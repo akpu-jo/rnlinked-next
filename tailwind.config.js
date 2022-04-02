@@ -3,7 +3,7 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class', // 'class'
+  darkMode: 'media', // 'class'
   theme: {
     extend: {
       fontFamily: {
@@ -60,6 +60,7 @@ module.exports = {
           600: '#359765'
         },
         primary: {
+          elm: '#1e7678',
           elephant: '#0f393b',
           springWood: '#f6f5ef',
           confetti: '#e6c653'

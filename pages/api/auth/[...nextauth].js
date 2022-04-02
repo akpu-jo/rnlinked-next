@@ -1,4 +1,4 @@
-import nextAuth from "next-auth";
+import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google"
 import TwitterProvider from "next-auth/providers/twitter"
 
@@ -13,4 +13,10 @@ export default NextAuth({
             clientSecret: process.env.TWITTER_SECRET,
           }),
     ],
+    callbacks: {
+      async jwt({ token }) {
+        token.userRole = "admin"
+        return token
+      },
+    },
   })
