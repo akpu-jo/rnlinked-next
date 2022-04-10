@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import validator from "validator";
-import { createUsername } from "../utils/createUsername.js";
 
 const { ObjectId } = mongoose.Schema;
 
@@ -16,6 +15,7 @@ const userSchema = new mongoose.Schema(
             index: true,
         },
         name: { type: String, trim: true, required: true },
+        image: { type: String, trim: true, default: "",},
 
         email: {
             type: String,
@@ -52,28 +52,6 @@ const userSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
-
-
-
-userSchema.pre("save", async function (next) {
-    //run if email is modified
-    if (!this.isModified("email")) return next();
-
-    //extract email username
-    const emailUsername = this.email.split("@")[0].replace(".", "-");
-
-    //check if username exists
-    const userNameExists = await createUsername(emailUsername);
-
-    //generate username
-    if (!userNameExists) {
-        this.username = emailUsername;
-    } else {
-        next();
-    }
-
-    next();
-});
 
 
 userSchema.pre(/^find/, function (next) {

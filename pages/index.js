@@ -3,6 +3,8 @@ import Image from "next/image";
 import Header from "../components/navs/Header";
 import styles from "../styles/Home.module.css";
 import { useSession, signIn, signOut } from "next-auth/react";
+import MobileNav from "../components/navs/MobileNav";
+import Example from "../components/uiTemplates/Popover";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -24,7 +26,8 @@ export default function Home() {
         <Header />
         Signed in as {session.user.name} <br />
         <button onClick={() => signOut()}>Sign out</button>
-        <pre>{JSON.stringify(session, null, 4)}</pre>
+        <MobileNav user={session.user} />
+        {/* <pre className="text-7xl">{JSON.stringify(session, null, 2)}</pre> */}
       </>
     );
   }
