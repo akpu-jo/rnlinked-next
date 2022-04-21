@@ -2,20 +2,25 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useSession, signIn, signOut } from "next-auth/react";
+import UserOptions from "./UserOptions";
+
 
 const Header = ({ children }) => {
   const router = useRouter();
+  const { data: session } = useSession();
+
 
   return (
-    <nav className=" z-50 flex justify-between items-center  shadow-sm sm:mx-4 mx-2 ">
+    <nav className=" z-50 flex justify-between items-center  shadow-sm sm:mx-4 mx-2 py-2 ">
       <ul className="flex items-center">
         <Link href="/">
           <a className="w-36 md:w-44 my-2 ">
             <Image
-              src="/logo.svg"
+              src="/rn-logo.png"
               alt="Picture of the logo"
-              width={350}
-              height={100}
+              width={250}
+              height={50}
             />
           </a>
         </Link>
@@ -23,9 +28,9 @@ const Header = ({ children }) => {
       <ul className="flex items-center z-20">
         {children}
 
-        {/* {user && <li className="z-30 text-gray-500 hover:text-gray-600 text-base font-semibold tracking-wider">
+        {session && <li className="z-30 text-gray-500 hover:text-gray-600 text-base font-semibold tracking-wider">
               <UserOptions />
-            </li>} */}
+            </li>}
       </ul>
     </nav>
   );

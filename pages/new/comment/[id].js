@@ -10,11 +10,15 @@ import { toast } from "react-toastify";
 import Resizer from "react-image-file-resizer";
 import axios from "axios";
 import { TrashIcon } from "@heroicons/react/solid";
+import connectDb from "@/utils/db";
+import Post from "models/postModel";
 import AltHeader from "@/components/navs/AltHeader";
+import { PostCard } from "@/components/post/PostCard";
 
-const NewPost = () => {
+const Comment = ({ p }) => {
   const { data: session } = useSession();
   const router = useRouter();
+  const post = JSON.parse(p);
 
   const initialValue = [
     {
@@ -75,10 +79,11 @@ const NewPost = () => {
           console.log("uri===> uri");
 
           try {
-            let { data } = await axios.post(`/api/posts`, {
+            let { data } = await axios.post(`/api/posts/comments`, {
               uri,
               body,
               userId: session.user.id,
+              postId: post._id,
             });
 
             console.log("Data===>", data);
@@ -99,9 +104,10 @@ const NewPost = () => {
       );
     } else {
       try {
-        let { data } = await axios.post(`/api/posts`, {
+        let { data } = await axios.post(`/api/posts/comments`, {
           body,
           userId: session.user.id,
+          postId: post._id,
         });
 
         console.log("Data===>", data);
@@ -110,29 +116,22 @@ const NewPost = () => {
         setImgFile(null);
         setImage({});
         router.back();
-
-        //set img in the state
-        // setImage(data);
       } catch (error) {
         console.log(error);
         toast.error("Post Upload Failed");
       }
     }
-    // console.log("ImageUploaded===>", image)
-    // let { data } = await axios.post(`/api/posts`, {
-    //   image, body, userId: session.user.id
-    // });
-    // console.log(data)
   };
 
   return (
     <div className=" relative">
       <AltHeader>
-        <p>New Post</p>
+        <p>Comment</p>
         <div></div>
       </AltHeader>
-      {/* <pre>{JSON.stringify(session, null, 4)}</pre> */}
-      <div className=" mx-3 pb-40">
+      <PostCard post={post} showAtions={false} />
+      <hr className=" p-2"></hr>
+      <div className=" pl-10  mx-3 pb-40">
         <form className="" onSubmit={handleSubmit}>
           <div className="grid grid-cols-7">
             {session && (
@@ -157,7 +156,8 @@ const NewPost = () => {
             >
               <Editable
                 className="text-gray-600 ml-4 text-2xl col-span-6"
-                placeholder="Start a Post"
+                placeholder="Type your comment"
+                autoFocus
               />
             </Slate>
           </div>
@@ -207,15 +207,31 @@ const NewPost = () => {
   );
 };
 
-export default NewPost;
+export default Comment;
 
-{
-  /* <textarea
-              className=" text-gray-600 border-none focus:outline-none w-full ml-4 text-2xl"
-              aria-label="Create a post"
-              autoComplete="off"
-              placeholder="Start a Post"
-              contentEditable
-              rows="10"
-            /> */
-}
+export const getServerSideProps = async (context) => {
+  const id = context.params.id;
+
+  await connectDb();
+
+  const post = await Post.findById(id).populate(
+    "userId",
+    "name username image"
+  );
+
+  console.log(post);
+
+  // const result =   await axios.get(``)
+
+  if (!post) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: {
+      p: JSON.stringify(post),
+    },
+  };
+};

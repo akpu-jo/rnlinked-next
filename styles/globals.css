@@ -7,3 +7,9 @@
     background-image: url("/nurses-vector.jpg");
     background-repeat: repeat-x;
   }
+
+  .clip-txt{
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+  }

@@ -77,7 +77,7 @@ export default NextAuth({
 
           const updatedUser = await User.findByIdAndUpdate(
             user.id,
-            {username: username},
+            {username: username, role: 'user'},
             { new: true, runValidators: true }
           );
 

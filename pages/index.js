@@ -1,10 +1,10 @@
 import Head from "next/head";
 import Image from "next/image";
 import Header from "../components/navs/Header";
-import styles from "../styles/Home.module.css";
 import { useSession, signIn, signOut } from "next-auth/react";
 import MobileNav from "../components/navs/MobileNav";
-import Example from "../components/uiTemplates/Popover";
+import { PostCard } from "@/components/post/PostCard";
+import { Timeline } from "@/components/users/Timeline";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -23,9 +23,8 @@ export default function Home() {
     return (
       <>
         {head()}
-        <Header />
-        Signed in as {session.user.name} <br />
-        <button onClick={() => signOut()}>Sign out</button>
+        <Header /> 
+        <Timeline />
         <MobileNav user={session.user} />
         {/* <pre className="text-7xl">{JSON.stringify(session, null, 2)}</pre> */}
       </>
