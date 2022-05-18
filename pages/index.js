@@ -5,11 +5,17 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import MobileNav from "../components/navs/MobileNav";
 import { PostCard } from "@/components/post/PostCard";
 import { Timeline } from "@/components/users/Timeline";
+import connectDb from "@/utils/db";
+import Post from "@/models/postModel";
+import Welcome from "./welcome";
+import axios from "axios";
 
-export default function Home() {
+export default function Home({posts}) {
   const { data: session } = useSession();
+  // const posts = JSON.parse(p);
 
   const head = () => {
+
     return (
       <Head>
         <title>Create Next App</title>
@@ -24,7 +30,8 @@ export default function Home() {
       <>
         {head()}
         <Header /> 
-        <Timeline />
+        {/* <pre>{JSON.stringify(session, null, 4)}</pre> */}
+        <Timeline posts={posts} />
         <MobileNav user={session.user} />
         {/* <pre className="text-7xl">{JSON.stringify(session, null, 2)}</pre> */}
       </>
@@ -33,9 +40,28 @@ export default function Home() {
   return (
     <>
       {head()}
-      <Header />
+      <Welcome />
       Not signed in <br />
       <button onClick={() => signIn()}>Sign in</button>
     </>
   );
 }
+
+export const getServerSideProps = async (context) => {
+
+  // await connectDb();
+
+  // const posts = await Post.find().populate(
+  //   "userId",
+  //   "name username image"
+  // ).sort({createdAt: -1});
+
+  const {data} =   await axios.get(`http://localhost:3000/api/posts`)
+
+
+  return {
+    props: {
+      posts: data.posts,
+    },
+  };
+};

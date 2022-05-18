@@ -1,3 +1,4 @@
+import Comment from "@/models/commentModel";
 import connectDb from "@/utils/db";
 import Post from "models/postModel";
 
@@ -5,7 +6,7 @@ import Post from "models/postModel";
 
 export default async function handler(req, res) {
   const { method } = req
-  const { postId, userId } = req.body;
+  const { commentId, userId } = req.body;
 
   await connectDb()
 
@@ -20,12 +21,20 @@ export default async function handler(req, res) {
       break
     case 'POST':
       try {
-        await Post.findByIdAndUpdate(postId, {
-          $pull: { likes: userId },
-        }).exec();
+        let comment;
+        comment = await Comment.findById(commentId)
+        const isliked = comment.likes && comment.likes.includes(userId)
+
+        console.log("isLiked===>", isliked)
+
+        const options = isliked ? "$pull" : "$addToSet"
+        comment = await Comment.findByIdAndUpdate(commentId, {
+          [options]: { likes: userId },
+        }, {new: true});
   
-        res.status(200).json({ ok: true });
+        res.status(200).json({ likes: comment.likes, isliked });
       } catch (error) {
+        console.log("Like Err0r====>", error)      
         res.status(400).json({ error });
       }
       break

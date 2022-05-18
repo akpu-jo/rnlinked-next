@@ -52,3 +52,14 @@ export default async function uploadImage(req, res) {
       break
   }
 }
+{
+  role: 'user',
+  posts: [],
+  _id: new ObjectId("624580861d89c21a6fddd09e"),
+  name: 'Joseph Akpu',
+  email: 'akpu.jo@gmail.com',
+  image: 'https://pbs.twimg.com/profile_images/1508879557985722369/N5Xs5FZd.jpg',
+  emailVerified: null,
+  updatedAt: 2022-04-03T00:23:49.524Z,
+  username: 'akpu-jo'
+}

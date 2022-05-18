@@ -2,17 +2,16 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { PostCard } from '../post/PostCard'
 
-export const Timeline = () => {
-    const [posts, setPosts] = useState([])
+export const Timeline = ({posts}) => {
 
-    const loadPosts = async() => {
-        const {data} = await axios.get(`api/posts`)
-        // console.log(data)
-        setPosts(data.posts)
-    }
-        useEffect(() => {
-            loadPosts()
-        }, [])
+    // const loadPosts = async() => {
+    //     const {data} = await axios.get(`api/posts`)
+    //     // console.log(data)
+    //     setPosts(data.posts)
+    // }
+    //     useEffect(() => {
+    //         loadPosts()
+    //     }, [])
 
   return (
       <>

@@ -6,15 +6,16 @@ import connectDb from "../../../utils/db";
 
 export default async function handler(req, res) {
   const { method } = req;
+  const {userId} = req.query
 
   await connectDb();
 
   switch (method) {
     case "GET":
       try {
-        const posts = await Post.find({}).populate(
-          "userId"
-        ); /* find all the data in our database */
+        const posts = await Post.find(userId? {userId}: {}).populate(
+          "userId", "name username image "
+        ).sort({createdAt: -1}); /* find all the data in our database */
         res.status(200).json({ success: true, posts });
       } catch (error) {
         res.status(400).json({ success: false });

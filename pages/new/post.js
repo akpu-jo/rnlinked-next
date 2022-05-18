@@ -158,6 +158,7 @@ const NewPost = () => {
               <Editable
                 className="text-gray-600 ml-4 text-2xl col-span-6"
                 placeholder="Start a Post"
+                autoFocus
               />
             </Slate>
           </div>

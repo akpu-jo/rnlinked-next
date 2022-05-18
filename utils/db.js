@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const mongoUrl = process.env.MONGODB_URI
 
 
-if (!mongoUrl) {
-  throw new Error(
-    'Please define the MONGODB_URI environment variable inside .env.local'
-  )
-}
+// if (!mongoUrl) {
+//   throw new Error(
+//     'Please define the MONGODB_URI environment variable inside .env.local'
+//   )
+// }
 
 let cached = global.mongoose
 

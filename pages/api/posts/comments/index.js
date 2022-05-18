@@ -4,23 +4,22 @@ import Comment from "models/commentModel";
 import Post from "models/postModel";
 import { nanoid } from "nanoid";
 
-
 export default async function handler(req, res) {
   const { method } = req;
-  const {postId} = req.query;
+  const { postId } = req.query;
 
   await connectDb();
 
   switch (method) {
     case "GET":
       try {
-        const comments = await Comment.find({postId}).populate(
+        const comments = await Comment.find({ postId }).populate(
           "userId",
           "name username image"
         );
         res.status(200).json({ success: true, comments });
       } catch (error) {
-        console.log("LoadComments err===>", error)
+        console.log("LoadComments err===>", error);
         res.status(400).json({ success: false });
       }
       break;

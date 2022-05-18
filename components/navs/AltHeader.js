@@ -7,7 +7,10 @@ export default function ({ children }) {
 
   return (
     <header className=" flex justify-between items-center px-3 pb-2 pt-3 text-2xl font-semibold tracking-wide sticky top-0 right-0 left-0 mb-4 bg-white z-10">
-      <button onClick={() => router.back()}>
+      <button onClick={(e) => {
+        e.preventDefault()
+        window.history.back()
+        }}>
         <ArrowNarrowLeftIcon className="w-8 h-8 " />
       </button>
       {children}

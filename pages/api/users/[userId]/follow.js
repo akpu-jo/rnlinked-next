@@ -1,3 +1,4 @@
+import User from "@/models/userModel";
 import connectDb from "@/utils/db";
 import Post from "models/postModel";
 
@@ -5,7 +6,9 @@ import Post from "models/postModel";
 
 export default async function handler(req, res) {
   const { method } = req
-  const { postId, userId } = req.body;
+  const { sessionUserId } = req.body;
+  const {userId} = req.query
+
 
   await connectDb()
 
@@ -20,18 +23,24 @@ export default async function handler(req, res) {
       break
     case 'POST':
       try {
-        let post;
-        post = await Post.findById(postId)
-        const isliked = post.likes && post.likes.includes(userId)
+        let user;
+        user = await User.findById(userId)
 
-        console.log("isLiked===>", isliked)
+        if(!user) return res.sendStatus(404);
 
-        const options = isliked ? "$pull" : "$addToSet"
-        post = await Post.findByIdAndUpdate(postId, {
-          [options]: { likes: userId },
+        const isFollowing = user.followers && user.followers.includes(sessionUserId)
+
+        console.log("isFollowing===>", isFollowing)
+
+        const options = isFollowing ? "$pull" : "$addToSet"
+        user = await User.findByIdAndUpdate(userId, {
+          [options]: { followers: sessionUserId },
         }, {new: true});
+        await User.findByIdAndUpdate(sessionUserId, {
+          [options]: {following: userId}
+        })
   
-        res.status(200).json({ likes: post.likes, isliked });
+        res.status(200).json({ followers: user.followers, isFollowing });
       } catch (error) {
         console.log("Like Err0r====>", error)      
         res.status(400).json({ error });

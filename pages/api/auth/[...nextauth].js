@@ -32,6 +32,8 @@ export default NextAuth({
   },
   callbacks: {
     async signIn({ user, account, profile, email, credentials, isNewUser }) {
+      await connectDb();
+
       const isAllowedToSignIn = true;
       if (isAllowedToSignIn) {
         return true;
@@ -43,11 +45,15 @@ export default NextAuth({
       }
     },
     async session({ session, token, user }) {
+      await connectDb();
+
       // Send properties to the client, like an access_token from a provider.
       // console.log("Session===>", session);
       // console.log("User===>", user);
       session.user.id = user.id;
       session.user.username = user.username
+      session.user.following = user.following
+      session.user.followers = user.followers
       return session;
     },
   },
