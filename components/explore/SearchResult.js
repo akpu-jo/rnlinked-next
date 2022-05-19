@@ -7,12 +7,7 @@ const SearchResult = () => {
 
   return (
     <div className=" mt-3">
-      <SearchTabs cats={categories}>
-        <Tab.Panel><p>postss</p></Tab.Panel>
-        <Tab.Panel><p>Articles</p></Tab.Panel>
-        <Tab.Panel><p>Users</p></Tab.Panel>
-      </SearchTabs>
-      SearchResult
+      <SearchTabs cats={categories} />
     </div>
   );
 };

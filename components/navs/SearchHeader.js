@@ -5,11 +5,13 @@ import {
   SearchIcon,
   XCircleIcon,
 } from "@heroicons/react/outline";
+import axios from "axios";
 
-const SearchHeader = ({ showSearch, setShowSearch, searchPage = false }) => {
+const SearchHeader = ({ showSearch, setShowSearch, setRecommendedUsers, searchPage = false }) => {
   const router = useRouter();
 
   const [query, setQuery] = useState(router.query.q ? router.query.q : "");
+  // const [recommendedUsers, ] = useState([])
   let [timer, setTimer] = useState(null);
 
 
@@ -17,15 +19,19 @@ const SearchHeader = ({ showSearch, setShowSearch, searchPage = false }) => {
     clearTimeout(timer);
 
     setTimer(
-      setTimeout(() => {
-        console.log(e.target.value.trim());
+      setTimeout( async () => {
+        const url = `/api/explore/users?q=${e.target.value.trim()}`;
+        const { data } = await axios.get(url);
+        setRecommendedUsers(data.result);
+        console.log(data.result);
       }, 1000)
-    );
+      );
   };
 
   const submitSearch = async (e) => {
     e.preventDefault();
     router.push(`/search?q=${query}`);
+    setShowSearch(false)
   };
 
   const searchBox = () => {

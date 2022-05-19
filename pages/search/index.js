@@ -6,6 +6,7 @@ import React, { useState } from "react";
 
 const SearchPage = () => {
   const [showSearch, setShowSearch] = useState(false);
+  const [recommendedUsers, setRecommendedUsers] = useState([]);
 
   return (
     <div>
@@ -13,8 +14,13 @@ const SearchPage = () => {
         showSearch={showSearch}
         setShowSearch={setShowSearch}
         searchPage={true}
+        setRecommendedUsers={setRecommendedUsers}
       />
-      {showSearch ? <Recommendations /> : <SearchResult />}
+      {showSearch ? (
+        <Recommendations recommendedUsers={recommendedUsers} />
+      ) : (
+        <SearchResult />
+      )}
       <MobileNav />
     </div>
   );

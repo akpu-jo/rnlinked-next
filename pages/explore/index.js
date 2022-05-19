@@ -7,6 +7,7 @@ import React, { useRef, useState } from "react";
 
 const Explore = () => {
   const [showSearch, setShowSearch] = useState(false);
+  const [recommendedUsers, setRecommendedUsers] = useState([]);
 
   return (
     <div>
@@ -15,8 +16,9 @@ const Explore = () => {
           <SearchHeader
             showSearch={showSearch}
             setShowSearch={setShowSearch}
+            setRecommendedUsers={setRecommendedUsers}
           />{" "}
-          <Recommendations />{" "}
+          <Recommendations recommendedUsers={recommendedUsers} />{" "}
         </div>
       ) : (
         <div>
@@ -27,7 +29,9 @@ const Explore = () => {
               className=" w-7 h-7"
             />
           </AltHeader>
-          Explore contents
+          <p className=" text-center text-xl font-medium p-2 m-10">
+            Explore contents: TODO
+          </p>
         </div>
       )}
       <MobileNav />

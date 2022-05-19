@@ -1,9 +1,14 @@
-import React from 'react'
+import React from "react";
+import UserCard from "../users/UserCard";
 
-const Recommendations = () => {
+const Recommendations = ({ recommendedUsers }) => {
   return (
-    <div>Recommendations</div>
-  )
-}
+    <div className=" ml-2">
+      {recommendedUsers !== undefined && recommendedUsers.map((user) => (
+        <UserCard user={user} key={user._id} />
+      ))}
+    </div>
+  );
+};
 
-export default Recommendations
+export default Recommendations;

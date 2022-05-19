@@ -9,7 +9,7 @@ import Link from "next/link";
 export const ProfileHead = ({user}) => {
 
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session } = useSession(); 
   const [isFollowing, setIsFollowing] = useState(
     user.followers.includes(session && session.user.id)
   );
@@ -32,7 +32,7 @@ export const ProfileHead = ({user}) => {
 
   useEffect(() => {
     setIsFollowing(user.followers.includes(session && session.user.id));
-  }, [session]);
+  }, [session, router.query.src]);
 
 
   return (
