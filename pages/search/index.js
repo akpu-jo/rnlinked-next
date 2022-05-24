@@ -15,6 +15,7 @@ const SearchPage = () => {
         setShowSearch={setShowSearch}
         searchPage={true}
         setRecommendedUsers={setRecommendedUsers}
+        focus={false}
       />
       {showSearch ? (
         <Recommendations recommendedUsers={recommendedUsers} />

@@ -18,7 +18,7 @@ const NewMessage = () => {
       </a>
     </Link>
   </AltHeader>
-  <SearchChat showSearch={showSearch} setShowSearch={setShowSearch} setRecommendedUsers={setRecommendedUsers} />
+  <SearchChat showSearch={showSearch} setShowSearch={setShowSearch} setRecommendedUsers={setRecommendedUsers} focus={true} />
   <Recommendations recommendedUsers={recommendedUsers} />
   </div>
   )

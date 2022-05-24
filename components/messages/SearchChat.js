@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect, } from "react";
 import { useRouter } from "next/router";
 import {
   ArrowNarrowLeftIcon,
@@ -7,13 +7,20 @@ import {
 } from "@heroicons/react/outline";
 import axios from "axios";
 
-const SearchChat = ({ showSearch, setShowSearch, setRecommendedUsers }) => {
+const SearchChat = ({ showSearch, setShowSearch, setRecommendedUsers,   focus = false,
+}) => {
 
     const router = useRouter();
 
     const [query, setQuery] = useState(router.query.q ? router.query.q : "");
     // const [recommendedUsers, ] = useState([])
     let [timer, setTimer] = useState(null);
+    const focusSearchRef = useRef();
+
+    useEffect(() => {
+      console.log(focusSearchRef)
+      focus && focusSearchRef.current.focus();
+    }, [])
   
   
     const searchTimer = (e) => {
@@ -21,10 +28,15 @@ const SearchChat = ({ showSearch, setShowSearch, setRecommendedUsers }) => {
   
       setTimer(
         setTimeout( async () => {
-          const url = `/api/explore/users?q=${e.target.value.trim()}`;
-          const { data } = await axios.get(url);
-          setRecommendedUsers(data.result);
-          console.log(data.result);
+          console.log(e.keyCode)
+          console.log(e.target.value.trim());
+          if(e.target.value.trim() === '' && e.keyCode === 8 ){
+            return
+          }
+            console.log(e.keyCode, '<=== after ran')
+            const url = `/api/explore/users?q=${e.target.value.trim()}`;
+            const { data } = await axios.get(url);
+            setRecommendedUsers(data.result);
         }, 1000)
         );
     };
@@ -51,6 +63,7 @@ const SearchChat = ({ showSearch, setShowSearch, setRecommendedUsers }) => {
               placeholder="Search on RNlinked"
               aria-label="Search for an article"
               value={query}
+              ref={focusSearchRef}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => searchTimer(e)}
             />
