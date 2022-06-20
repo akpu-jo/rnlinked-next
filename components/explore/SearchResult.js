@@ -1,6 +1,6 @@
 import { Tab } from "@headlessui/react";
 import React, { useState } from "react";
-import SearchTabs from "./searchTabs";
+import SearchTabs from "./SearchTabs";
 
 const SearchResult = () => {
   const [categories] = useState(["Posts", "Articles", "Users"]);
