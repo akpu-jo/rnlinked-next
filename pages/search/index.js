@@ -1,5 +1,5 @@
 import Recommendations from "@/components/explore/Recommendations";
-import SearchResult from "@/components/explore/searchResult";
+import SearchResult from "@/components/explore/searchResult.js";
 import MobileNav from "@/components/navs/MobileNav";
 import SearchHeader from "@/components/navs/SearchHeader";
 import React, { useState } from "react";
