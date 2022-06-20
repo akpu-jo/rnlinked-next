@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSession, signIn, signOut } from "next-auth/react";
 import axios from "axios";
-import { HeartInactiveIcon } from "../uiTemplates/icons";
+import { HeartInactiveIcon } from "../uiTemplates/icons.js";
 import { timeDifference } from "@/utils/timeStamp";
 import { Avatar, Image } from "@nextui-org/react";
 

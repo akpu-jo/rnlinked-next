@@ -10,7 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSession, signIn, signOut } from "next-auth/react";
 import axios from "axios";
-import { HeartInactiveIcon } from "../uiTemplates/icons";
+import { HeartInactiveIcon } from "../uiTemplates/icons.js";
 import { Avatar, Textarea, Image } from "@nextui-org/react";
 import { timeDifference } from "@/utils/timeStamp";
 
