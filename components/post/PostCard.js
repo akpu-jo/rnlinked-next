@@ -1,6 +1,6 @@
 import { ChatIcon, HeartIcon } from "@heroicons/react/outline";
 import moment from "moment";
-import Image from "next/image";
+// import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -8,8 +8,9 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import axios from "axios";
 import { HeartInactiveIcon } from "../uiTemplates/icons";
 import { timeDifference } from "@/utils/timeStamp";
+import { Avatar, Image } from "@nextui-org/react";
 
-export const PostCard = ({ post, showAtions = true, clipText = true }) => {
+export const PostCard = ({ post, showAtions = true, clipText = true, fullW = true }) => {
   const router = useRouter();
   const { data: session } = useSession();
   const [liked, setLiked] = useState(
@@ -38,17 +39,19 @@ export const PostCard = ({ post, showAtions = true, clipText = true }) => {
   }, [session]);
 
   return (
-    <div id={post._id} className="py-4 border-b">
-      <div className=" mx-3">
-        <article>
+    <div id={post._id} className="py-2 border-b border-slate-100 ">
+      <div className=" mx-2 bg-primary-springWood bg-opacity-50 rounded-lg shadow-sm px-2 py-3">
+        <article className="">
           {post.image.length > 0 && (
             <div className=" w-full">
               <Image
                 className=" object-cover rounded-2xl w-full bg-black "
                 src={post.image[0].Location}
                 alt=""
-                width={400}
-                height={250}
+                width={300}
+                height={200}
+                showSkeleton
+                objectFit="cover"
               />
             </div>
           )}
@@ -59,25 +62,19 @@ export const PostCard = ({ post, showAtions = true, clipText = true }) => {
             id="test"
             className={`${
               clipText && "clip-txt"
-            } text-xl text-gray-500 font-medium leading-normal py-2 overflow-hidden text-ellipsis`}
+            } ${fullW && 'w-80'} text-lg font- leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-800  `}
           >
             {post.body}
           </p>
         </article>
         {session && showAtions && (
-          <div className=" flex justify-between items-center">
+          <div className=" flex justify-between items-center z-10">
             <div className={` flex items-center `}>
               <Link href={`/${post.userId.username}`}>
-                <a className=" flex justify-start items-center">
-                  <Image
-                    className=" rounded-xl"
-                    src={post.userId.image}
-                    alt="Picture of the logo"
-                    width={30}
-                    height={30}
-                  />
+                <a className=" flex justify-start items-center z-10">
+                  <Avatar src={post.userId.image} squared size='sm' zoomed />
                   <div className=" ml-2">
-                    <p className=" text-md text-slate-500 capitalize">{post.userId.name}</p>
+                    <p className=" tracking-normal text-slate-500 capitalize">{post.userId.name}</p>
                     {/* <p className=" font-semibold text-gray-400 text-sm">
                       @{post.userId.username}
                     </p> */}
@@ -85,7 +82,7 @@ export const PostCard = ({ post, showAtions = true, clipText = true }) => {
                 </a>
               </Link>
               <p className=" p-1 text-2xl text-gray-400">&middot;</p>
-              <p className="text-slate-400 text-md">{timestamp}</p>
+              <p className="text-slate-400 text-sm font-light">{timestamp}</p>
             </div>
             <div
               className={` flex items-center  ${

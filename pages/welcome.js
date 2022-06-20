@@ -88,9 +88,7 @@ const Welcome = () => {
             </div>
 
             <button
-              onClick={() => {
-                setSignUpOpen(true);
-              }}
+              onClick={() => signIn()}
               className=" sm:my-0 tracking-widest justify-center bg-elm-600 dark:bg-burntSienna-600 shadow-md px-3 py-2  rounded-full sm:w-56  w-4/6 text-sm uppercase font-head font-semibold text-elephant-50"
             >
               Get Started

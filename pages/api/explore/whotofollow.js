@@ -1,8 +1,11 @@
 import User from "@/models/userModel";
 import connectDb from "@/utils/db";
 import Post from "models/postModel";
+import { getSession } from "next-auth/react";
 
 export default async function handler(req, res) {
+    const session = await getSession({ req })
+
   const { method } = req;
 
   await connectDb();
@@ -10,22 +13,11 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       try {
-        const query = req.query.q;
-        console.log(query);
-
-        // const { search } = req.query;
-        if (query !== undefined) {
-          const result = await User.find({
-            $or: [
-              { name: { $regex: query, $options: "i" } },
-              { username: { $regex: query, $options: "i" } },
-            ],
-          }).select("_id name username image bio followers");
-          res.status(200).json({
-            success: true,
-            result,
-          });
-        }
+        const users = await User.find({_id: {$ne: session.user.id}})
+          .select( "followers following name username image _id ")
+          .limit(6); /* find all the data in our database */
+          //   .sort("-createdAt")
+        res.status(200).json({ success: true, users });
       } catch (error) {
         console.log(error);
         res.status(400).json({ success: false });

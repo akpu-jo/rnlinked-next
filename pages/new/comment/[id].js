@@ -126,11 +126,10 @@ const Comment = ({ p }) => {
   return (
     <div className=" relative">
       <AltHeader>
-        <p>Comment</p>
-        <div></div>
+        <p className=" text-xl">Comment</p>
+        <div className=" w-1/3"></div> 
       </AltHeader>
       <PostCard post={post} showAtions={false} />
-      <hr className=" p-2"></hr>
       <div className=" pl-10  mx-3 pb-40">
         <form className="" onSubmit={handleSubmit}>
           <div className="grid grid-cols-7">

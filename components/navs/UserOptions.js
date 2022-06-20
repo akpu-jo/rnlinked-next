@@ -6,6 +6,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
+import { Avatar } from "@nextui-org/react";
 
 export default function UserOptions() {
   const { data: session } = useSession();
@@ -18,17 +19,19 @@ export default function UserOptions() {
     <div className="">
       <Menu as="div" className="relative inline-block text-left">
         <div className=" flex items-center">
-          <Menu.Button className=" w-10 h-10  bg-black rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <Menu.Button className=" hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             {session && (
-              <div>
-                <Image
-                  className=" rounded-full"
+                <Avatar
+                  squared
                   src={session.user.image}
-                  alt="Picture of the logo"
-                  width={50}
-                  height={50}
                 />
-              </div>
+                // {/* <Image
+                //   className=" rounded-full"
+                //   src={session.user.image}
+                //   alt="Picture of the logo"
+                //   width={50}
+                //   height={50}
+                // /> */}
             )}
           </Menu.Button>
         </div>

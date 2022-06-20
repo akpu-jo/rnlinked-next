@@ -3,7 +3,7 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'media', // 'class'
+  darkMode: 'class', // 'media'
   theme: {
     extend: {
       fontFamily: {
@@ -11,6 +11,18 @@ module.exports = {
         body: ['Poppins']
       },
       colors: {
+        cloud: {
+          50: '#e9ebef',
+          100: '#d3d7e0',
+          200: '#bec3d0',
+          300: '#a8afc1',
+          400: '#929cb1',
+          500: '#7c88a1',
+          600: '#667492',
+          700: '#516082',
+          800: '#3b4c73',
+          900: '#253863'
+        },
         elephant: {
           50: '#e7ebeb',
           100: '#b7c4c4',

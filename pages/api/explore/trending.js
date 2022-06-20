@@ -10,22 +10,11 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       try {
-        const query = req.query.q;
-        console.log(query);
-
-        // const { search } = req.query;
-        if (query !== undefined) {
-          const result = await User.find({
-            $or: [
-              { name: { $regex: query, $options: "i" } },
-              { username: { $regex: query, $options: "i" } },
-            ],
-          }).select("_id name username image bio followers");
-          res.status(200).json({
-            success: true,
-            result,
-          });
-        }
+        const posts = await Post.find({ image: { $ne: [{}] }, image: {$ne: []} })
+          .populate("userId", "name username image ")
+          .sort("createdAt: -1")
+          .limit(6); /* find all the data in our database */
+        res.status(200).json({ success: true, posts });
       } catch (error) {
         console.log(error);
         res.status(400).json({ success: false });

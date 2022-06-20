@@ -16,7 +16,7 @@ export default async function handler(req, res) {
         const comments = await Comment.find({ postId }).populate(
           "userId",
           "name username image"
-        );
+        ).sort({updatedAt: '-1'});
         res.status(200).json({ success: true, comments });
       } catch (error) {
         console.log("LoadComments err===>", error);
@@ -72,6 +72,8 @@ export default async function handler(req, res) {
             userId,
             postId,
           });
+
+          await comment.populate("userId", "name username image _id");
           //update parent post
           await Post.findByIdAndUpdate(
             postId,

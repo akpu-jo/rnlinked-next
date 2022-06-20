@@ -15,7 +15,7 @@ export const Timeline = ({posts}) => {
 
   return (
       <>
-      <pre className=' hidden md:block'>{JSON.stringify(posts, null, 4)}</pre>
+      {/* <pre className=' hidden md:block'>{JSON.stringify(posts, null, 4)}</pre> */}
       {posts.map((post, i) => (
           <PostCard key={post._id} post={post} />
       ))}

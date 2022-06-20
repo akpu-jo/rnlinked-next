@@ -26,7 +26,12 @@ const SearchHeader = ({
   }, [])
   
   const searchTimer = (e) => {
+
     clearTimeout(timer);
+
+    if(query === ""){
+      setRecommendedUsers([]);
+    }
 
     setTimer(
       setTimeout(async () => {

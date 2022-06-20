@@ -72,7 +72,7 @@ const NewPost = () => {
         100,
         0,
         async (uri) => {
-          console.log("uri===> uri");
+          // console.log("uri===>", uri); 
 
           try {
             let { data } = await axios.post(`/api/posts`, {
@@ -128,8 +128,8 @@ const NewPost = () => {
   return (
     <div className=" relative">
       <AltHeader>
-        <p>New Post</p>
-        <div></div>
+        <p className=" text-2xl tracking-wide">New Post</p>
+        <div className=" w-1/3"></div>
       </AltHeader>
       {/* <pre>{JSON.stringify(session, null, 4)}</pre> */}
       <div className=" mx-3 pb-40">

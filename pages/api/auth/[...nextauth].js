@@ -52,6 +52,7 @@ export default NextAuth({
       // console.log("User===>", user);
       session.user.id = user.id;
       session.user.username = user.username
+      session.user.bio = user.bio
       session.user.following = user.following
       session.user.followers = user.followers
       return session;

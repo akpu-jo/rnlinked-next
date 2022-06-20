@@ -9,13 +9,24 @@ import connectDb from "@/utils/db";
 import Post from "@/models/postModel";
 import Welcome from "./welcome";
 import axios from "axios";
+import { useEffect } from "react";
+import socket from "@/utils/clientSocket";
 
-export default function Home({posts}) {
+export default function Home({ posts }) {
   const { data: session } = useSession();
+  console.log(session);
+
+  const connectSocket = (user) => {
+    let connected = false;
+
+    socket.emit("setup", user);
+
+    socket.on("connected", () => (connected = true));
+    console.log("socket===>", socket);
+  };
   // const posts = JSON.parse(p);
 
   const head = () => {
-
     return (
       <Head>
         <title>Create Next App</title>
@@ -29,10 +40,14 @@ export default function Home({posts}) {
     return (
       <>
         {head()}
-        <Header /> 
-        {/* <pre>{JSON.stringify(session, null, 4)}</pre> */}
-        <Timeline posts={posts} />
-        <MobileNav user={session.user} />
+        <div className=" flex flex-col h-screen">
+          <Header />
+          {/* <pre>{JSON.stringify(session, null, 4)}</pre> */}
+          <main className=" flex-1">
+            <Timeline posts={posts} />
+          </main>
+          <MobileNav user={session.user} />
+        </div>
         {/* <pre className="text-7xl">{JSON.stringify(session, null, 2)}</pre> */}
       </>
     );
@@ -41,14 +56,11 @@ export default function Home({posts}) {
     <>
       {head()}
       <Welcome />
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
     </>
   );
 }
 
 export const getServerSideProps = async (context) => {
-
   // await connectDb();
 
   // const posts = await Post.find().populate(
@@ -56,8 +68,7 @@ export const getServerSideProps = async (context) => {
   //   "name username image"
   // ).sort({createdAt: -1});
 
-  const {data} =   await axios.get(`http://localhost:3000/api/posts`)
-
+  const { data } = await axios.get(`http://localhost:3000/api/posts`);
 
   return {
     props: {
