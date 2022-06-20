@@ -10,9 +10,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSession, signIn, signOut } from "next-auth/react";
 import axios from "axios";
-import { HeartInactiveIcon } from "../uiTemplates/icons.js";
 import { Avatar, Textarea, Image } from "@nextui-org/react";
 import { timeDifference } from "@/utils/timeStamp";
+import HeartInactiveIcon from "../icons/HeartInactiveIcon";
 
 export const CommentCard = ({ comment }) => {
   const router = useRouter();

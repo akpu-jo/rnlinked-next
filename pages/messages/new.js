@@ -1,8 +1,8 @@
 import Recommendations from "@/components/explore/Recommendations";
+import CheckedIcon from "@/components/icons/CheckedIcon";
 import NewChatUsers from "@/components/messages/NewChatUsers";
 import SearchChat from "@/components/messages/SearchChat";
 import AltHeader from "@/components/navs/AltHeader";
-import { CheckedIcon } from "@/components/uiTemplates/icons";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";

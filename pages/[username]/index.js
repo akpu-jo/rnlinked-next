@@ -1,6 +1,6 @@
+import SettingsIcon from "@/components/icons/SettingsIcon";
 import AltHeader from "@/components/navs/AltHeader";
 import MobileNav from "@/components/navs/MobileNav";
-import { SettingsIcon } from "@/components/uiTemplates/icons";
 import NextUiModal from "@/components/uiTemplates/NextUiModal";
 import { ProfileHead } from "@/components/users/ProfileHead";
 import Tabs from "@/components/users/Tabs";

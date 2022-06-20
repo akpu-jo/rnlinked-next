@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Avatar } from "@nextui-org/react";
-import { HomeIconUI, MessageIcon, SearchIconUI } from "../uiTemplates/icons.js";
+import HomeIconUI from "../icons/HomeIconUI";
+import SearchIconUI from "../icons/SearchIconUI";
+import MessageIcon from "../icons/MessageIcon";
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
