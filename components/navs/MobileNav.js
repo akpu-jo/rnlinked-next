@@ -1,4 +1,3 @@
-import { SearchCircleIcon } from "@heroicons/react/outline";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Avatar } from "@nextui-org/react";
