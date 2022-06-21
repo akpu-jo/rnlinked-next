@@ -1,7 +1,6 @@
 import { useSession } from "next-auth/react";
 import { css, Button } from "@nextui-org/react";
-import React from "react";
-import { useState } from "react/cjs/react.development";
+import React, { useState }  from "react";
 
 const Message = ({ message, getLiClassNames, isGroup }) => {
   const { data: session } = useSession();
