@@ -68,7 +68,7 @@ export const getServerSideProps = async (context) => {
   //   "name username image"
   // ).sort({createdAt: -1});
 
-  const { data } = await axios.get(`http://localhost:3000/api/posts`);
+  const { data } = await axios.get(`https://rnlinked.vercel.app/api/posts`);
 
   return {
     props: {
