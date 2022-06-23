@@ -93,6 +93,7 @@ const PostPage = ({ post }) => {
 export default PostPage;
 
 export const getServerSideProps = async (context) => {
+  console.log(context.params)
   const postId = context.params.postId;
 
 
