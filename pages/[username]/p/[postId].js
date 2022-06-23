@@ -97,6 +97,7 @@ export const getServerSideProps = async (context) => {
 
 
   const { data } = await axios.get(`https://rnlinked.vercel.app/api/posts/${postId}`);
+  console.log("post  ===> ", data.post)
 
 
 
@@ -109,7 +110,6 @@ export const getServerSideProps = async (context) => {
   return {
     props: {
       post: data.post,
-      session: await getSession(context),
     },
   };
 };
