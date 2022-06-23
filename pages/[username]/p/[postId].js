@@ -17,7 +17,6 @@ import { PostCard } from "@/components/post/PostCard";
 import { CommentCard } from "@/components/post/CommentCard";
 import { Textarea, Avatar } from "@nextui-org/react";
 import { useSession, getSession } from "next-auth/react"
-import { NextPageContext } from "next"
 
 const PostPage = ({ post }) => {
   const { data: session } = useSession();
