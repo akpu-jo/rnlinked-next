@@ -61,12 +61,7 @@ export default function Home({ posts }) {
 }
 
 export const getServerSideProps = async (context) => {
-  // await connectDb();
 
-  // const posts = await Post.find().populate(
-  //   "userId",
-  //   "name username image"
-  // ).sort({createdAt: -1});
 
   const { data } = await axios.get(`https://rnlinked.vercel.app/api/posts`);
 

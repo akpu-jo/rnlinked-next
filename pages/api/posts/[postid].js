@@ -1,35 +1,41 @@
-import User from '../../../models/userModel'
-import connectDb from '../../../utils/db'
-import { hashPassword } from '../../../utils/hashPassword'
+import User from "../../../models/userModel";
+import connectDb from "../../../utils/db";
+import { hashPassword } from "../../../utils/hashPassword";
 
 export default async function handler(req, res) {
-  const { method } = req
-  const {email, password} = req.body
+  const { method } = req;
+  const { email, password } = req.body;
 
-  await connectDb()
+  await connectDb();
 
   switch (method) {
-    case 'GET':
+    case "GET":
       try {
-        const post = await Pet.find({}) /* find all the data in our database */
-        res.status(200).json({ success: true, data: pets })
+        const { postId } = req.query;
+        const post = await Post.findById(postId).populate(
+          "userId",
+          "name username image"
+        ); 
+        res.status(200).json({ success: true, post });
+        
       } catch (error) {
-        res.status(400).json({ success: false })
+        res.status(400).json({ success: false });
       }
-      break
-    case 'POST':
+      break;
+    case "POST":
       try {
-          const hashedPassword = await hashPassword(password)
-        const user = await User.create(
-          {email, password: hashedPassword}
-        ) /* create a new model in the database */
-        res.status(201).json({ success: true, data: user })
+        const hashedPassword = await hashPassword(password);
+        const user = await User.create({
+          email,
+          password: hashedPassword,
+        }); /* create a new model in the database */
+        res.status(201).json({ success: true, data: user });
       } catch (error) {
-        res.status(400).json({ success: false })
+        res.status(400).json({ success: false });
       }
-      break
+      break;
     default:
-      res.status(400).json({ success: false })
-      break
+      res.status(400).json({ success: false });
+      break;
   }
 }

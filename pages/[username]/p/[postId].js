@@ -16,12 +16,11 @@ import AltHeader from "@/components/navs/AltHeader";
 import { PostCard } from "@/components/post/PostCard";
 import { CommentCard } from "@/components/post/CommentCard";
 import { Textarea, Avatar } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
-import UserOptions from "@/components/navs/UserOptions";
+import { useSession, getSession } from "next-auth/react"
+import { NextPageContext } from "next"
 
-const PostPage = ({ p }) => {
+const PostPage = ({ post }) => {
   const { data: session } = useSession();
-  const post = JSON.parse(p);
   const router = useRouter();
 
   const [comments, setComments] = useState([]);
@@ -97,24 +96,21 @@ export default PostPage;
 export const getServerSideProps = async (context) => {
   const postId = context.params.postId;
 
-  await connectDb();
 
-  const post = await Post.findById(postId).populate(
-    "userId",
-    "name username image"
-  );
+  const { data } = await axios.get(`https://rnlinked.vercel.app/api/posts/${postId}`);
 
-  // const result =   await axios.get(``)
 
-  if (!post) {
-    return {
-      notFound: true,
-    };
-  }
+
+  // if (!post) {
+  //   return {
+  //     notFound: true,
+  //   };
+  // }
 
   return {
     props: {
-      p: JSON.stringify(post),
+      post: data.post,
+      session: await getSession(context),
     },
   };
 };
