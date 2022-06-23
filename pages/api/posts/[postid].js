@@ -17,9 +17,10 @@ export default async function handler(req, res) {
           "name username image"
         ); 
         res.status(200).json({ success: true, post });
-        
+
       } catch (error) {
         res.status(400).json({ success: false });
+        console.log("post error ===> ", error)
       }
       break;
     case "POST":
