@@ -13,15 +13,16 @@ export default async function handler(req, res) {
     case "GET":
       try {
         const { postId } = req.query;
+        console.log("postId ===> ", postId)
         const post = await Post.findById(postId).populate(
           "userId",
           "name username image"
-        ); 
-        res.status(200).json({ success: true, post });
-
-      } catch (error) {
-        res.status(400).json({ success: false });
+          ); 
+          res.status(200).json({ success: true, post });
+          
+        } catch (error) {
         console.log("post error ===> ", error)
+        res.status(400).json({ success: false });
       }
       break;
     case "POST":
