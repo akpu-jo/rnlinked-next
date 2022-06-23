@@ -13,6 +13,7 @@ export default async function handler(req, res) {
     case "GET":
       try {
         const { postId } = req.query;
+        console.log("req.query", req.query )
         console.log("postId ===> ", postId)
         const post = await Post.findById(postId).populate(
           "userId",
