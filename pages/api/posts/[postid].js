@@ -1,3 +1,4 @@
+import Post from "@/models/postModel";
 import User from "../../../models/userModel";
 import connectDb from "../../../utils/db";
 import { hashPassword } from "../../../utils/hashPassword";
