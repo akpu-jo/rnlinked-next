@@ -12,10 +12,10 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       try {
-        const { postId } = req.query;
+        const { postid } = req.query;
         console.log("req.query", req.query )
-        console.log("postId ===> ", postId)
-        const post = await Post.findById(postId).populate(
+        console.log("postId ===> ", postid)
+        const post = await Post.findById(postid).populate(
           "userId",
           "name username image"
           ); 
