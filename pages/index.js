@@ -14,7 +14,7 @@ import socket from "@/utils/clientSocket";
 
 export default function Home({ posts }) {
   const { data: session } = useSession();
-  console.log(session);
+  console.log("Session", session);
 
   const connectSocket = (user) => {
     let connected = false;
@@ -63,7 +63,8 @@ export default function Home({ posts }) {
 export const getServerSideProps = async (context) => {
 
 
-  const { data } = await axios.get(`https://rnlinked.vercel.app/api/posts`);
+  console.log(process.env.NEXT_PUBLIC_URL)
+  const { data } = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/posts`);
 
   return {
     props: {

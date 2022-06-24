@@ -15,10 +15,9 @@ import Post from "models/postModel";
 import AltHeader from "@/components/navs/AltHeader";
 import { PostCard } from "@/components/post/PostCard";
 
-const Comment = ({ p }) => {
+const Comment = ({ post }) => {
   const { data: session } = useSession();
   const router = useRouter();
-  const post = JSON.parse(p);
 
   const initialValue = [
     {
@@ -209,28 +208,13 @@ const Comment = ({ p }) => {
 export default Comment;
 
 export const getServerSideProps = async (context) => {
-  const id = context.params.id;
+  const id = context.params.id
 
-  await connectDb();
-
-  const post = await Post.findById(id).populate(
-    "userId",
-    "name username image"
-  );
-
-  console.log(post);
-
-  // const result =   await axios.get(``)
-
-  if (!post) {
-    return {
-      notFound: true,
-    };
-  }
+  const { data } = await axios.get(`https://rnlinked.vercel.app/api/posts/${id}`);
 
   return {
     props: {
-      p: JSON.stringify(post),
+      post: data.post,
     },
   };
 };

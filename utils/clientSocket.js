@@ -1,8 +1,7 @@
 import { io } from "socket.io-client";
 
-const URL = "https://rnlinked.herokuapp.com";
 
-const socket = io(URL)
+const socket = io(process.env.NEXT_PUBLIC_NODE_API)
 
 // export const messageReceived = () => {
     

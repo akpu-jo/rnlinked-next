@@ -29,12 +29,12 @@ const WhoToFollow = ({ user }) => {
   }, [session]);
 
   return (
-    <div className=" z-10 w-40 h-56 flex flex-col flex-wrap justify-between items-center m-2 rounded-lg bg-primary-springWood bg-opacity-50 py-4 px-5 border border-slate-200 ">
+    <div className=" z-10 w-36 h-56 flex flex-col justify-between items-center m-2 rounded-lg bg-primary-springWood bg-opacity-50 py-4 px-5 border border-slate-200 ">
       <Link href={`/${user.username}`}>
-        <a className="">
+        <a className=" flex flex-col">
           <Avatar css={{ size: "$20" }} squared src={user.image} />
-          <div className=" text-slate-800 mt-2  ">
-            <p className=" text-lg tracking-wide leading-4 font-medium capitalize">
+          <div className=" text-slate-800 mt-2 text-center w-36  ">
+            <p className=" text-lg leading-4 font-medium capitalize">
               {user.name}
             </p>
             <p className=" clip-txt-1 text-gray-500 ">@{user.username}</p>
@@ -44,7 +44,7 @@ const WhoToFollow = ({ user }) => {
 
       <button
         onClick={() => handleFollow()}
-        className=" bg-cloud-900 text-slate-600 font-medium rounded-md mr-5"
+        className=" bg-cloud-900 text-slate-600 font-medium rounded-md"
       >
         {isFollowing ? (
           <span className="flex items-center justify-center text-gray-50 bg-cloud-900 text-center p-1 rounded-md text-lg font-semibold tracking-wide ">
