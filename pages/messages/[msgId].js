@@ -231,10 +231,10 @@ const Chat = () => {
 
       <form
         onSubmit={handleSubmit}
-        className=" flex justify-between  items-end sticky bottom-0 right-0 left-0  py-3 border-t shadow-md bg-white "
+        className=" w-screen flex justify-between  items-end sticky bottom-0 right-0 left-0  py-3 border-t shadow-md bg-white "
       >
         <Textarea
-          className=" ml- flex-1 text-gray-800 w-full  overflow-y-auto bg-gry-100 p-2 py-1 rounded-sm focus:outline-none"
+          className=" ml- flex-1 text-gray-800 w- overflow-y-auto bg-gry-100 p-2 py-1 rounded-sm focus:outline-none"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           onKeyDown={(e) => handleTyping(e)}
