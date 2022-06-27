@@ -243,6 +243,7 @@ const Chat = () => {
           maxRows={3}
           fullWidth={true}
           cacheMeasurements={false}
+          size="lg"
         />
 
         <button className=" mr-2 " type="submit">
