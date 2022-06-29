@@ -69,6 +69,7 @@ export default NextAuth({
           await connectDb();
 
           let username;
+          console.log("SIgned up user ===>", user)
 
           //extract email username
           const emailUsername = user.email.split("@")[0].replace(".", "-");

@@ -25,9 +25,12 @@ export default async function handler(req, res) {
       //Uri is the raw/resized image file
       const { body, userId, uri } = req.body;
 
+      console.log('image uri ===>', uri)
+
       try {
         //Prepare Image
         if (uri) {
+          console.log('Immage msg====> image uri' )
           const base64Data = new Buffer.from(
             uri.replace(/^data:image\/\w+;base64,/, ""),
             "base64"
@@ -55,6 +58,7 @@ export default async function handler(req, res) {
             res.status(201).json({ success: true, post });
           });
         } else{
+          console.log('Immage msg====> No image uri' )
           const post = await Post.create({ body, userId });
           res.status(201).json({ success: true, post });
         }
