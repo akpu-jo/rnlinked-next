@@ -40,12 +40,12 @@ export const PostCard = ({ post, showAtions = true, clipText = true, fullW = tru
 
   return (
     <div id={post._id} className="py-2 border-b border-slate-100 ">
-      <div className=" mx-2 bg-primary-springWood bg-opacity-50 rounded-lg shadow-sm px-2 py-3">
+      <div className=" mx-2  bg-opacity-50 rounded-lg px-2 py-3">
         <article className="">
           {post.image.length > 0 && (
             <div className=" w-full">
               <Image
-                className=" object-cover rounded-2xl w-full bg-black "
+                className=" object-cover rounded-sm w-full bg-black "
                 src={post.image[0].Location}
                 alt=""
                 width={300}

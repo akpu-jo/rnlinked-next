@@ -14,11 +14,14 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet"></link>
+        <link href="https://cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet"></link>
         <Head>{CssBaseline.flush()}</Head>
         <body>
           <Main />
           <NextScript />
         </body>
+        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
       </Html>
     );
   }
