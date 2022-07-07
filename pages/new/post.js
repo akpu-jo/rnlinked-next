@@ -72,7 +72,7 @@ const NewPost = () => {
         100,
         0,
         async (uri) => {
-          console.log("uri===>", uri); 
+          // console.log("uri===>", uri); 
 
           try {
             let { data } = await axios.post(`/api/posts`, {
