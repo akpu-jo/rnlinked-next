@@ -97,8 +97,8 @@ export const getServerSideProps = async (context) => {
   const postId = context.params.postId;
 
 
-  const { data } = await axios.get(`https://rnlinked.vercel.app/api/posts/${postId}`);
-  console.log("post  ===> ", data.post)
+  const { data } = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/posts/${postId}`);
+  console.log("post  ===> ", data)
 
 
 

@@ -55,6 +55,7 @@ export default NextAuth({
       session.user.bio = user.bio
       session.user.following = user.following
       session.user.followers = user.followers
+      session.user.role = user.role
       return session;
     },
   },

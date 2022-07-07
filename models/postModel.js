@@ -15,6 +15,8 @@ const postSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+console.log(postSchema)
+
 let Post;
 try {
   Post = mongoose.model("Post");

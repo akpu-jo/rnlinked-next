@@ -186,6 +186,9 @@ li{
   border-top-left-radius: 8px;
 }
 
+.ProseMirror {
+  padding: 15px 25px;
+}
 .peng {
   animation: ping 500ms cubic-bezier(0, 0, 0.2, 1);
   animation-timing-function: ease-in-out;
@@ -205,3 +208,10 @@ li{
   }
 }
 
+.ql-toolbar {
+  background-color: gray;
+}
+
+.ql-bubble * {
+  z-index: 30;
+}
