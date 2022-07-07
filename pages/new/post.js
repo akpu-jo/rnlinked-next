@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
-import { createEditor, Node } from "slate";
-import { Slate, Editable, withReact } from "slate-react";
-import { withHistory } from "slate-history";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.bubble.css";
+
 import { ArrowNarrowLeftIcon, PhotographIcon } from "@heroicons/react/outline";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
@@ -12,27 +12,19 @@ import axios from "axios";
 import { TrashIcon } from "@heroicons/react/solid";
 import AltHeader from "@/components/navs/AltHeader";
 
+const toolbarOptions = [["bold", "italic", "underline", "strike"]];
+
 const NewPost = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const initialValue = [
-    {
-      type: "paragraph",
-      children: [{ text: "" }],
-    },
-  ];
-  const [value, setValue] = useState(initialValue);
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const [value, setValue] = useState("");
 
   const [previewImg, setPreviewImg] = useState("");
   const [imgFile, setImgFile] = useState(null);
   const [image, setImage] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const serialize = (nodes) => {
-    return nodes.map((n) => Node.string(n)).join("\n");
-  };
 
   const handleImage = (e) => {
     let file = e.target.files[0];
@@ -72,7 +64,7 @@ const NewPost = () => {
         100,
         0,
         async (uri) => {
-          // console.log("uri===>", uri); 
+          // console.log("uri===>", uri);
 
           try {
             let { data } = await axios.post(`/api/posts`, {
@@ -128,13 +120,32 @@ const NewPost = () => {
   return (
     <div className=" relative">
       <AltHeader>
-        <p className=" text-2xl tracking-wide">New Post</p>
+        <p className=" text-xl tracking-wide">New Post</p>
         <div className=" w-1/3"></div>
       </AltHeader>
-      {/* <pre>{JSON.stringify(session, null, 4)}</pre> */}
       <div className=" mx-3 pb-40">
+        {previewImg !== "" && (
+          <div className="py-4 group relative">
+            <>
+              <Image
+                className=" object-cover rounded-md w-screen bg-black "
+                src={previewImg}
+                alt=""
+                width={350}
+                height={200}
+              />
+
+              <button
+                //   onClick={handleImageRemove}
+                className="hidden group-hover:block absolute top-4 right-0 text-center rounded-sm p-2 bg-blue-50  text-red-600"
+              >
+                <TrashIcon className=" w-5 h-5 " />
+              </button>
+            </>
+          </div>
+        )}
         <form className="" onSubmit={handleSubmit}>
-          <div className="grid grid-cols-7">
+          <div className=" flex">
             {session && (
               <div>
                 <Image
@@ -146,21 +157,13 @@ const NewPost = () => {
                 />
               </div>
             )}
-            <Slate
-              editor={editor}
+            <ReactQuill
+              className=" flex-1"
+              theme="bubble"
+              placeholder="Start a post..."
               value={value}
-              onChange={(value) => {
-                setValue(value);
-
-                // console.log(serialize(value), value);
-              }}
-            >
-              <Editable
-                className="text-gray-600 ml-4 text-2xl col-span-6"
-                placeholder="Start a Post"
-                autoFocus
-              />
-            </Slate>
+              onChange={setValue}
+            />
           </div>
           <div className="py-4 group relative">
             {previewImg && (
@@ -209,14 +212,3 @@ const NewPost = () => {
 };
 
 export default NewPost;
-
-{
-  /* <textarea
-              className=" text-gray-600 border-none focus:outline-none w-full ml-4 text-2xl"
-              aria-label="Create a post"
-              autoComplete="off"
-              placeholder="Start a Post"
-              contentEditable
-              rows="10"
-            /> */
-}
