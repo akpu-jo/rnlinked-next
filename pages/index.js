@@ -5,8 +5,6 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import MobileNav from "../components/navs/MobileNav";
 import { PostCard } from "@/components/post/PostCard";
 import { Timeline } from "@/components/users/Timeline";
-import connectDb from "@/utils/db";
-import Post from "@/models/postModel";
 import Welcome from "./welcome";
 import axios from "axios";
 import { useEffect } from "react";
