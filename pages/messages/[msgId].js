@@ -242,6 +242,7 @@ const Chat = () => {
           minRows={1}
           maxRows={3}
           fullWidth={true}
+          autoFocus
           cacheMeasurements={false}
         />
 
