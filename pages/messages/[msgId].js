@@ -7,10 +7,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { io } from "socket.io-client";
 import styles from "../../styles/Message.module.css";
-import { createEditor, Editor, Transforms } from "slate";
-import { Slate, Editable, withReact } from "slate-react";
-import { withHistory } from "slate-history";
-import { serialize } from "@/utils/functions";
+
 
 import { Loading, Textarea } from "@nextui-org/react";
 import Message from "@/components/messages/Message";
