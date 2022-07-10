@@ -1,7 +1,4 @@
 import React, { useState, useMemo } from "react";
-import { createEditor, Node } from "slate";
-import { Slate, Editable, withReact } from "slate-react";
-import { withHistory } from "slate-history";
 import { ArrowNarrowLeftIcon, PhotographIcon } from "@heroicons/react/outline";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
@@ -10,8 +7,6 @@ import { toast } from "react-toastify";
 import Resizer from "react-image-file-resizer";
 import axios from "axios";
 import { TrashIcon } from "@heroicons/react/solid";
-import connectDb from "@/utils/db";
-import Post from "models/postModel";
 import AltHeader from "@/components/navs/AltHeader";
 import { PostCard } from "@/components/post/PostCard";
 
@@ -19,23 +14,15 @@ const Comment = ({ post }) => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const initialValue = [
-    {
-      type: "paragraph",
-      children: [{ text: "" }],
-    },
-  ];
-  const [value, setValue] = useState(initialValue);
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+ 
+  const [value, setValue] = useState('');
 
   const [previewImg, setPreviewImg] = useState("");
   const [imgFile, setImgFile] = useState(null);
   const [image, setImage] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const serialize = (nodes) => {
-    return nodes.map((n) => Node.string(n)).join("\n");
-  };
+
 
   const handleImage = (e) => {
     let file = e.target.files[0];
@@ -62,7 +49,7 @@ const Comment = ({ post }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const body = serialize(value);
+    const body = value
 
     if (imgFile) {
       //Resize
@@ -143,21 +130,7 @@ const Comment = ({ post }) => {
                 />
               </div>
             )}
-            <Slate
-              editor={editor}
-              value={value}
-              onChange={(value) => {
-                setValue(value);
 
-                // console.log(serialize(value), value);
-              }}
-            >
-              <Editable
-                className="text-gray-600 ml-4 text-2xl col-span-6"
-                placeholder="Type your comment"
-                autoFocus
-              />
-            </Slate>
           </div>
           <div className="py-4 group relative">
             {previewImg && (

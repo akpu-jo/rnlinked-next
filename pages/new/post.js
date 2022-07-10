@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
-import ReactQuill from "react-quill";
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.bubble.css";
 
 import { ArrowNarrowLeftIcon, PhotographIcon } from "@heroicons/react/outline";
@@ -13,6 +14,11 @@ import { TrashIcon } from "@heroicons/react/solid";
 import AltHeader from "@/components/navs/AltHeader";
 
 const toolbarOptions = [["bold", "italic", "underline", "strike"]];
+const modules = {
+  toolbar: [
+    ["bold", "italic", "underline", "strike"]
+  ]
+}
 
 const NewPost = () => {
   const { data: session } = useSession();
@@ -24,6 +30,8 @@ const NewPost = () => {
   const [imgFile, setImgFile] = useState(null);
   const [image, setImage] = useState({});
   const [loading, setLoading] = useState(false);
+
+  console.log(value)
 
 
   const handleImage = (e) => {
@@ -136,7 +144,7 @@ const NewPost = () => {
               />
 
               <button
-                //   onClick={handleImageRemove}
+                  onClick={handleImageRemove}
                 className="hidden group-hover:block absolute top-4 right-0 text-center rounded-sm p-2 bg-blue-50  text-red-600"
               >
                 <TrashIcon className=" w-5 h-5 " />
@@ -157,33 +165,14 @@ const NewPost = () => {
                 />
               </div>
             )}
-            <ReactQuill
+            {typeof window !== 'undefined' && <ReactQuill
               className=" flex-1"
               theme="bubble"
+              modules={modules}
               placeholder="Start a post..."
               value={value}
               onChange={setValue}
-            />
-          </div>
-          <div className="py-4 group relative">
-            {previewImg && (
-              <>
-                <Image
-                  className=" object-cover rounded-md w-screen bg-black "
-                  src={previewImg}
-                  alt=""
-                  width={350}
-                  height={200}
-                />
-
-                <button
-                  onClick={handleImageRemove}
-                  className="hidden group-hover:block absolute top-4 right-0 text-center rounded-sm p-2 bg-blue-50  text-red-600"
-                >
-                  <TrashIcon className=" w-5 h-5 " />
-                </button>
-              </>
-            )}
+            />}
           </div>
 
           <div className=" fixed bottom-0 left-0 right-0 mx-3 bg-white shadow-lg py-4">
