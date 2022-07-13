@@ -129,6 +129,9 @@ body{
   border-style: solid;
 }
 
+.koyqBc h1{
+  font-size: x-large;
+}
 .max-w-55{
   max-width: 75%;
 }
@@ -214,4 +217,9 @@ li{
 
 .ql-bubble * {
   z-index: 30;
+}
+
+.article-title {
+  font-size: 78px;
+  font-weight: 500;
 }
