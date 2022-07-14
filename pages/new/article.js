@@ -1,22 +1,29 @@
 import AltHeader from "@/components/navs/AltHeader";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.bubble.css";
+import "react-quill/dist/quill.snow.css";
 import { Textarea } from "@nextui-org/react";
-import { DotsVerticalIcon, PlusIcon } from "@heroicons/react/outline";
+import {
+  DotsVerticalIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@heroicons/react/outline";
 
 import TextareaAutosize from "react-textarea-autosize";
 import AddPhotoIcon from "@/components/icons/AddPhotoIcon";
+import Image from "next/image";
+import { toast } from "react-toastify";
 
 const modules = {
   toolbar: [
     [{ header: "1" }, { header: "2" }],
     // [{ size: [] }],
-    ["bold", "italic", "underline", "blockquote"],
+    ["bold", "italic", "underline"],
     [{ list: "ordered" }, { list: "bullet" }],
-    ["link", "image", "video"],
-    // ["clean"],
+    ["link", "image"],
+    ["clean"],
   ],
 };
 
@@ -58,11 +65,57 @@ const Article = () => {
       return null;
     }
   };
+  const getImageFromLS = () => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    if (localStorage.getItem("cover-image")) {
+      return JSON.parse(localStorage.getItem("cover-image"));
+    } else {
+      return null;
+    }
+  };
 
   const [content, setContent] = useState(getContentFromLS());
   const [title, setTitle] = useState(getTitleFromLS());
+  const [imgFile, setImgFile] = useState(getImageFromLS());
+  const [previewImg, setPreviewImg] = useState("");
+
+  const handleImage = (e) => {
+    let file = e.target.files[0];
+    console.log(file)
+    if (file) {
+      setPreviewImg(URL.createObjectURL(file));
+      setImgFile(file);
+      localStorage.setItem("cover-image", JSON.stringify(file));
+    } else {
+      setPreviewImg("");
+      setImgFile("");
+    }
+  };
+
+  const handleImageRemove = (e) => {
+    // e.preventDefault()
+    try {
+      // setImage({});
+      setPreviewImg("");
+      setImgFile(null);
+    } catch (err) {
+      console.log(err);
+      toast.error("Unable to remove image! Try again.");
+    }
+  };
+
+  useEffect(() => {
+    console.log(imgFile)
+    // setPreviewImg(imgFile)
+  }, [])
+  
+
   return (
-    <div className=" mx-3">
+    <div className=" relative h-screen mx-3">
+      <pre>{JSON.stringify(imgFile)}</pre>
       <AltHeader>
         <div className=" flex items-center ">
           <button className=" px-2 mx-1">
@@ -85,34 +138,53 @@ const Article = () => {
             localStorage.setItem("title", JSON.stringify(e.target.value));
           }}
         />
-        <div className="flex items-center justify-center border border-dashed py-2 bg-cloud-50 ">
-          <label className="flex items-center justify-center cursor-pointer">
-            <input
-              className="h-0 w-0 opacity-0"
-              type="file"
-              // onChange={handleChange("photo")}
-              accept="image/*"
+
+        {previewImg !== "" ? (
+          <div className="py-4 group relative">
+            <Image
+              className=" object-cover rounded-md w-screen bg-black "
+              src={previewImg}
+              alt=""
+              width={350}
+              height={200}
             />
-            <span
-              title="Upload featured Image"
-              className="text-xl font-bold cursor-pointer"
+
+            <button
+              onClick={(e) => handleImageRemove(e)}
+              className="hidden group-hover:block absolute top-4 right-0 text-center rounded-sm p-2 bg-blue-50  text-red-600"
             >
-              <AddPhotoIcon className=" w-7 h-7 text-gray-50" />
-            </span>
+              <TrashIcon className=" w-5 h-5 " />
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center border border-dashed py-2 bg-cloud-50 mb-3 ">
+            <label className="flex items-center justify-center cursor-pointer">
+              <input
+                className="h-0 w-0 opacity-0"
+                type="file"
+                onChange={handleImage}
+                accept="image/*"
+              />
+              <span
+                title="Upload featured Image"
+                className="text-xl font-bold cursor-pointer"
+              >
+                <AddPhotoIcon className=" w-7 h-7 text-gray-50" />
+              </span>
               Add a cover photo
-          </label>
-        </div>
+            </label>
+          </div>
+        )}
         <ReactQuill
-          className=" flex-1"
-          theme="bubble"
+          className=" flex-1 text-lg placeholder:text-4xl"
+          theme="snow"
           modules={modules}
           formats={formats}
           placeholder="Start a post..."
           value={content}
           onChange={(e) => {
-            console.log(e);
-            setContent;
             localStorage.setItem("content", JSON.stringify(e));
+            setContent(e);
           }}
         />
       </form>
