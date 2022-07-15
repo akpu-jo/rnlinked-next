@@ -1,5 +1,5 @@
 import AltHeader from "@/components/navs/AltHeader";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.bubble.css";
@@ -81,10 +81,11 @@ const Article = () => {
   const [title, setTitle] = useState(getTitleFromLS());
   const [imgFile, setImgFile] = useState(getImageFromLS());
   const [previewImg, setPreviewImg] = useState("");
+  const bottomRef = useRef(null);
 
   const handleImage = (e) => {
     let file = e.target.files[0];
-    console.log(file)
+    console.log(file);
     if (file) {
       setPreviewImg(URL.createObjectURL(file));
       setImgFile(file);
@@ -108,14 +109,13 @@ const Article = () => {
   };
 
   useEffect(() => {
-    console.log(imgFile)
+    console.log(imgFile);
     // setPreviewImg(imgFile)
-  }, [])
-  
+  }, []);
 
   return (
-    <div className=" relative h-screen mx-3">
-      <pre>{JSON.stringify(imgFile)}</pre>
+    <div className=" h-screen">
+      {/* <pre>{JSON.stringify(content, 4, null)}</pre> */}
       <AltHeader>
         <div className=" flex items-center ">
           <button className=" px-2 mx-1">
@@ -128,7 +128,7 @@ const Article = () => {
       </AltHeader>
       <form>
         <TextareaAutosize
-          className=" w-full text-3xl font-semibold text-slate-700 px-1 my-2"
+          className=" w-full text-3xl font-semibold text-slate-700 px-1 my-2  "
           maxRows={4}
           maxLength={150}
           placeholder="Headline"
@@ -140,24 +140,24 @@ const Article = () => {
         />
 
         {previewImg !== "" ? (
-          <div className="py-4 group relative">
+          <div className=" group relative ">
             <Image
-              className=" object-cover rounded-md w-screen bg-black "
+              className=" object-cover rounded- w- "
               src={previewImg}
               alt=""
-              width={350}
-              height={200}
+              width={400}
+              height={250}
             />
 
             <button
               onClick={(e) => handleImageRemove(e)}
-              className="hidden group-hover:block absolute top-4 right-0 text-center rounded-sm p-2 bg-blue-50  text-red-600"
+              className="hidden group-hover:block absolute top-0 right-0 text-center rounded-sm p-2 bg-blue-50  text-red-600"
             >
               <TrashIcon className=" w-5 h-5 " />
             </button>
           </div>
         ) : (
-          <div className="flex items-center justify-center border border-dashed py-2 bg-cloud-50 mb-3 ">
+          <div className="flex items-center justify-center border border-dashed py-2 bg-cloud-50 mb-3 mx-3 ">
             <label className="flex items-center justify-center cursor-pointer">
               <input
                 className="h-0 w-0 opacity-0"
@@ -176,7 +176,7 @@ const Article = () => {
           </div>
         )}
         <ReactQuill
-          className=" flex-1 text-lg placeholder:text-4xl"
+          className=" "
           theme="snow"
           modules={modules}
           formats={formats}
@@ -187,6 +187,7 @@ const Article = () => {
             setContent(e);
           }}
         />
+        <div ref={bottomRef} />
       </form>
     </div>
   );

@@ -215,10 +215,13 @@ li {
 } */
 
 .ql-toolbar.ql-snow {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  left: 0;
+  background-color: #fff;
+  z-index: 100;
+  /* position: -webkit-sticky; Safari */
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
   margin: 0px -12px;
   padding: 14px !important;
   border-top: 1px solid #ccc !important;
