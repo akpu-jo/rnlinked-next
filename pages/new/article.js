@@ -176,7 +176,7 @@ const Article = () => {
           </div>
         )}
         <ReactQuill
-          className=" "
+          className=""
           theme="snow"
           modules={modules}
           formats={formats}

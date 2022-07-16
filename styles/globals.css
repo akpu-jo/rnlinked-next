@@ -215,9 +215,10 @@ li {
 } */
 
 .ql-toolbar.ql-snow {
+  white-space: nowrap;
+  display: flex;
   background-color: #fff;
   z-index: 100;
-  /* position: -webkit-sticky; Safari */
   position: fixed;
   bottom: 0px;
   right: 0px;
@@ -225,7 +226,10 @@ li {
   margin: 0px -12px;
   padding: 14px !important;
   border-top: 1px solid #ccc !important;
-  /* border: 0px !important; */
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .ql-snow .ql-picker.ql-expanded .ql-picker-options {
