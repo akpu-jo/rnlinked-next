@@ -232,6 +232,11 @@ li {
   align-items: center;
 }
 
+.ql-toolbar.ql-snow .ql-formats {
+  margin-right: 10px;
+  white-space: nowrap;
+}
+
 .ql-snow .ql-picker.ql-expanded .ql-picker-options {
   bottom: 100% !important;
   top: 0.1 !important;
