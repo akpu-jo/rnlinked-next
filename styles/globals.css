@@ -233,8 +233,13 @@ li {
 }
 
 .ql-toolbar.ql-snow .ql-formats {
-  margin-right: 10px;
+  margin-right: 10px !important;
   white-space: nowrap;
+  display: flex;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .ql-snow .ql-picker.ql-expanded .ql-picker-options {
