@@ -114,7 +114,7 @@ const Article = () => {
   }, []);
 
   return (
-    <div className=" h-screen">
+    <div className=" flex flex-col h-screen">
       {/* <pre>{JSON.stringify(content, 4, null)}</pre> */}
       <AltHeader>
         <div className=" flex items-center ">
@@ -126,7 +126,7 @@ const Article = () => {
           </button>
         </div>
       </AltHeader>
-      <form>
+      <form className=" flex-1">
         <TextareaAutosize
           className=" w-full text-3xl font-semibold text-slate-700 px-1 my-2  "
           maxRows={4}
@@ -185,6 +185,7 @@ const Article = () => {
           onChange={(e) => {
             localStorage.setItem("content", JSON.stringify(e));
             setContent(e);
+            bottomRef.current?.scrollIntoView();
           }}
         />
         <div ref={bottomRef} />

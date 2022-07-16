@@ -238,6 +238,7 @@ li {
 }
 
 .ql-editor {
+  padding: 12px 10px 100px 10px !important;
   font-size: large;
   --tw-text-opacity: 1;
   color: rgb(100 116 139 / var(--tw-text-opacity));
