@@ -3,7 +3,7 @@ import validator from "validator";
 
 const { ObjectId } = mongoose.Schema;
 
-const userSchema = new mongoose.Schema(
+const tagSchema = new mongoose.Schema(
   {
     
     name: {
@@ -25,27 +25,11 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-let Topic;
+let Tag;
 try {
-  Topic = mongoose.model("Topic");
+  Tag = mongoose.model("Tag");
 } catch (error) {
-  Topic = mongoose.model("Topic", TopicSchema);
+  Tag = mongoose.model("Tag", tagSchema);
 }
-
-export default Topic;
-
-
-
-import mongoose from "mongoose";
-
-const tagSchema = new mongoose.Schema(
-  {
-    
-    
-  },
-  { timestamp: true }
-);
-
-const Tag = mongoose.model("Tag", tagSchema);
 
 export default Tag;

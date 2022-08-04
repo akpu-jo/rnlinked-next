@@ -8,17 +8,15 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import Resizer from "react-image-file-resizer";
 import axios from "axios";
 import { TrashIcon } from "@heroicons/react/solid";
 import AltHeader from "@/components/navs/AltHeader";
+import { Avatar } from "@nextui-org/react";
+import { resizeImage } from "@/utils/functions";
 
-const toolbarOptions = [["bold", "italic", "underline", "strike"]];
 const modules = {
-  toolbar: [
-    ["bold", "italic", "underline", "strike"]
-  ]
-}
+  toolbar: [["bold", "italic", "underline", "strike"]],
+};
 
 const NewPost = () => {
   const { data: session } = useSession();
@@ -31,14 +29,15 @@ const NewPost = () => {
   const [image, setImage] = useState({});
   const [loading, setLoading] = useState(false);
 
-  console.log(value)
 
-
-  const handleImage = (e) => {
+  const handleImage = async (e) => {
     let file = e.target.files[0];
     if (file) {
       setPreviewImg(URL.createObjectURL(file));
-      setImgFile(file);
+      const img = await resizeImage(e.target.files[0]);
+      console.log("Image Based64==>", img);
+
+      setImgFile(img);
     } else {
       setPreviewImg("");
       setImgFile(null);
@@ -59,70 +58,33 @@ const NewPost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const body = serialize(value);
-
-    if (imgFile) {
-      //Resize
-
-      Resizer.imageFileResizer(
-        imgFile,
-        720,
-        500,
-        "JPEG",
-        100,
-        0,
-        async (uri) => {
-          // console.log("uri===>", uri);
-
-          try {
-            let { data } = await axios.post(`/api/posts`, {
-              uri,
-              body,
-              userId: session.user.id,
-            });
-
-            console.log("Data===>", data);
-            setValue([]);
-            setPreviewImg("");
-            setImgFile(null);
-            setImage({});
-            router.back();
-
-            //set img in the state
-            // setImage(data);
-          } catch (error) {
-            console.log(error);
-            toast.error("Post Upload Failed");
-          }
-        },
-        "base64"
-      );
-    } else {
-      try {
+    try {
+      axios.post(`${process.env.NEXT_PUBLIC_NODE_API}/api/n/articles/upload-image`,
+      { img: imgFile }).then(async (response) => {
+        console.log('IMG response===>', response)
         let { data } = await axios.post(`/api/posts`, {
-          body,
+          image: response.data.image,
+          body: value,
           userId: session.user.id,
         });
-
+  
         console.log("Data===>", data);
         setValue([]);
         setPreviewImg("");
         setImgFile(null);
         setImage({});
         router.back();
+      })
+      
+  
 
-        //set img in the state
-        // setImage(data);
-      } catch (error) {
-        console.log(error);
-        toast.error("Post Upload Failed");
-      }
+      //set img in the state
+      // setImage(data);
+    } catch (error) {
+      console.log(error);
+      toast.error("Post Upload Failed");
     }
-    // console.log("ImageUploaded===>", image)
-    // let { data } = await axios.post(`/api/posts`, {
-    //   image, body, userId: session.user.id
-    // });
-    // console.log(data)
+
   };
 
   return (
@@ -144,7 +106,7 @@ const NewPost = () => {
               />
 
               <button
-                  onClick={handleImageRemove}
+                onClick={handleImageRemove}
                 className="hidden group-hover:block absolute top-4 right-0 text-center rounded-sm p-2 bg-blue-50  text-red-600"
               >
                 <TrashIcon className=" w-5 h-5 " />
@@ -156,23 +118,24 @@ const NewPost = () => {
           <div className=" flex">
             {session && (
               <div>
-                <Image
+                <Avatar squared src={session.user.image} />
+                {/* <Image
                   className=" rounded-full"
                   src={session.user.image}
                   alt="Picture of the logo"
                   width={50}
                   height={50}
-                />
+                /> */}
               </div>
             )}
-            {typeof window !== 'undefined' && <ReactQuill
+            <ReactQuill
               className=" flex-1"
               theme="bubble"
               modules={modules}
               placeholder="Start a post..."
               value={value}
               onChange={setValue}
-            />}
+            />
           </div>
 
           <div className=" fixed bottom-0 left-0 right-0 mx-3 bg-white shadow-lg py-4">

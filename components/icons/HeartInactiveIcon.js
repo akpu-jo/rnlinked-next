@@ -1,11 +1,11 @@
 import React from 'react'
 
-const HeartInactiveIcon = ({ liked, animateLike }) => {
+const HeartInactiveIcon = ({ liked, animateLike, size='h-5 w-5' }) => {
     return (
         <div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className={`${animateLike && "peng"} " h-5 w-5"`}
+            className={`${animateLike && "peng"} ${size}`}
             fill={`${liked ? "currentColor" : "none"}`}
             viewBox="0 0 24 24"
             stroke="currentColor"

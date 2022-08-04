@@ -1,3 +1,4 @@
+import Article from "@/models/articleModel";
 import Post from "@/models/postModel";
 import User from "../../../models/userModel";
 import connectDb from "../../../utils/db";
@@ -12,14 +13,14 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       try {
-        const { postid } = req.query;
+        const { slug } = req.query;
         console.log("req.query", req.query);
-        console.log("postId ===> ", postid);
-        const post = await Post.findById(postid).populate(
-          "userId",
-          "name username image"
+        console.log("Slug ===> ", slug);
+        const article = await Article.findOne({slug}).populate(
+          "author",
+          "name username image followers bio"
         );
-        res.status(200).json({ success: true, post });
+        res.status(200).json({ success: true, article });
       } catch (error) {
         console.log("post error ===> ", error);
         res.status(400).json({ success: false });

@@ -1,7 +1,5 @@
 import Comment from "@/models/commentModel";
 import connectDb from "@/utils/db";
-import Post from "models/postModel";
-
 
 
 export default async function handler(req, res) {
@@ -13,10 +11,10 @@ export default async function handler(req, res) {
   switch (method) {
     case 'GET':
       try {
-        const post = await Pet.find({}) /* find all the data in our database */
-        res.status(200).json({ success: true, data: pets })
+        res.status(200).json({ message: `Nothing to ${method}` });
       } catch (error) {
-        res.status(400).json({ success: false })
+        console.log("Like Err0r====>", error);
+        res.status(400).json({ error });
       }
       break
     case 'POST':

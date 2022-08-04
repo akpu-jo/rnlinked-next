@@ -1,5 +1,6 @@
 import { handleFollowing } from "@/utils/users";
 import { CheckIcon, PlusIcon } from "@heroicons/react/outline";
+import { Avatar } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -30,13 +31,12 @@ const UserCard = ({ user, showBio = false }) => {
         <Link href={`/${user.username}`}>
           <a className=" flex justify-start items-center">
             {user !== undefined && (
-              <Image
-                className=" rounded-xl"
-                src={user.image}
-                alt="Picture of the logo"
-                width={30}
-                height={30}
-              />
+              <Avatar
+              zoomed
+              squared
+              size="lg"
+              src={user.image}
+            />
             )}
             <div className=" ml-3">
               <p className=" text-md text-slate-700 font-medium capitalize">
@@ -65,8 +65,7 @@ const UserCard = ({ user, showBio = false }) => {
         </button>}
       </div>
       {showBio && <p className=" pt-2 py-1 text-slate-800 clip-txt-2 text-ellipsis overflow-hidden ">
-        Danielle Newnham Host of Danielle Newnham Podcast — interviews with tech
-        founders and innovators. Writer. Author. Recovering Founder.
+        {user.bio}
       </p>}
     </div>
   );

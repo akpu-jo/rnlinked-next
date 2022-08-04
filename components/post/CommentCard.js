@@ -13,6 +13,8 @@ import axios from "axios";
 import { Avatar, Textarea, Image } from "@nextui-org/react";
 import { timeDifference } from "@/utils/timeStamp";
 import HeartInactiveIcon from "../icons/HeartInactiveIcon";
+import parse from "html-react-parser";
+
 
 export const CommentCard = ({ comment }) => {
   const router = useRouter();
@@ -27,7 +29,7 @@ export const CommentCard = ({ comment }) => {
 
   const handleLike = async (id) => {
     const { likes } = comment;
-    const { data } = await axios.post(`/api/posts/comments/like`, {
+    const { data } = await axios.post(`/api/comments/like`, {
       userId: session.user.id,
       commentId: id,
     });
@@ -57,9 +59,9 @@ export const CommentCard = ({ comment }) => {
             />
           </div>
         )}
-        <p className=" text-lg tracking-wide text-slate-700 font-medium leading-normal py-2 overflow-hidden text-ellipsis">
-          {comment.body}
-        </p>
+          <p className=" pt-2 py-1 text-slate-800 text-ellipsis overflow-hidden ">
+        {parse(comment.body)}
+      </p>
       </article>
       <div className=" flex justify-between items-center">
         <Link href={`/${comment.userId.username}`}>

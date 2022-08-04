@@ -1,7 +1,5 @@
 import Header from "@/components/navs/Header";
-import connectDb from "@/utils/db";
 import axios from "axios";
-import Post from "models/postModel";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -11,12 +9,11 @@ import {
   HeartIcon,
   PaperAirplaneIcon,
 } from "@heroicons/react/outline";
-import moment from "moment";
 import AltHeader from "@/components/navs/AltHeader";
 import { PostCard } from "@/components/post/PostCard";
 import { CommentCard } from "@/components/post/CommentCard";
 import { Textarea, Avatar } from "@nextui-org/react";
-import { useSession, getSession } from "next-auth/react"
+import { useSession, getSession } from "next-auth/react";
 
 const PostPage = ({ post }) => {
   const { data: session } = useSession();
@@ -26,14 +23,14 @@ const PostPage = ({ post }) => {
   const [body, setBody] = useState("");
 
   const loadComments = async () => {
-    const { data } = await axios.get(`/api/posts/comments?postId=${post._id}`);
+    const { data } = await axios.get(`/api/comments?postId=${post._id}`);
     console.log(data);
     setComments(data.comments);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data } = await axios.post(`/api/posts/comments`, {
+    const { data } = await axios.post(`/api/comments`, {
       body,
       userId: session.user.id,
       postId: post._id,
@@ -76,10 +73,12 @@ const PostPage = ({ post }) => {
           onChange={(e) => setBody(e.target.value)}
           aria-label="Type you message"
           minRows={1}
-          maxRows={3}
+          maxRows={4}
+          size="xl"
+          shadow={false}
           fullWidth={true}
           cacheMeasurements={false}
-          placeholder="Type your comment.."
+          placeholder="Share your thoughts..."
         />
 
         <button className="mr-2 " type="submit">
@@ -93,14 +92,13 @@ const PostPage = ({ post }) => {
 export default PostPage;
 
 export const getServerSideProps = async (context) => {
-  console.log(context.params)
+  console.log(context.params);
   const postId = context.params.postId;
 
-
-  const { data } = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/posts/${postId}`);
-  console.log("post  ===> ", data)
-
-
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_URL}/api/posts/${postId}`
+  );
+  console.log("post  ===> ", data);
 
   // if (!post) {
   //   return {

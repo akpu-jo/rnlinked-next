@@ -4,7 +4,9 @@ import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.bubble.css";
 import "react-quill/dist/quill.snow.css";
-import { Textarea } from "@nextui-org/react";
+import Resizer from "react-image-file-resizer";
+
+import { Loading, Textarea } from "@nextui-org/react";
 import {
   DotsVerticalIcon,
   PlusIcon,
@@ -15,6 +17,10 @@ import TextareaAutosize from "react-textarea-autosize";
 import AddPhotoIcon from "@/components/icons/AddPhotoIcon";
 import Image from "next/image";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { resizeImage } from "@/utils/functions";
 
 const modules = {
   toolbar: [
@@ -42,6 +48,9 @@ const formats = [
 ];
 
 const Article = () => {
+  const { data: session } = useSession();
+  const router = useRouter();
+
   const getContentFromLS = () => {
     if (typeof window === "undefined") {
       return false;
@@ -79,49 +88,94 @@ const Article = () => {
 
   const [content, setContent] = useState(getContentFromLS());
   const [title, setTitle] = useState(getTitleFromLS());
-  const [imgFile, setImgFile] = useState(getImageFromLS());
-  const [previewImg, setPreviewImg] = useState("");
+  const [image, setImage] = useState(null);
+  const [imageUploading, setImageUploading] = useState(false);
+
   const bottomRef = useRef(null);
 
-  const handleImage = (e) => {
-    let file = e.target.files[0];
-    console.log(file);
-    if (file) {
-      setPreviewImg(URL.createObjectURL(file));
-      setImgFile(file);
-      localStorage.setItem("cover-image", JSON.stringify(file));
-    } else {
-      setPreviewImg("");
-      setImgFile("");
+  // const resizeImage = (file) => {
+  //   //Resize
+  //   return new Promise((resolve) => {
+  //     Resizer.imageFileResizer(
+  //       file,
+  //       720,
+  //       500,
+  //       "JPEG",
+  //       100,
+  //       0,
+  //       (uri) => {
+  //         // console.log("uri===>", uri);
+  //         resolve(uri);
+  //       },
+  //       "base64"
+  //     );
+  //   });
+  // };
+
+  const uploadImage = async (e) => {
+    setImageUploading(true);
+    try {
+      const img = await resizeImage(e.target.files[0]);
+      console.log("Image Based64==>", img);
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_NODE_API}/api/n/articles/upload-image`,
+        { img }
+      );
+      console.log("Uploaded image response===>", data);
+      setImage(data.image);
+    } catch (error) {
+      console.log(error);
     }
+    setImageUploading(false);
   };
 
-  const handleImageRemove = (e) => {
-    // e.preventDefault()
+  const deleteImage = async (e) => {
+    e.preventDefault();
     try {
-      // setImage({});
-      setPreviewImg("");
-      setImgFile(null);
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_NODE_API}/api/n/articles/remove-image`,
+        { publicId: image.publicId }
+      );
+
+      console.log("deleted image response===>", data);
+      data.result === "ok" && setImage(null);
     } catch (err) {
       console.log(err);
       toast.error("Unable to remove image! Try again.");
     }
   };
 
-  useEffect(() => {
-    console.log(imgFile);
-    // setPreviewImg(imgFile)
-  }, []);
+  const publish = async () => {
+    try {
+      const { data } = await axios.post(`/api/articles`, {
+        title,
+        body: content,
+        image,
+        author: session.user.id,
+      });
+
+      console.log(data);
+      setContent('')
+      setTitle('')
+      localStorage.setItem("title", '');
+      setImage(null)
+      router.push(`/${session.user.username}/${data.article.slug}`)
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className=" flex flex-col h-screen">
-      {/* <pre>{JSON.stringify(content, 4, null)}</pre> */}
       <AltHeader>
         <div className=" flex items-center ">
           <button className=" px-2 mx-1">
             <DotsVerticalIcon className=" w-5 h-5" />
           </button>
-          <button className=" text-xl tracking-wide bg-cloud-600 px-2 py-1 rounded-md text-slate-200">
+          <button
+            onClick={publish}
+            className=" text-xl tracking-wide bg-cloud-900 px-2 py-1 rounded-md text-slate-200"
+          >
             Publish
           </button>
         </div>
@@ -139,18 +193,18 @@ const Article = () => {
           }}
         />
 
-        {previewImg !== "" ? (
+        {image !== null ? (
           <div className=" group relative ">
             <Image
               className=" object-cover rounded- w- "
-              src={previewImg}
+              src={image.url}
               alt=""
               width={400}
               height={250}
             />
 
             <button
-              onClick={(e) => handleImageRemove(e)}
+              onClick={(e) => deleteImage(e)}
               className="hidden group-hover:block absolute top-0 right-0 text-center rounded-sm p-2 bg-blue-50  text-red-600"
             >
               <TrashIcon className=" w-5 h-5 " />
@@ -158,21 +212,27 @@ const Article = () => {
           </div>
         ) : (
           <div className="flex items-center justify-center border border-dashed py-2 bg-cloud-50 mb-3 mx-3 ">
-            <label className="flex items-center justify-center cursor-pointer">
-              <input
-                className="h-0 w-0 opacity-0"
-                type="file"
-                onChange={handleImage}
-                accept="image/*"
-              />
-              <span
-                title="Upload featured Image"
-                className="text-xl font-bold cursor-pointer"
-              >
-                <AddPhotoIcon className=" w-7 h-7 text-gray-50" />
-              </span>
-              Add a cover photo
-            </label>
+            {imageUploading ? (
+              <div>
+                <Loading type="points-opacity" />
+              </div>
+            ) : (
+              <label className="flex items-center justify-center cursor-pointer">
+                <input
+                  className="h-0 w-0 opacity-0"
+                  type="file"
+                  onChange={uploadImage}
+                  accept="image/*"
+                />
+                <span
+                  title="Upload featured Image"
+                  className="text-xl font-bold cursor-pointer"
+                >
+                  <AddPhotoIcon className=" w-7 h-7 text-gray-50" />
+                </span>
+                Add a cover photo
+              </label>
+            )}
           </div>
         )}
         <ReactQuill

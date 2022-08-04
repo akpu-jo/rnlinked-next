@@ -1,5 +1,4 @@
 import { ChatIcon, HeartIcon } from "@heroicons/react/outline";
-import moment from "moment";
 // import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
@@ -9,6 +8,8 @@ import axios from "axios";
 import { timeDifference } from "@/utils/timeStamp";
 import { Avatar, Image } from "@nextui-org/react";
 import HeartInactiveIcon from "../icons/HeartInactiveIcon";
+import parse from 'html-react-parser';
+
 
 export const PostCard = ({ post, showAtions = true, clipText = true, fullW = true }) => {
   const router = useRouter();
@@ -45,8 +46,8 @@ export const PostCard = ({ post, showAtions = true, clipText = true, fullW = tru
           {post.image.length > 0 && (
             <div className=" w-full">
               <Image
-                className=" object-cover rounded-sm w-full bg-black "
-                src={post.image[0].Location}
+                className=" object-cover rounded-sm w-full bg-gray-300 "
+                src={post.image[0].url}
                 alt=""
                 width={300}
                 height={200}
@@ -64,7 +65,7 @@ export const PostCard = ({ post, showAtions = true, clipText = true, fullW = tru
               clipText && "clip-txt"
             } ${fullW && 'w-80'} text-lg font- leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-800  `}
           >
-            {post.body}
+            {parse(post.body)}
           </p>
         </article>
         {session && showAtions && (
