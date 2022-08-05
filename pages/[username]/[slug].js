@@ -138,13 +138,8 @@ const ArticlePage = ({ article }) => {
             }}
             className=" flex items-center p-2  text-lg text-gray-500 "
           >
-            <Link href={`/${article.author.username}/${article.slug}`} as={`/${article.author.username}/${article.slug}/comments`}>
-            <a>
-
             <ChatIcon className=" w-7 h-7" />
             <p className="">{comments.length || ""}</p>
-            </a>
-            </Link>
           </li>
         </ul>
         <Avatar
@@ -186,7 +181,7 @@ const ArticlePage = ({ article }) => {
                   comments.map((comment, i) => (
                     <ArticleComments comment={comment} key={i} />
                   ))}
-              </div>
+              </div> 
             )}
           </Modal.Body>
           <Modal.Footer

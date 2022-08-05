@@ -36,19 +36,19 @@ const ArticleComments = ({ comment }) => {
   }, [session]);
 
   return (
-    <div className=" text-slate-600 border-b py-2 mb-2 ">
-      <section className=" flex py-1 items-center bg-primary-springWoo bg-opacity-90 rounded-lg">
+    <div className=" border-b py-2 mb-2 ">
+      <section className=" flex py-2 items-start bg-primary-springWoo bg-opacity-90 rounded-lg">
         <Avatar zoomed squared size="md" src={comment.userId.image} />
         <div className=" px-3">
-          <p className=" font-medium tracking-wide leading-5 text-md">
+          <p className=" tracking-wide leading-5 text-sm text-slate-800">
             {comment.userId.name}
           </p>
-          <p className=" font-semibold text-gray-400">
+          <p className=" text-slate-700 text-sm">
             @{comment.userId.username}
           </p>
         </div>
       </section>
-      <p className=" pt-2 py-1 text-slate-800 text-ellipsis overflow-hidden ">
+      <p className=" pt-2 text-slate-800 text-ellipsis overflow-hidden ">
         {parse(comment.body)}
       </p>
       <div className=" flex items-center justify-end">
@@ -68,14 +68,13 @@ const ArticleComments = ({ comment }) => {
             <HeartInactiveIcon
               animateLike={animateLike}
               liked={liked}
-              size="h-6 w-6"
             />
             <span
               className={`${commentLikes.length && "ml-2"} ${
                 animateLike && ""
-              }`}
+              } text-slate-500 tracking-wide `}
             >
-              {commentLikes.length || ""}
+              {commentLikes.length > 0 ? `${commentLikes.length} Liked` : ""}
             </span>
           </span>
         </div>

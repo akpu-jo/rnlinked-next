@@ -14,6 +14,8 @@ import { PostCard } from "@/components/post/PostCard";
 import { CommentCard } from "@/components/post/CommentCard";
 import { Textarea, Avatar } from "@nextui-org/react";
 import { useSession, getSession } from "next-auth/react";
+import PostPageTemplate from "@/components/post/PostPageTemplate";
+
 
 const PostPage = ({ post }) => {
   const { data: session } = useSession();
@@ -54,37 +56,7 @@ const PostPage = ({ post }) => {
           </a>
         </Link>{" "}
       </AltHeader>
-      <main className=" flex-1">
-        <PostCard post={post} clipText={false} />
-        <div className=" mx-3">
-          {comments.length > 0 &&
-            comments.map((comment, i) => (
-              <CommentCard comment={comment} key={i} />
-            ))}
-        </div>
-      </main>
-      <form
-        onSubmit={handleSubmit}
-        className=" z-50 flex justify-between  items-end sticky bottom-0 right-0 left-0  py-3 border-t shadow-md bg-white "
-      >
-        <Textarea
-          className=" ml- flex-1 text-gray-800 w-full  overflow-y-auto bg-gry-100 p-2 py-1 rounded-sm focus:outline-none"
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-          aria-label="Type you message"
-          minRows={1}
-          maxRows={4}
-          size="xl"
-          shadow={false}
-          fullWidth={true}
-          cacheMeasurements={false}
-          placeholder="Share your thoughts..."
-        />
-
-        <button className="mr-2 " type="submit">
-          <PaperAirplaneIcon className=" text-cloud-900 rounded-md w-8 h-8 rotate-90 items-center " />
-        </button>
-      </form>
+      <PostPageTemplate post={post} />
     </div>
   );
 };
@@ -101,7 +73,7 @@ export const getServerSideProps = async (context) => {
   console.log("post  ===> ", data);
 
   // if (!post) {
-  //   return {
+  //   return { 
   //     notFound: true,
   //   };
   // }

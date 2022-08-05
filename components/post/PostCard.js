@@ -1,4 +1,4 @@
-import { ChatIcon, HeartIcon } from "@heroicons/react/outline";
+import { ChatIcon, HeartIcon, XIcon } from "@heroicons/react/outline";
 // import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
@@ -6,19 +6,27 @@ import { useRouter } from "next/router";
 import { useSession, signIn, signOut } from "next-auth/react";
 import axios from "axios";
 import { timeDifference } from "@/utils/timeStamp";
-import { Avatar, Image } from "@nextui-org/react";
+import { Avatar, Button, Image, Modal, Text, useModal } from "@nextui-org/react";
 import HeartInactiveIcon from "../icons/HeartInactiveIcon";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
+import AltHeader from "../navs/AltHeader";
+import PostPageTemplate from "./PostPageTemplate";
 
-
-export const PostCard = ({ post, showAtions = true, clipText = true, fullW = true }) => {
+export const PostCard = ({
+  post,
+  showAtions = true,
+  clipText = true,
+  fullW = true,
+}) => {
   const router = useRouter();
   const { data: session } = useSession();
+
   const [liked, setLiked] = useState(
     post.likes.includes(session && session.user.id)
   );
   const [animateLike, setAnimateLike] = useState(false);
   const [postLikes, setPostLikes] = useState(post.likes);
+  const { setVisible, bindings } = useModal();
 
   const timestamp = timeDifference(Date.now(), new Date(post.createdAt));
 
@@ -39,6 +47,14 @@ export const PostCard = ({ post, showAtions = true, clipText = true, fullW = tru
     setLiked(post.likes.includes(session && session.user.id));
   }, [session]);
 
+  const queryBuilder = () => {
+    const currentQuery = router.query; //target
+    const postQ = { ...currentQuery, postId: post._id };
+
+    // console.log(postQ);
+    return postQ;
+  };
+
   return (
     <div id={post._id} className="py-2 border-b border-slate-100 ">
       <div className=" mx-2  bg-opacity-50 rounded-lg px-2 py-3">
@@ -56,26 +72,63 @@ export const PostCard = ({ post, showAtions = true, clipText = true, fullW = tru
               />
             </div>
           )}
-          <p
-            onClick={() =>
-              router.push(`/${post.userId.username}/p/${post._id}`)
-            }
-            id="test"
-            className={`${
-              clipText && "clip-txt"
-            } ${fullW && 'w-80'} text-lg font- leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-800  `}
+
+          <div onClick={() => setVisible(true)}>
+          <Link
+            href={{
+              pathname: router.pathname,
+              query: queryBuilder(),
+            }}
+            as={`/${post.userId.username}/p/${post._id}`}
+            scroll={false}
           >
-            {parse(post.body)}
-          </p>
+            <a
+              className={`${clipText && "clip-txt"} ${
+                fullW && "w-80"
+              } text-lg font- leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-800 `}
+            >
+              {parse(post.body)}
+            </a>
+          </Link>
+          </div>
+          <Modal
+        scroll
+        fullScreen
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+        {...bindings}
+      >
+         <Modal.Header className=" flex justify-between">
+            <button
+              className=" text-slate-500 rounded-md p-1 bg-slate-100 mr-3 "
+              onClick={() => {
+                // router.back()
+                setVisible(false)}}
+            >
+              <XIcon className=" w-6 h-6" />
+            </button>
+
+            <h2 className=" text-xl text-slate-800 font-medium">
+              Post 
+            </h2>
+            <div className=" w-1/3" />
+          </Modal.Header>
+        <Modal.Body>
+          <PostPageTemplate post={post} />
+        
+        </Modal.Body>
+      </Modal>
         </article>
         {session && showAtions && (
           <div className=" flex justify-between items-center z-10">
             <div className={` flex items-center `}>
               <Link href={`/${post.userId.username}`}>
                 <a className=" flex justify-start items-center z-10">
-                  <Avatar src={post.userId.image} squared size='sm' zoomed />
+                  <Avatar src={post.userId.image} squared size="sm" zoomed />
                   <div className=" ml-2">
-                    <p className=" tracking-normal text-slate-500 capitalize">{post.userId.name}</p>
+                    <p className=" tracking-normal text-slate-500 capitalize">
+                      {post.userId.name}
+                    </p>
                     {/* <p className=" font-semibold text-gray-400 text-sm">
                       @{post.userId.username}
                     </p> */}
