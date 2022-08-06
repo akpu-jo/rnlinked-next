@@ -26,7 +26,7 @@ const NewPost = () => {
 
   const [previewImg, setPreviewImg] = useState("");
   const [imgFile, setImgFile] = useState(null);
-  const [image, setImage] = useState([]);
+  // const [image, setImage] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleImage = async (e) => {
@@ -54,18 +54,22 @@ const NewPost = () => {
     }
   };
 
-  const createPost = async () => {
-    let { data } = await axios.post(`/api/posts`, {
-      image,
-      body: value,
-      userId: session.user.id,
-    });
+  const createPost = async (image=[]) => {
+    console.log(image)
+   
+      let { data } = await axios.post(`/api/posts`, {
+        image,
+        body: value,
+        userId: session.user.id,
+      });
 
-    console.log("Data===>", data);
+      console.log("Data===>", data);
+  
+
     setValue([]);
     setPreviewImg("");
     setImgFile(null);
-    setImage({});
+    // setImage({});
     router.back();
   };
 
@@ -73,7 +77,7 @@ const NewPost = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      if(imgFile !== null){
+      if (imgFile !== null) {
         axios
           .post(
             `${process.env.NEXT_PUBLIC_NODE_API}/api/n/articles/upload-image`,
@@ -81,11 +85,11 @@ const NewPost = () => {
           )
           .then(async (response) => {
             console.log("IMG response===>", response);
-            setImage(response.data.image)
-            createPost()
+            // setImage(response.data.image)
+            createPost(response.data.image);
           });
-      }else{
-        createPost()
+      } else {
+        createPost();
       }
 
       //set img in the state
