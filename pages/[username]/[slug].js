@@ -176,7 +176,7 @@ const ArticlePage = ({ article }) => {
                 </p>
               </div>
             ) : (
-              <div>
+              <div className=" h-full">
                 {comments.length > 0 &&
                   comments.map((comment, i) => (
                     <ArticleComments comment={comment} key={i} />

@@ -75,7 +75,7 @@ const PostPageTemplate = ({ post, makeFocus=false }) => {
   }, [makeFocus]);
 
   return (
-    <div className=" flex flex-col h-screen  ">
+    <div className=" flex flex-col h-full ">
       <main className=" flex-1">
         <section className=" flex mb-1 items-center mx-3 bg-opacity-90 rounded-lg ">
           <Link href={`/${post.userId.username}`}>
