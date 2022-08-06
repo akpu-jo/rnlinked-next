@@ -26,9 +26,8 @@ const NewPost = () => {
 
   const [previewImg, setPreviewImg] = useState("");
   const [imgFile, setImgFile] = useState(null);
-  const [image, setImage] = useState({});
+  const [image, setImage] = useState([]);
   const [loading, setLoading] = useState(false);
-
 
   const handleImage = async (e) => {
     let file = e.target.files[0];
@@ -55,28 +54,39 @@ const NewPost = () => {
     }
   };
 
+  const createPost = async () => {
+    let { data } = await axios.post(`/api/posts`, {
+      image,
+      body: value,
+      userId: session.user.id,
+    });
+
+    console.log("Data===>", data);
+    setValue([]);
+    setPreviewImg("");
+    setImgFile(null);
+    setImage({});
+    router.back();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      axios.post(`${process.env.NEXT_PUBLIC_NODE_API}/api/n/articles/upload-image`,
-      { img: imgFile }).then(async (response) => {
-        console.log('IMG response===>', response)
-        let { data } = await axios.post(`/api/posts`, {
-          image: response.data.image,
-          body: value,
-          userId: session.user.id,
-        });
-  
-        console.log("Data===>", data);
-        setValue([]);
-        setPreviewImg("");
-        setImgFile(null);
-        setImage({});
-        router.back();
-      })
-      
-  
+      if(imgFile !== null){
+        axios
+          .post(
+            `${process.env.NEXT_PUBLIC_NODE_API}/api/n/articles/upload-image`,
+            { img: imgFile }
+          )
+          .then(async (response) => {
+            console.log("IMG response===>", response);
+            setImage(response.data.image)
+            createPost()
+          });
+      }else{
+        createPost()
+      }
 
       //set img in the state
       // setImage(data);
@@ -84,7 +94,6 @@ const NewPost = () => {
       console.log(error);
       toast.error("Post Upload Failed");
     }
-
   };
 
   return (

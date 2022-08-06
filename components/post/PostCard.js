@@ -6,7 +6,14 @@ import { useRouter } from "next/router";
 import { useSession, signIn, signOut } from "next-auth/react";
 import axios from "axios";
 import { timeDifference } from "@/utils/timeStamp";
-import { Avatar, Button, Image, Modal, Text, useModal } from "@nextui-org/react";
+import {
+  Avatar,
+  Button,
+  Image,
+  Modal,
+  Text,
+  useModal,
+} from "@nextui-org/react";
 import HeartInactiveIcon from "../icons/HeartInactiveIcon";
 import parse from "html-react-parser";
 import AltHeader from "../navs/AltHeader";
@@ -27,6 +34,7 @@ export const PostCard = ({
   const [animateLike, setAnimateLike] = useState(false);
   const [postLikes, setPostLikes] = useState(post.likes);
   const { setVisible, bindings } = useModal();
+  const [makeFocus, setMakeFocus] = useState(false)
 
   const timestamp = timeDifference(Date.now(), new Date(post.createdAt));
 
@@ -74,50 +82,49 @@ export const PostCard = ({
           )}
 
           <div onClick={() => setVisible(true)}>
-          <Link
-            href={{
-              pathname: router.pathname,
-              query: queryBuilder(),
-            }}
-            as={`/${post.userId.username}/p/${post._id}`}
-            scroll={false}
-          >
-            <a
-              className={`${clipText && "clip-txt"} ${
-                fullW && "w-80"
-              } text-lg font- leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-800 `}
+            <Link
+              href={{
+                pathname: router.pathname,
+                query: queryBuilder(),
+              }}
+              as={`/${post.userId.username}/p/${post._id}`}
+              scroll={false}
             >
-              {parse(post.body)}
-            </a>
-          </Link>
+              <a
+                className={`${clipText && "clip-txt"} ${
+                  fullW && "w-80"
+                } text-lg font- leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-800 `}
+              >
+                {parse(post.body)}
+              </a>
+            </Link>
           </div>
           <Modal
-        scroll
-        fullScreen
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
-        {...bindings}
-      >
-         <Modal.Header className=" flex justify-between">
-            <button
-              className=" text-slate-500 rounded-md p-1 bg-slate-100 mr-3 "
-              onClick={() => {
-                // router.back()
-                setVisible(false)}}
-            >
-              <XIcon className=" w-6 h-6" />
-            </button>
+            scroll
+            fullScreen
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
+            {...bindings}
+          >
+            <Modal.Header className=" flex justify-between p-3 mx-3 my-3">
+              <button
+                className=" text-slate-500 rounded-md p-1 bg-slate-100 mr-3 "
+                onClick={() => {
+                  router.back();
+                  setVisible(false);
+                  setMakeFocus(false)
+                }}
+              >
+                <XIcon className=" w-6 h-6" />
+              </button>
 
-            <h2 className=" text-xl text-slate-800 font-medium">
-              Post 
-            </h2>
-            <div className=" w-1/3" />
-          </Modal.Header>
-        <Modal.Body>
-          <PostPageTemplate post={post} />
-        
-        </Modal.Body>
-      </Modal>
+              <h2 className=" text-xl text-slate-800 font-medium">Post</h2>
+              <div className=" w-1/3" />
+            </Modal.Header>
+            <Modal.Body>
+              <PostPageTemplate post={post} makeFocus={makeFocus} />
+            </Modal.Body>
+          </Modal>
         </article>
         {session && showAtions && (
           <div className=" flex justify-between items-center z-10">
@@ -160,13 +167,25 @@ export const PostCard = ({
                   {postLikes.length || ""}
                 </span>
               </span>
-              <span
-                onClick={() => router.push(`/new/comment/${post._id}`)}
-                className=" flex items-center p-2  text-lg text-gray-500 "
-              >
-                <ChatIcon className=" w-5 h-5" />
-                <p className="">{post.comments.length || ""}</p>
-              </span>
+
+              <div onClick={() => {
+                setVisible(true)
+                setMakeFocus(true)
+                }}>
+                <Link
+                  href={{
+                    pathname: router.pathname,
+                    query: queryBuilder(),
+                  }}
+                  as={`/${post.userId.username}/p/${post._id}`}
+                  scroll={false}
+                >
+                  <a className=" flex items-center p-2  text-lg text-gray-500 ">
+                    <ChatIcon className=" w-5 h-5" />
+                    <p className="">{post.comments.length || ""}</p>
+                  </a>
+                </Link>
+              </div>
             </div>
           </div>
         )}

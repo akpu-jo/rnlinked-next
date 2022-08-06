@@ -83,7 +83,7 @@ const ArticlePage = ({ article }) => {
           {article.title}
         </h2>
 
-        <figure className="block py-4">
+        {article.image.length > 0 && <figure className="block py-4">
           <Image
             className=" object-cover "
             src={article.image[0].url}
@@ -92,7 +92,7 @@ const ArticlePage = ({ article }) => {
             width={500}
             height={300}
           />
-        </figure>
+        </figure>}
         <article>
           <div className="max-w-2xl py-6 mx-auto text-gray-600 text-xl font-base leading-relaxed tracking-wide">
             {parse(article.body)}
@@ -167,7 +167,7 @@ const ArticlePage = ({ article }) => {
           </Modal.Header>
           <Modal.Body>
             {article.comments.length === 0 ? (
-              <div>
+              <div className=" flex flex-col h-full items-center justify-center">
                 <h2 className=" text-xl tracking-wide text-slate-700 font-medium text-center">
                   No comments yet
                 </h2>

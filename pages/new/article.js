@@ -88,7 +88,7 @@ const Article = () => {
 
   const [content, setContent] = useState(getContentFromLS());
   const [title, setTitle] = useState(getTitleFromLS());
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState([]);
   const [imageUploading, setImageUploading] = useState(false);
 
   const bottomRef = useRef(null);
@@ -96,7 +96,7 @@ const Article = () => {
   // const resizeImage = (file) => {
   //   //Resize
   //   return new Promise((resolve) => {
-  //     Resizer.imageFileResizer(
+  //     Resizer.imageFileResizer( 
   //       file,
   //       720,
   //       500,
@@ -138,7 +138,7 @@ const Article = () => {
       );
 
       console.log("deleted image response===>", data);
-      data.result === "ok" && setImage(null);
+      data.result === "ok" && setImage([]);
     } catch (err) {
       console.log(err);
       toast.error("Unable to remove image! Try again.");
@@ -158,7 +158,7 @@ const Article = () => {
       setContent('')
       setTitle('')
       localStorage.setItem("title", '');
-      setImage(null)
+      setImage([])
       router.push(`/${session.user.username}/${data.article.slug}`)
     } catch (error) {
       console.log(error);
@@ -193,7 +193,7 @@ const Article = () => {
           }}
         />
 
-        {image !== null ? (
+        {image.length > 0 ? (
           <div className=" group relative ">
             <Image
               className=" object-cover rounded- w- "

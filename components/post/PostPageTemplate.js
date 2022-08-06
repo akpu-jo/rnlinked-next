@@ -2,7 +2,7 @@ import { Avatar, Textarea } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AltHeader from "../navs/AltHeader";
 import parse from "html-react-parser";
 import Image from "next/image";
@@ -13,11 +13,12 @@ import axios from "axios";
 import { ReplyIcon } from "@heroicons/react/solid";
 import ArticleComments from "../articles/ArticleComments";
 
-const PostPageTemplate = ({ post }) => {
+const PostPageTemplate = ({ post, makeFocus=false }) => {
   const { data: session } = useSession();
   const router = useRouter();
 
   const [comments, setComments] = useState([]);
+  const commentInputRef = useRef();
   const [body, setBody] = useState("");
 
   const [liked, setLiked] = useState(
@@ -68,6 +69,10 @@ const PostPageTemplate = ({ post }) => {
     loadComments();
     console.log(post._id);
   }, []);
+
+  useEffect(() => {
+      makeFocus && commentInputRef.current.focus()
+  }, [makeFocus]);
 
   return (
     <div className=" flex flex-col h-screen  ">
@@ -139,7 +144,7 @@ const PostPageTemplate = ({ post }) => {
               </p>
             </li>
             <li
-              // onClick={() => router.push(`/new/comment/${post._id}`)}
+              onClick={() => commentInputRef.current.focus()}
               className=" flex items-center p-2  text-lg text-gray-500  "
             >
               <ReplyIcon className=" w-5 h-5 mr-1 -rotate-180 " />
@@ -174,6 +179,7 @@ const PostPageTemplate = ({ post }) => {
             fullWidth={true}
             cacheMeasurements={false}
             placeholder="Share your thoughts..."
+            ref={commentInputRef}
           />
 
           <button className="mr-2 " type="submit">

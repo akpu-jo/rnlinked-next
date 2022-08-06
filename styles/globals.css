@@ -13,6 +13,12 @@ body {
   /* background-color: aliceblue */
 }
 
+blockquote{
+  border-radius: 0% !important;
+  /* background-color: !important; */
+  background: var(--background);
+}
+
 .checkbox {
   --background: #fff;
   --border: #d1d6ee;
@@ -168,8 +174,19 @@ li {
   border-top-right-radius: 8px;
 }
 
+/* NextUi textarea backgroud */
 .nextui-c-eXOOPO {
   background: none !important;
+}
+
+/* NextUi modal.. remove default padding from modal body */
+.nextui-c-iDzHRq {
+  padding: 0% !important;
+}
+/* NextUi modal.. remove default padding from modal header */
+
+.nextui-c-igVEsI {
+  padding: 0% !important;
 }
 .theirs.first .body {
   border-bottom-left-radius: 2px;

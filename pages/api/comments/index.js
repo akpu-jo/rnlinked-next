@@ -7,14 +7,16 @@ import { nanoid } from "nanoid";
 
 export default async function handler(req, res) {
   const { method } = req;
-  const { postId, articleId } = req.query;
-
+  
   await connectDb();
-
+  
   switch (method) {
     case "GET":
       try {
-        const comments = await Comment.find({ postId })
+        const { postId, articleId } = req.query;
+        const commentOrigin = articleId ? {articleId} : {postId};
+
+        const comments = await Comment.find( commentOrigin )
           .populate("userId", "name username image")
           .sort({ updatedAt: "-1" });
         res.status(200).json({ success: true, comments });
