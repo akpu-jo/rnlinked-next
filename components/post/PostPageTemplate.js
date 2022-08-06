@@ -162,13 +162,13 @@ const PostPageTemplate = ({ post, makeFocus=false }) => {
             ))}
         </article>
       </main>
-      <footer className=" z-5 sticky bottom-0 right-0 left-0 z-50 ">
+      <footer className=" z-5 fixed bottom-0 right-0 left-0 z-50 ">
         <form
           onSubmit={handleSubmit}
           className=" flex justify-between  items-end py-3 border-t shadow-md bg-white "
         >
           <Textarea
-            className=" ml- flex-1 text-gray-800 w-full  overflow-y-auto bg-gry-100 p-2 py-1 rounded-sm focus:outline-none"
+            className="flex-1 text-gray-800 w-full  overflow-y-auto bg-gry-100 p-2 py-1 rounded-sm focus:outline-none"
             value={body}
             onChange={(e) => setBody(e.target.value)}
             aria-label="Type you message"
