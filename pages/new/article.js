@@ -88,7 +88,7 @@ const Article = () => {
 
   const [content, setContent] = useState(getContentFromLS());
   const [title, setTitle] = useState(getTitleFromLS());
-  const [image, setImage] = useState([]);
+  const [image, setImage] = useState(null);
   const [imageUploading, setImageUploading] = useState(false);
 
   const bottomRef = useRef(null);
@@ -96,7 +96,7 @@ const Article = () => {
   // const resizeImage = (file) => {
   //   //Resize
   //   return new Promise((resolve) => {
-  //     Resizer.imageFileResizer( 
+  //     Resizer.imageFileResizer(
   //       file,
   //       720,
   //       500,
@@ -146,20 +146,19 @@ const Article = () => {
   };
 
   const publish = async () => {
+    const reqBody =
+      image === null
+        ? { title, body: content, author: session.user.id }
+        : { title, body: content, image, author: session.user.id };
     try {
-      const { data } = await axios.post(`/api/articles`, {
-        title,
-        body: content,
-        image,
-        author: session.user.id,
-      });
+      const { data } = await axios.post(`/api/articles`, reqBody);
 
       console.log(data);
-      setContent('')
-      setTitle('')
-      localStorage.setItem("title", '');
-      setImage([])
-      router.push(`/${session.user.username}/${data.article.slug}`)
+      setContent("");
+      setTitle("");
+      localStorage.setItem("title", "");
+      setImage(null);
+      router.push(`/${session.user.username}/${data.article.slug}`);
     } catch (error) {
       console.log(error);
     }
@@ -193,7 +192,7 @@ const Article = () => {
           }}
         />
 
-        {image.length > 0 ? (
+        {image !== null ? (
           <div className=" group relative ">
             <Image
               className=" object-cover rounded- w- "
