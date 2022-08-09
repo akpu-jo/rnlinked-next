@@ -18,6 +18,7 @@ import HeartInactiveIcon from "../icons/HeartInactiveIcon";
 import parse from "html-react-parser";
 import AltHeader from "../navs/AltHeader";
 import PostPageTemplate from "./PostPageTemplate";
+import PostPageModal from "./PostPageModal";
 
 export const PostCard = ({
   post,
@@ -34,6 +35,7 @@ export const PostCard = ({
   const [animateLike, setAnimateLike] = useState(false);
   const [postLikes, setPostLikes] = useState(post.likes);
   const { setVisible, bindings } = useModal();
+  const [open, setOpen] = useState(false);
   const [makeFocus, setMakeFocus] = useState(false)
 
   const timestamp = timeDifference(Date.now(), new Date(post.createdAt));
@@ -81,7 +83,7 @@ export const PostCard = ({
             </div>
           )}
 
-          <div onClick={() => setVisible(true)}>
+          <div onClick={() => setOpen(true)}>
             <Link
               href={{
                 pathname: router.pathname,
@@ -99,6 +101,7 @@ export const PostCard = ({
               </a>
             </Link>
           </div>
+          <PostPageModal post={post} open={open} close={()=> setOpen(false)} />
           <Modal
             scroll
             fullScreen
