@@ -36,6 +36,8 @@ export const PostCard = ({
   const [postLikes, setPostLikes] = useState(post.likes);
   const { setVisible, bindings } = useModal();
   const [open, setOpen] = useState(false);
+  let [isOpen, setIsOpen] = useState(false)
+
   const [makeFocus, setMakeFocus] = useState(false)
 
   const timestamp = timeDifference(Date.now(), new Date(post.createdAt));
@@ -83,7 +85,7 @@ export const PostCard = ({
             </div>
           )}
 
-          <div onClick={() => setOpen(true)}>
+          <div onClick={() => setIsOpen(true)}>
             <Link
               href={{
                 pathname: router.pathname,
@@ -101,7 +103,10 @@ export const PostCard = ({
               </a>
             </Link>
           </div>
-          <PostPageModal post={post} open={open} close={()=> setOpen(false)} />
+          <PostPageModal post={post} isOpen={isOpen} closeModal={()=> {
+            router.back()
+            setIsOpen(false)
+            }} />
           <Modal
             scroll
             fullScreen

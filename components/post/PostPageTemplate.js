@@ -13,11 +13,11 @@ import axios from "axios";
 import { ReplyIcon } from "@heroicons/react/solid";
 import ArticleComments from "../articles/ArticleComments";
 
-const PostPageTemplate = ({ post, makeFocus=false }) => {
+const PostPageTemplate = ({ post, makeFocus=false, comments, setComments }) => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const [comments, setComments] = useState([]);
+  // const [comments, setComments] = useState([]);
   const commentInputRef = useRef();
   const [body, setBody] = useState("");
 
@@ -162,7 +162,7 @@ const PostPageTemplate = ({ post, makeFocus=false }) => {
             ))}
         </article>
       </main>
-      <footer className=" z-5 fixed bottom-0 right-0 left-0 z-50 ">
+      {/* <footer className=" z-5 fixed bottom-0 right-0 left-0 z-50 ">
         <form
           onSubmit={handleSubmit}
           className=" flex justify-between  items-end py-3 border-t shadow-md bg-white "
@@ -186,7 +186,7 @@ const PostPageTemplate = ({ post, makeFocus=false }) => {
             <PaperAirplaneIcon className=" text-cloud-900 rounded-md w-8 h-8 rotate-90 items-center " />
           </button>
         </form>
-      </footer>
+      </footer> */}
     </div>
   );
 };
