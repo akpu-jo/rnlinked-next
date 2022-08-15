@@ -13,11 +13,11 @@ import axios from "axios";
 import { ReplyIcon } from "@heroicons/react/solid";
 import ArticleComments from "../articles/ArticleComments";
 
-const PostPageTemplate = ({ post, makeFocus=false, comments, setComments }) => {
+const PostPageTemplate = ({ post, makeFocus = false }) => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  // const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState([]);
   const commentInputRef = useRef();
   const [body, setBody] = useState("");
 
@@ -71,98 +71,98 @@ const PostPageTemplate = ({ post, makeFocus=false, comments, setComments }) => {
   }, []);
 
   useEffect(() => {
-      makeFocus && commentInputRef.current.focus()
+    makeFocus && commentInputRef.current.focus();
   }, [makeFocus]);
 
   return (
-    <div className=" flex flex-col h-full ">
-      <main className=" flex-1">
-        <section className=" flex mb-1 items-center mx-3 bg-opacity-90 rounded-lg ">
-          <Link href={`/${post.userId.username}`}>
-            <a>
-              <Avatar zoomed squared size="md" src={post.userId.image} />
-            </a>
-          </Link>
+    <main className=" h-full flex flex-col ">
+      <section className=" flex mb-1 items-center mx-3 bg-opacity-90 rounded-lg ">
+        <Link href={`/${post.userId.username}`}>
+          <a>
+            <Avatar zoomed squared size="md" src={post.userId.image} />
+          </a>
+        </Link>
 
-          <Link href={`/${post.userId.username}`}>
-            <a className=" px-3 ">
-              <p className=" font-medium tracking-wide leading-5 text-md">
-                {post.userId.name}
-              </p>
-              <p className=" font-semibold text-gray-400">
-                @{post.userId.username}
-              </p>
-            </a>
-          </Link>
-        </section>
-        <article className=" mx-3 bg-slate-00">
-          {post.image.length > 0 && (
-            <div className=" w-full">
-              <Image
-                className=" object-cover rounded-sm w-full bg-gray-300 "
-                src={post.image[0].url}
-                alt=""
-                width={370}
-                height={240}
-                showSkeleton
-                objectFit="cover"
-              />
-            </div>
-          )}
-          <p className=" py-2 text-slate-800 text-ellipsis overflow-hidden ">
-            {parse(post.body)}
-          </p>
-          <ul
-            className={` flex items-center justify-around border-b border-t ${
-              liked ? "text-red-500" : " text-gray-500"
-            }`}
+        <Link href={`/${post.userId.username}`}>
+          <a className=" px-3 ">
+            <p className=" font-medium tracking-wide leading-5 text-md">
+              {post.userId.name}
+            </p>
+            <p className=" font-semibold text-gray-400">
+              @{post.userId.username}
+            </p>
+          </a>
+        </Link>
+      </section>
+      <article className=" mx-3 bg-slate-00 flex-1">
+        {post.image.length > 0 && (
+          <div className=" w-full">
+            <Image
+              className=" object-cover rounded-sm w-full bg-gray-300 "
+              src={post.image[0].url}
+              alt=""
+              width={370}
+              height={240}
+              showSkeleton
+              objectFit="cover"
+            />
+          </div>
+        )}
+        <p className=" py-2 text-slate-800 text-ellipsis overflow-hidden ">
+          {parse(post.body)}
+        </p>
+        <ul
+          className={` flex items-center justify-around border-b border-t ${
+            liked ? "text-red-500" : " text-gray-500"
+          }`}
+        >
+          <li
+            onClick={() => {
+              setAnimateLike(true);
+              handleLike(post._id);
+            }}
+            className={` flex items-center p-2 text-lg mr-2`}
+            onAnimationEnd={() => setAnimateLike(false)}
           >
-            <li
-              onClick={() => {
-                setAnimateLike(true);
-                handleLike(post._id);
-              }}
-              className={` flex items-center p-2 text-lg mr-2`}
-              onAnimationEnd={() => setAnimateLike(false)}
+            <HeartInactiveIcon animateLike={animateLike} liked={liked} />
+            <span
+              className={`${"ml-1"} ${
+                animateLike && ""
+              } text-slate-500 tracking-wide`}
             >
-              <HeartInactiveIcon animateLike={animateLike} liked={liked} />
-              <span
-                className={`${"ml-1"} ${
-                  animateLike && ""
-                } text-slate-500 tracking-wide`}
-              >
-                {postLikes.length} Liked
-              </span>
-            </li>
-            <li
-              // onClick={() => router.push(`/new/comment/${post._id}`)}
-              className=" flex items-center p-2  text-lg text-gray-500  "
-            >
-              <ChatIcon className=" w-5 h-5 mr-1" />
-              <p className=" tracking-wide">
-                {post.comments.length || ""} Replies{" "}
-              </p>
-            </li>
-            <li
-              onClick={() => commentInputRef.current.focus()}
-              className=" flex items-center p-2  text-lg text-gray-500  "
-            >
-              <ReplyIcon className=" w-5 h-5 mr-1 -rotate-180 " />
-              <p className=" tracking-wide"> Reply </p>
-            </li>
-          </ul>
+              {postLikes.length} Liked
+            </span>
+          </li>
+          <li
+            // onClick={() => router.push(`/new/comment/${post._id}`)}
+            className=" flex items-center p-2  text-lg text-gray-500  "
+          >
+            <ChatIcon className=" w-5 h-5 mr-1" />
+            <p className=" tracking-wide">
+              {post.comments.length || ""} Replies{" "}
+            </p>
+          </li>
+          <li
+            onClick={() => commentInputRef.current.focus()}
+            className=" flex items-center p-2  text-lg text-gray-500  "
+          >
+            <ReplyIcon className=" w-5 h-5 mr-1 -rotate-180 " />
+            <p className=" tracking-wide"> Reply </p>
+          </li>
+        </ul>
 
-          { comments.length > 0 && <h2 className=" border-b text-slate-500 font-medium tracking-normal py-2 my-1">
+        {comments.length > 0 && (
+          <h2 className=" border-b text-slate-500 font-medium tracking-normal py-2 my-1">
             Comments
-          </h2>}
+          </h2>
+        )}
 
-          {comments.length > 0 &&
-            comments.map((comment, i) => (
-              <ArticleComments comment={comment} key={i} />
-            ))}
-        </article>
-      </main>
-      {/* <footer className=" z-5 fixed bottom-0 right-0 left-0 z-50 ">
+        {comments.length > 0 &&
+          comments.map((comment, i) => (
+            <ArticleComments comment={comment} key={i} />
+          ))}
+      </article>
+      <footer className=" z-5 sticky bottom-0">
         <form
           onSubmit={handleSubmit}
           className=" flex justify-between  items-end py-3 border-t shadow-md bg-white "
@@ -186,8 +186,8 @@ const PostPageTemplate = ({ post, makeFocus=false, comments, setComments }) => {
             <PaperAirplaneIcon className=" text-cloud-900 rounded-md w-8 h-8 rotate-90 items-center " />
           </button>
         </form>
-      </footer> */}
-    </div>
+      </footer>
+    </main>
   );
 };
 

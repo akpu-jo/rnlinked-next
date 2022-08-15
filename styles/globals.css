@@ -124,8 +124,9 @@ blockquote{
 }
 
 .h-90 {
-  height: 100vh;
+  height: 90vh;
 }
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -288,4 +289,7 @@ li {
 
 .z-5{
   z-index: 500;
+}
+.z-4{
+  z-index: 50;
 }

@@ -25,6 +25,7 @@ const CommentForm = ({setComments, comments, makeFocus=false, postId}) => {
 
       useEffect(() => {
         makeFocus && commentInputRef.current.focus()
+        console.log(makeFocus)
     }, [makeFocus]);
 
   return (

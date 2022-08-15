@@ -19,6 +19,8 @@ import parse from "html-react-parser";
 import AltHeader from "../navs/AltHeader";
 import PostPageTemplate from "./PostPageTemplate";
 import PostPageModal from "./PostPageModal";
+import { Dialog } from "@headlessui/react";
+import CommentForm from "./CommentForm";
 
 export const PostCard = ({
   post,
@@ -36,9 +38,9 @@ export const PostCard = ({
   const [postLikes, setPostLikes] = useState(post.likes);
   const { setVisible, bindings } = useModal();
   const [open, setOpen] = useState(false);
-  let [isOpen, setIsOpen] = useState(false)
+  let [isOpen, setIsOpen] = useState(false);
 
-  const [makeFocus, setMakeFocus] = useState(false)
+  const [makeFocus, setMakeFocus] = useState(false);
 
   const timestamp = timeDifference(Date.now(), new Date(post.createdAt));
 
@@ -103,36 +105,55 @@ export const PostCard = ({
               </a>
             </Link>
           </div>
-          <PostPageModal post={post} isOpen={isOpen} closeModal={()=> {
-            router.back()
-            setIsOpen(false)
-            }} />
-          <Modal
-            scroll
-            fullScreen
-            aria-labelledby="modal-title"
-            aria-describedby="modal-description"
-            {...bindings}
+          <Dialog
+            className=" relative z-5 "
+            open={isOpen}
+            onClose={() => {
+              router.back();
+              setIsOpen(false);
+            }}
           >
-            <Modal.Header className=" flex justify-between p-3 mx-3 my-3">
-              <button
-                className=" text-slate-500 rounded-md p-1 bg-slate-100 mr-3 "
-                onClick={() => {
-                  router.back();
-                  setVisible(false);
-                  setMakeFocus(false)
-                }}
-              >
-                <XIcon className=" w-6 h-6" />
-              </button>
+            <div className="fixed inset-0 bg-black bg-opacity-30" />
 
-              <h2 className=" text-xl text-slate-800 font-medium">Post</h2>
-              <div className=" w-1/3" />
-            </Modal.Header>
-            <Modal.Body>
-              <PostPageTemplate post={post} makeFocus={makeFocus} />
-            </Modal.Body>
-          </Modal>
+            <div className="fixed inset-0 ">
+              <div className=" h-screen">
+                <Dialog.Panel
+                  className={` flex flex-col h-90 bg-white overflow-auto `}
+                >
+                  <Dialog.Title
+                    as="h3"
+                    className=" bg-white z-5 text-lg leading-6  flex justify-between items-center p-3 border-b shadow-sm"
+                  >
+                    <button
+                      className=" text-slate-500 rounded-md p-1 bg-slate-100 mr-3 "
+                      onClick={() => {
+                        router.back();
+                        setIsOpen(false);
+                        setMakeFocus(false)
+                      }}
+                    >
+                      <XIcon className=" w-6 h-6" />
+                    </button>
+                    <h2 className=" text-lg text-slate-800 font-medium">
+                      Post
+                    </h2>
+                    <div className=" w-1/3" />{" "}
+                  </Dialog.Title>
+                  <Dialog.Description className="mt-2 overflow-scroll flex-1  ">
+                    <PostPageTemplate makeFocus={makeFocus} post={post} />
+                  </Dialog.Description>
+                </Dialog.Panel>
+              </div>
+            </div>
+          </Dialog>
+          {/* <PostPageModal
+            post={post}
+            isOpen={isOpen}
+            closeModal={() => {
+              router.back();
+              setIsOpen(false);
+            }}
+          /> */}
         </article>
         {session && showAtions && (
           <div className=" flex justify-between items-center z-10">
@@ -176,10 +197,12 @@ export const PostCard = ({
                 </span>
               </span>
 
-              <div onClick={() => {
-                setVisible(true)
-                setMakeFocus(true)
-                }}>
+              <div
+                onClick={() => {
+                  setIsOpen(true);
+                  setMakeFocus(true);
+                }}
+              >
                 <Link
                   href={{
                     pathname: router.pathname,

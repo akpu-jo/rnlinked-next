@@ -13,7 +13,7 @@ const PostPageModal = ({ isOpen, closeModal, post, makeFocus }) => {
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-5" onClose={closeModal}>
+        <Dialog as="div" className="relative z-5 " onClose={closeModal}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -40,7 +40,7 @@ const PostPageModal = ({ isOpen, closeModal, post, makeFocus }) => {
                 <Dialog.Panel className=" flex flex-col overflow-scroll w-full max-w-md h-screen transform bg-white  text-left align-middle transition-all">
                   <Dialog.Title
                     as="h3"
-                    className=" sticky top-0 right-0 left-0 bg-white z-5 text-lg leading-6  flex justify-between items-center p-3 border-b shadow-sm"
+                    className=" bg-white z-5 text-lg leading-6  flex justify-between items-center p-3 border-b shadow-sm"
                   >
                     <button
                       className=" text-slate-500 rounded-md p-1 bg-slate-100 mr-3 "
@@ -53,14 +53,14 @@ const PostPageModal = ({ isOpen, closeModal, post, makeFocus }) => {
                     </h2>
                     <div className=" w-1/3" />{" "}
                   </Dialog.Title>
-                  <Dialog.Description className="mt-2 overflow-scroll flex-1">
+                  <Dialog.Description className="mt-2 overflow-scroll flex-">
                     <PostPageTemplate
                       post={post}
                       comments={comments}
                       setComments={setComments}
                     />
                   </Dialog.Description>
-                  <footer className=" z-5 sticky bottom-0 right-0 left-0 z-50 ">
+                  <footer className=" z-5 z-50 ">
                     <CommentForm
                       comments={comments}
                       setComments={setComments}

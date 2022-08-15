@@ -50,9 +50,9 @@ const PostPage = ({ post }) => {
   return (
     <div className=" flex flex-col h-screen">
       <AltHeader>
-        <Link href={`/${session.user.username}`}>
+        <Link href={`/${session && session.user.username}`}>
           <a>
-            <Avatar squared src={session.user.image} />
+            <Avatar squared src={ session && session.user.image} />
           </a>
         </Link>{" "}
       </AltHeader>

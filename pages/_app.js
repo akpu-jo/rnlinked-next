@@ -9,11 +9,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <SessionProvider session={session}>
       <NextUIProvider>
-        <WithSession>
+        {/* <WithSession> */}
           <SocketLayout>
             <Component {...pageProps} />
           </SocketLayout>
-        </WithSession>
+        {/* </WithSession> */}
       </NextUIProvider>
     </SessionProvider>
   );

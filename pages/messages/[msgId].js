@@ -8,7 +8,6 @@ import React, { useEffect, useState, useMemo, useRef } from "react";
 import { io } from "socket.io-client";
 import styles from "../../styles/Message.module.css";
 
-
 import { Loading, Textarea } from "@nextui-org/react";
 import Message from "@/components/messages/Message";
 import { useSession } from "next-auth/react";
@@ -134,7 +133,6 @@ const Chat = () => {
       socket.off("typing");
     };
   }, []);
-
 
   useEffect(() => {
     getChat();
