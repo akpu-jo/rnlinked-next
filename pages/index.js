@@ -49,7 +49,7 @@ export default function Home({ posts }) {
             <Tab.Group>
               <Tab.List className=" sticky top-0 z-4 bg-white space-x-3 mx-3 border-b whitespace-nowrap overflow-x-scroll hide-scrollbar">
                 {categories.map((category) => (
-                  <Tab>
+                  <Tab key={category}>
                     {({ selected }) => (
                       <h2
                         className={` p-2 ${
