@@ -1,5 +1,7 @@
+import { XIcon } from "@heroicons/react/outline";
 import { Modal } from "@nextui-org/react";
 import React from "react";
+import PostPageTemplate from "../post/PostPageTemplate";
 
 const NextUiModal = ({ mHeader, mBody, mFooter, children, mOptions }) => {
   return (
