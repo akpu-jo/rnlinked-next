@@ -149,7 +149,7 @@ const Chat = () => {
   }, [messages]);
 
   return (
-    <div className=" flex flex-col h-screen">
+    <div className=" flex flex-col h-screen ">
       <AltHeader>
         <ul
           onClick={() => {
@@ -208,7 +208,7 @@ const Chat = () => {
         ></div>
       </AltHeader>
 
-      <ul className=" flex-1  mx-3">
+      <ul className=" grow  mx-3">
         {messages.map((message, i) => (
           <Message
             message={message}
@@ -237,7 +237,6 @@ const Chat = () => {
           minRows={1}
           maxRows={3}
           fullWidth={true}
-          autoFocus
           cacheMeasurements={false}
         />
 

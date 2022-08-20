@@ -13,12 +13,13 @@ import axios from "axios";
 import { ReplyIcon } from "@heroicons/react/solid";
 import ArticleComments from "../articles/ArticleComments";
 
-const PostPageTemplate = ({ post, makeFocus = false }) => {
+const PostPageTemplate = ({ post }) => {
   const { data: session } = useSession();
   const router = useRouter();
 
   const [comments, setComments] = useState([]);
   const commentInputRef = useRef();
+  const [makeFocus, setMakeFocus] = useState(router.query.makeFocus);
   const [body, setBody] = useState("");
 
   const [liked, setLiked] = useState(
@@ -72,6 +73,7 @@ const PostPageTemplate = ({ post, makeFocus = false }) => {
 
   useEffect(() => {
     makeFocus && commentInputRef.current.focus();
+    console.log(router.query);
   }, [makeFocus]);
 
   return (

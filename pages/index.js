@@ -13,6 +13,7 @@ import { Button, Modal, Text, useModal } from "@nextui-org/react";
 import PostId from "./post/[postid]";
 import PostPageTemplate from "@/components/post/PostPageTemplate";
 import { Tab } from "@headlessui/react";
+import ArticleList from "@/components/articles/ArticleList";
 
 export default function Home({ posts }) {
   const { data: session } = useSession();
@@ -46,7 +47,7 @@ export default function Home({ posts }) {
         <div className=" flex flex-col h-screen">
           <Header />
           <main className=" flex-1">
-            <Tab.Group>
+            <Tab.Group defaultIndex={1}>
               <Tab.List className=" sticky top-0 z-4 bg-white space-x-3 mx-3 border-b whitespace-nowrap overflow-x-scroll hide-scrollbar">
                 {categories.map((category) => (
                   <Tab key={category}>
@@ -66,7 +67,7 @@ export default function Home({ posts }) {
                 <Tab.Panel>
                   <Timeline posts={posts} />
                 </Tab.Panel>
-                <Tab.Panel>Articles stay here</Tab.Panel>
+                <Tab.Panel><ArticleList /></Tab.Panel>
               </Tab.Panels>
             </Tab.Group>
           </main>

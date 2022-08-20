@@ -29,7 +29,7 @@ export default async function handler(req, res) {
             path: "latestMessage",
             select: 'sender content _id',
             populate: { path: "sender", select: "username name" },
-          })
+          }) 
           .sort({ updatedAt: "-1" });
         // console.log("Chat====>", chats);
 

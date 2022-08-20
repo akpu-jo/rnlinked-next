@@ -12,7 +12,7 @@ export default function AltHeader ({ children }) {
       className=" text-slate-500 rounded-md p-1 bg-slate-100 mr-3 "
         onClick={(e) => {
           e.preventDefault();
-          window.history.back();
+          router.back();
         }}
       >
         <ChevronLeftIcon className=" w-5 h-5" />

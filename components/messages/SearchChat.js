@@ -55,7 +55,7 @@ const SearchChat = ({
     return (
       <form
         onSubmit={(e) => submitSearch(e)}
-        className=" flex items-center text-lg bg-slate-100 text-slate-600 p-2 mb-2 rounded-lg w-full"
+        className=" flex items-center text-lg bg-slate-100 text-slate-600 p-2 rounded-md w-full"
       >
         <button type="submit" className="">
           <SearchIcon className="h-7 w-7 hover:text-primary-brick opacity-90" />
@@ -88,7 +88,7 @@ const SearchChat = ({
 
   return (
     <header
-      className={` sticky border-b-2 shadow px-3 pb-2 pt- text-2xl font-semibold tracking-wide top-0 right-0 left-0 bg-white z-10`}
+      className={` py-2 pt- text-2xl font-semibold tracking-wide  bg-white z-10`}
     >
       {searchBox()}
       <div className=" flex overflow-x-scroll hide-scrollbar  ">

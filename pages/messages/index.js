@@ -2,7 +2,8 @@ import Recommendations from "@/components/explore/Recommendations";
 import SearchChat from "@/components/messages/SearchChat";
 import AltHeader from "@/components/navs/AltHeader";
 import MobileNav from "@/components/navs/MobileNav";
-import { PencilAltIcon } from "@heroicons/react/outline";
+import { ChevronLeftIcon, PencilAltIcon } from "@heroicons/react/outline";
+import { Avatar } from "@nextui-org/react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -20,7 +21,7 @@ const Inbox = () => {
   // const isGroup =
   const listChat = async () => {
     const { data } = await axios.get(`/api/messages/get-chats`);
-    console.log(data);
+    console.log(data.chats);
     setChatList(data.chats);
   };
 
@@ -44,36 +45,28 @@ const Inbox = () => {
 
   const chatlistjsx = () => {
     return (
-      <div className=" flex-1">
+      <div className=" grow mb-8 ">
         {chatList.length > 0 ? (
           chatList.map((c) => (
-            <div key={c._id} className=" flex  ">
-              <ul
+            <div key={c._id} className=" flex items-center my-1 py-1 ml-3  ">
+              <div
                 onClick={() => {
                   console.log(c.isGroupChat);
                   !c.isGroupChat && router.push(`/${c.users[1].username}`);
                 }}
-                className=" relative w-10 p-1 m-1 "
+                className=" pr-3"
               >
-                {c.chatImages.map((image, i) => (
-                  <li
-                    key={i}
-                    className={` ${
-                      c.chatImages.length > 1
-                        ? "last:top-5 last:bottom-2 last:right-2 first:left-2 first:top-0 first:bottom-7 border-2 rounded-xl  "
-                        : " w-8 h-8 top-3 left-1 right-1"
-                    } absolute `}
-                  >
-                    <Image
-                      className=" rounded-xl"
+                <Avatar.Group>
+                  {c.chatImages.map((image, i) => (
+                    <Avatar
+                      key={i}
+                      size={`${c.chatImages.length > 1 ? 'sm' : 'lg'}`}
+                      squared
                       src={image}
-                      alt="Picture of the logo"
-                      width={50}
-                      height={50}
                     />
-                  </li>
-                ))}
-              </ul>
+                  ))}
+                </Avatar.Group>
+              </div>
               <Link key={c._id} href={`/messages/${c._id}`}>
                 <a className=" py-2 text-clip w-3/4">
                   <p className=" clip-txt-1 text-slate-800 ">{c.chatName}</p>
@@ -98,25 +91,38 @@ const Inbox = () => {
   };
 
   return (
-    <div className=" flex flex-col h-screen ">
-      <AltHeader>
-        <p className=" text-2xl tracking-wide">Inbox</p>
-        <div className="w-1/3"></div>
-        <Link href={"/messages/new"}>
-          <a>
-            <PencilAltIcon className=" w-7 h-7" />
-          </a>
-        </Link>
-      </AltHeader>
-      <SearchChat
-        showSearch={showSearch}
-        setShowSearch={setShowSearch}
-        setRecommendedUsers={setRecommendedUsers}
-      />
-      <Recommendations recommendedUsers={recommendedUsers} />
+    <div className="flex flex-col ">
+      <header className=" px-3 pt-3 text-xl font-semibold tracking-wide  mb-4 bg-white z-5 border-b border-slate-100 shadow-sm">
+        <div className=" flex justify-between items-center">
+          <button
+            className=" text-slate-500 rounded-md p-1 bg-slate-100 mr-3 "
+            onClick={(e) => {
+              e.preventDefault();
+              router.back();
+            }}
+          >
+            <ChevronLeftIcon className=" w-5 h-5" />
+          </button>
+          <p className=" text-2xl tracking-wide">Inbox</p>
+          <div className="w-1/3"></div>
+          <Link href={"/messages/new"}>
+            <a>
+              <PencilAltIcon className=" w-7 h-7" />
+            </a>
+          </Link>
+        </div>
+        <SearchChat
+          showSearch={showSearch}
+          setShowSearch={setShowSearch}
+          setRecommendedUsers={setRecommendedUsers}
+        />
+      </header>
+      <main className=" mx-4 ">
+        <Recommendations recommendedUsers={recommendedUsers} />
 
-      {chatlistjsx()}
-      <MobileNav />
+        {chatlistjsx()}
+        <MobileNav />
+      </main>
     </div>
   );
 };

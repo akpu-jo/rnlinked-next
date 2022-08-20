@@ -16,7 +16,7 @@ const Message = ({ message, getLiClassNames, isGroup }) => {
           {message.sender.name}
         </span>
       )}
-      <div className="inline-flex flex-col body p-2 py-1 rounded-lg max-w-55 bg-slate-200">
+      <div className="inline-flex flex-col body p-2 py-1 rounded-lg max-w-55 bg-slate-200 break-all">
         {message.content}
       </div>
     </li>

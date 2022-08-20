@@ -18,7 +18,7 @@ export default function MobileNav() {
 
   return (
     <>
-      <div className=" md:hidden sticky bottom-0 right-0 left-0  py-2 shadow-lg text-cloud-900 bg-primary-springWood flex justify-around items-center z-50">
+      <div className=" md:hidden fixed bottom-0 right-0 left-0  py-2 shadow-lg text-cloud-900 bg-primary-springWood flex justify-around items-center z-50">
         <Link href={`/`}>
           <a>
             <span className=" p-2 rounded-full bg-slate-100 inline-block text-cloud-900">

@@ -81,30 +81,21 @@ export const PostCard = ({
                 alt=""
                 width={300}
                 height={200}
-                showSkeleton
+                // showSkeleton
                 objectFit="cover"
               />
             </div>
           )}
 
-          <div onClick={() => setIsOpen(true)}>
-            <Link
-              href={{
-                pathname: router.pathname,
-                query: queryBuilder(),
-              }}
-              as={`/${post.userId.username}/p/${post._id}`}
-              scroll={false}
+          <Link href={`/${post.userId.username}/p/${post._id}`} scroll={false}>
+            <a
+              className={`${clipText && "clip-txt"} ${
+                fullW && "w-80"
+              } text-lg font- leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-800 `}
             >
-              <a
-                className={`${clipText && "clip-txt"} ${
-                  fullW && "w-80"
-                } text-lg font- leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-800 `}
-              >
-                {parse(post.body)}
-              </a>
-            </Link>
-          </div>
+              {parse(post.body)}
+            </a>
+          </Link>
           <Dialog
             className=" relative z-5 "
             open={isOpen}
@@ -129,7 +120,7 @@ export const PostCard = ({
                       onClick={() => {
                         router.back();
                         setIsOpen(false);
-                        setMakeFocus(false)
+                        setMakeFocus(false);
                       }}
                     >
                       <XIcon className=" w-6 h-6" />
@@ -199,15 +190,11 @@ export const PostCard = ({
 
               <div
                 onClick={() => {
-                  setIsOpen(true);
                   setMakeFocus(true);
                 }}
               >
                 <Link
-                  href={{
-                    pathname: router.pathname,
-                    query: queryBuilder(),
-                  }}
+                  href={`/${post.userId.username}/p/${post._id}?makeFocus=true`}
                   as={`/${post.userId.username}/p/${post._id}`}
                   scroll={false}
                 >
