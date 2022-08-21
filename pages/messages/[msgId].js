@@ -51,6 +51,7 @@ const Chat = () => {
     if (data.success) {
       setSuccess(data.success);
     }
+
   };
 
   const joinChatRoom = (chatId) => {
@@ -62,6 +63,7 @@ const Chat = () => {
     const { data } = await axios.get(`/api/messages?chatId=${chat._id}`);
     console.log(data);
     setMessages(data.messages);
+    bottomRef.current.scrollIntoView()
   };
 
   const handleSubmit = async (e) => {
@@ -74,12 +76,13 @@ const Chat = () => {
     console.log("newMessage", data);
 
     if (socket.connected) {
-      socket.emit("new message", data.message);
+      socket.emit("new message from socket", data.message);
     }
 
     setMessages((messages) => [...messages, ...[data.message]]);
     setContent("");
     socket.emit("stop typing", chat._id);
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const getLiClassNames = (msg, prevMsg, nxtMsg) => {
@@ -122,7 +125,6 @@ const Chat = () => {
 
   useEffect(() => {
     getChat();
-    bottomRef.current?.scrollIntoView();
     socket.on("typing", () => setTyping(true));
     socket.on("stop typing", () => setTyping(false));
     socket.on("message received", (newMessage) => {
@@ -143,13 +145,13 @@ const Chat = () => {
     success && getChatMessages();
   }, [success]);
 
-  useEffect(() => {
-    // 👇️ scroll to bottom every time messages change
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  // useEffect(() => {
+  //   // 👇️ scroll to bottom every time messages change
+  //   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, []);
 
   return (
-    <div className=" flex flex-col h-screen ">
+    <div className=" mb-16 ">
       <AltHeader>
         <ul
           onClick={() => {
@@ -191,11 +193,11 @@ const Chat = () => {
                 {chat.chatName}
               </p>
               {!chat.isGroupChat && (
-                <span className=" font-light text-slate-400 text-sm">
+                <span className=" font-light text-slate-400 text-sm flex items-center">
                   {typing ? (
-                    <Loading type="points" color="currentColor" />
+                    <Loading type="points" color="currentColor" size="sm" className=" pt-2" />
                   ) : (
-                    <p>@{otherChatUsers}</p>
+                    <p className=" text-xs">@{otherChatUsers}</p>
                   )}
                 </span>
               )}
@@ -208,7 +210,7 @@ const Chat = () => {
         ></div>
       </AltHeader>
 
-      <ul className=" grow  mx-3">
+      <ul className="  mx-3">
         {messages.map((message, i) => (
           <Message
             message={message}
@@ -226,7 +228,7 @@ const Chat = () => {
 
       <form
         onSubmit={handleSubmit}
-        className=" w-screen flex justify-between  items-end sticky bottom-0 right-0 left-0  py-3 border-t shadow-md bg-white "
+        className=" w-screen flex justify-between  items-end fixed bottom-0 right-0 left-0  py-3 border-t shadow-md bg-white "
       >
         <Textarea
           className=" ml- flex-1 text-gray-800 w- overflow-y-auto bg-gry-100 p-2 py-1 rounded-sm focus:outline-none"
@@ -237,6 +239,7 @@ const Chat = () => {
           minRows={1}
           maxRows={3}
           fullWidth={true}
+          shadow={false}
           cacheMeasurements={false}
         />
 
@@ -249,3 +252,4 @@ const Chat = () => {
 };
 
 export default Chat;
+

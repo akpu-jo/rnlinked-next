@@ -13,7 +13,7 @@ const CreateOptions = ({ open, close }) => {
         onClick={close}
         className="fixed z-50 inset-0 bg-elephant-600 bg-opacity-60 "
       />
-      <div className=" fixed bottom-0 rounded-t-lg left-0 right-0 py-6 shadow-xl z-50 bg-slate-100">
+      <div className=" fixed bottom-0 rounded-t-lg left-0 right-0 py-6 shadow-xl z-5 bg-slate-100">
         <ul className=" text-slate-600 mx-5">
           <li className=" bg-primary-springWood bg-opacity-80 shadow-sm rounded-lg p-2 my-2 text-xl tracking-wide  focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50">
             <Link href={`/new/post`}>

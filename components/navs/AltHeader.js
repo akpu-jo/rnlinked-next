@@ -3,13 +3,13 @@ import { useRouter } from "next/router";
 import { ArrowNarrowLeftIcon } from "@heroicons/react/outline";
 import { ChevronLeftIcon } from "@heroicons/react/outline";
 
-export default function AltHeader ({ children }) {
+export default function AltHeader({ children }) {
   const router = useRouter();
 
   return (
-    <header className=" flex justify-between items-center px-3 pt-3 text-2xl font-semibold tracking-wide sticky top-0 right-0 left-0 mb-4 bg-white z-5">
+    <header className=" flex justify-between items-center px-3 py-2 text-xl font-semibold tracking-wide sticky top-0 right-0 left-0 mb-4 bg-white z-5">
       <button
-      className=" text-slate-500 rounded-md p-1 bg-slate-100 mr-3 "
+        className=" text-slate-500 rounded-md p-1 bg-slate-100 mr-3 "
         onClick={(e) => {
           e.preventDefault();
           router.back();

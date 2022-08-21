@@ -14,9 +14,15 @@ import PostId from "./post/[postid]";
 import PostPageTemplate from "@/components/post/PostPageTemplate";
 import { Tab } from "@headlessui/react";
 import ArticleList from "@/components/articles/ArticleList";
+import { Router, useRouter } from "next/router";
 
 export default function Home({ posts }) {
   const { data: session } = useSession();
+  const router = useRouter()
+
+  const [lastIndex, setLastIndex] = useState(0)
+  const [selectedIndex, setSelectedIndex] = useState(0)
+
 
   const categories = ["Community", "Articles"];
 
@@ -29,6 +35,10 @@ export default function Home({ posts }) {
     console.log("socket===>", socket);
   };
   // const posts = JSON.parse(p);
+useEffect(() => {
+  setSelectedIndex(categories.indexOf(router.query.feed))
+}, [router.query])
+
 
   const head = () => {
     return (
@@ -47,7 +57,11 @@ export default function Home({ posts }) {
         <div className=" flex flex-col h-screen">
           <Header />
           <main className=" flex-1">
-            <Tab.Group defaultIndex={1}>
+          <Tab.Group selectedIndex={selectedIndex} onChange={(index) => {
+            router.push(`/?feed=${categories[index]}`, categories[index]=== 'Community' && `/` )
+            setSelectedIndex(index)
+            console.log(categories[index])
+            }}>
               <Tab.List className=" sticky top-0 z-4 bg-white space-x-3 mx-3 border-b whitespace-nowrap overflow-x-scroll hide-scrollbar">
                 {categories.map((category) => (
                   <Tab key={category}>

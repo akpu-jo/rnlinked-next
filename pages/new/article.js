@@ -150,6 +150,8 @@ const Article = () => {
       image === null
         ? { title, body: content, author: session.user.id }
         : { title, body: content, image, author: session.user.id };
+        console.log(reqBody, '<==reqbody');
+
     try {
       const { data } = await axios.post(`/api/articles`, reqBody);
 

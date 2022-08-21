@@ -7,6 +7,15 @@ const nextConfig = {
   experimental: {
     scrollRestoration: true
   },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/?feed=Community',
+  //       destination: '/',
+  //       permanent: true,
+  //     },
+  //   ]
+  // },
 }
 
 module.exports = nextConfig

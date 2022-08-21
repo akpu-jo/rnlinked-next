@@ -23,6 +23,8 @@ export default async function handler(req, res) {
       const { title, body, author, image } = req.body;
 
       try {
+        console.log(req.body, '<==reqbody api');
+
         const article = await Article.create({ title, body, author, image });
 
         // await article.populate("author", "name username image");

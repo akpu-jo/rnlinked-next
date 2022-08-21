@@ -117,7 +117,7 @@ const Inbox = () => {
           setRecommendedUsers={setRecommendedUsers}
         />
       </header>
-      <main className=" mx-4 ">
+      <main className=" mx-4 mb-16 ">
         <Recommendations recommendedUsers={recommendedUsers} />
 
         {chatlistjsx()}
