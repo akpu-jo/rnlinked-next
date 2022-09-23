@@ -70,7 +70,7 @@ export const PostCard = ({
   };
 
   return (
-    <div id={post._id} className="py-2 border-b border-slate-100 ">
+    <div id={post._id} className="py-2 border-b border-slate-100 bg-white rounded-lg mb-1 ">
       <div className=" mx-2  bg-opacity-50 rounded-lg px-2 py-3">
         <article className="">
           {post.image.length > 0 && (
@@ -90,7 +90,7 @@ export const PostCard = ({
           <Link href={`/${post.userId.username}/p/${post._id}`} scroll={false}>
             <a
               className={`${clipText && "clip-txt"} ${
-                fullW && "w-80"
+                fullW ? '' : "w-80"
               } text-lg font- leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-800 `}
             >
               {parse(post.body)}

@@ -1,13 +1,20 @@
 import AltHeader from "@/components/navs/AltHeader";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+const ReactQuill = dynamic(
+  async () => {
+    const { default: RQ } = await import("react-quill");
+    return ({ forwardedRef, ...props }) => <RQ ref={forwardedRef} {...props} />;
+  },
+  { ssr: false }
+);
 import "react-quill/dist/quill.bubble.css";
 import "react-quill/dist/quill.snow.css";
 import Resizer from "react-image-file-resizer";
 
 import { Loading, Textarea } from "@nextui-org/react";
 import {
+  ChevronLeftIcon,
   DotsVerticalIcon,
   PlusIcon,
   TrashIcon,
@@ -21,39 +28,17 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { resizeImage } from "@/utils/functions";
-
-const modules = {
-  toolbar: [
-    [{ header: "1" }, { header: "2" }],
-    // [{ size: [] }],
-    ["bold", "italic", "underline"],
-    [{ list: "ordered" }, { list: "bullet" }],
-    ["link", "image"],
-    ["clean"],
-  ],
-};
-
-const formats = [
-  "header",
-  "size",
-  "bold",
-  "italic",
-  "underline",
-  "blockquote",
-  "list",
-  "bullet",
-  "link",
-  "image",
-  "video",
-];
+import Link from "next/link";
 
 const Article = () => {
   const { data: session } = useSession();
   const router = useRouter();
+  const [editorImageUrl, setEditorImageUrl] = useState([])
+
 
   const getContentFromLS = () => {
     if (typeof window === "undefined") {
-      return false;
+      return '';
     }
 
     if (localStorage.getItem("content")) {
@@ -65,7 +50,7 @@ const Article = () => {
 
   const getTitleFromLS = () => {
     if (typeof window === "undefined") {
-      return false;
+      return '';
     }
 
     if (localStorage.getItem("title")) {
@@ -86,12 +71,82 @@ const Article = () => {
     }
   };
 
+  const imageHandler = (a) => {
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
+
+    input.onchange = async () => {
+        const file = input.files[0];
+
+        // file type is only image.
+        if (/^image\//.test(file.type)) {
+          const img = await resizeImage(file);
+
+          
+          const editor = editorRef.current.getEditor()
+          const unprivilegedEditor = editorRef.current.makeUnprivilegedEditor(editor);
+          const range = unprivilegedEditor.getSelection()
+
+          
+
+          const { data } = await axios.post(
+            `${process.env.NEXT_PUBLIC_NODE_API}/api/n/articles/upload-image`,
+            { img }
+          );
+
+          const url = data.image.url
+
+          editorRef.current.getEditor().insertEmbed(range.index, "image", url);
+
+          editorRef.current.getEditor().setSelection(range.index + 1)
+
+          setEditorImageUrl((editorImageUrl) => [...editorImageUrl, ...[data.image]])
+        } else {
+            console.warn("You could only upload images.");
+        }
+    };
+};
+
   const [content, setContent] = useState(getContentFromLS());
   const [title, setTitle] = useState(getTitleFromLS());
   const [image, setImage] = useState(null);
   const [imageUploading, setImageUploading] = useState(false);
 
   const bottomRef = useRef(null);
+  const editorRef = useRef(null);
+
+  const modules = useMemo(() => ({
+    toolbar: {
+      container: [
+        [{ header: "1" }, { header: "2" }],
+        // [{ size: [] }],
+        ["bold", "italic", "underline"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        ["link", "image"],
+        ["clean"],
+      ],
+      handlers: {
+        image: imageHandler,
+      },
+    },
+  }),[]);
+
+  const formats = [
+    "header",
+    "size",
+    "bold",
+    "italic",
+    "underline",
+    "blockquote",
+    "list",
+    "bullet",
+    "link",
+    "image",
+    "video",
+  ];
+
 
   // const resizeImage = (file) => {
   //   //Resize
@@ -112,6 +167,14 @@ const Article = () => {
   //   });
   // };
 
+  const cloudinaryImageCleanUp = (content) => {
+    editorImageUrl.map(async (img) => {
+      if(!content.includes(img.url)){
+        deleteImage(img.publicId)
+      }
+    })
+  }
+
   const uploadImage = async (e) => {
     setImageUploading(true);
     try {
@@ -129,12 +192,12 @@ const Article = () => {
     setImageUploading(false);
   };
 
-  const deleteImage = async (e) => {
-    e.preventDefault();
+  const deleteImage = async (publicId, e) => {
+    e.preventDefault()
     try {
       const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_NODE_API}/api/n/articles/remove-image`,
-        { publicId: image.publicId }
+        { publicId }
       );
 
       console.log("deleted image response===>", data);
@@ -145,14 +208,19 @@ const Article = () => {
     }
   };
 
+  // const [h, setH] = useState(window.innerWidth)
+
   const publish = async () => {
     const reqBody =
       image === null
         ? { title, body: content, author: session.user.id }
         : { title, body: content, image, author: session.user.id };
-        console.log(reqBody, '<==reqbody');
+    console.log(reqBody, "<==reqbody");
+
+
 
     try {
+      cloudinaryImageCleanUp(reqBody.body)
       const { data } = await axios.post(`/api/articles`, reqBody);
 
       console.log(data);
@@ -166,33 +234,65 @@ const Article = () => {
     }
   };
 
+  // useEffect(() => {
+  // setH(window.innerWidth)
+  // }, [window])
+
   return (
-    <div className=" flex flex-col h-screen">
-      <AltHeader>
-        <div className=" flex items-center ">
-          <button className=" px-2 mx-1">
-            <DotsVerticalIcon className=" w-5 h-5" />
-          </button>
+    <div className=" flex flex-col h-screen  bg-blac">
+      {/* {h}  */}
+      <header className=" fixed top-0 right-0 left-0 z-5 py-2 bg-slate-100 ">
+        <div className=" flex items-center justify-between max-w-5xl mx-auto px-3 ">
           <button
-            onClick={publish}
-            className=" text-xl tracking-wide bg-cloud-900 px-2 py-1 rounded-md text-slate-200"
+            className=" text-slate-500 rounded-md p-1 bg-slate-100 mr-3 sm:hidden "
+            onClick={(e) => {
+              e.preventDefault();
+              router.back();
+            }}
           >
-            Publish
+            <ChevronLeftIcon className=" w-5 h-5" />
           </button>
+          <Link href="/">
+            <a className="w-36 md:w-44  hidden sm:block ">
+              <Image
+                src="/rn-logo.png"
+                alt="rnlinked logo"
+                width={125}
+                height={28}
+              />
+            </a>
+          </Link>
+          <div className=" flex items-center justify-between">
+            <button className=" flex items-center text-center px-2 mr-3">
+              <DotsVerticalIcon className=" w-5 h-5" />{" "}
+              <span className=" tracking-wide hidden sm:block ">options</span>
+            </button>
+            <button
+              onClick={() => {
+                publish();
+              }}
+              className=" text- tracking-wide bg-cloud-900 px-2 py-1 rounded-md text-slate-200"
+            >
+              Publish
+            </button>
+          </div>
         </div>
-      </AltHeader>
-      <form className=" flex-1">
-        <TextareaAutosize
-          className=" w-full text-3xl font-semibold text-slate-700 px-1 my-2  "
-          maxRows={4}
-          maxLength={150}
-          placeholder="Headline"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-            localStorage.setItem("title", JSON.stringify(e.target.value));
-          }}
-        />
+      </header>
+
+      <form className=" flex-1 max-w-3xl w-full mx-auto mt-16">
+        <div className=" mx-2 my-3">
+          <TextareaAutosize
+            className=" w-full text-3xl font-semibold text-slate-700 px-1 bg-slate-70   "
+            maxRows={2}
+            maxLength={150}
+            placeholder="Headline"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              localStorage.setItem("title", JSON.stringify(e.target.value));
+            }}
+          />
+        </div>
 
         {image !== null ? (
           <div className=" group relative ">
@@ -205,14 +305,14 @@ const Article = () => {
             />
 
             <button
-              onClick={(e) => deleteImage(e)}
+              onClick={(e) => deleteImage( image.publicId, e)}
               className="hidden group-hover:block absolute top-0 right-0 text-center rounded-sm p-2 bg-blue-50  text-red-600"
             >
               <TrashIcon className=" w-5 h-5 " />
             </button>
           </div>
         ) : (
-          <div className="flex items-center justify-center border border-dashed py-2 bg-cloud-50 mb-3 mx-3 ">
+          <div className="flex items-center justify-center border border-dashed py-2 sm:py-4 bg-cloud-50 mb-3 mx-3 ">
             {imageUploading ? (
               <div>
                 <Loading type="points-opacity" />
@@ -237,6 +337,7 @@ const Article = () => {
           </div>
         )}
         <ReactQuill
+          forwardedRef={editorRef}
           className=""
           theme="snow"
           modules={modules}
@@ -246,7 +347,7 @@ const Article = () => {
           onChange={(e) => {
             localStorage.setItem("content", JSON.stringify(e));
             setContent(e);
-            bottomRef.current?.scrollIntoView();
+            // bottomRef.current?.scrollIntoView();
           }}
         />
         <div ref={bottomRef} />

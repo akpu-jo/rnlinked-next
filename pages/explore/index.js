@@ -1,8 +1,10 @@
 import Recommendations from "@/components/explore/Recommendations";
+import TrendingPosts from "@/components/explore/TrendingPosts";
 import WhoToFollow from "@/components/explore/WhoToFollow";
 import AltHeader from "@/components/navs/AltHeader";
 import MobileNav from "@/components/navs/MobileNav";
 import SearchHeader from "@/components/navs/SearchHeader";
+import SideNav from "@/components/navs/SideNav";
 import { PostCard } from "@/components/post/PostCard";
 import { timeDifference } from "@/utils/timeStamp";
 import { SearchIcon } from "@heroicons/react/outline";
@@ -90,7 +92,7 @@ const Explore = () => {
   }, []);
 
   return (
-    <div className=" flex flex-col h-screen">
+    <div className=" flex flex-col h-screen bg-slate-50">
       {showSearch ? (
         <SearchHeader
           showSearch={showSearch}
@@ -109,36 +111,42 @@ const Explore = () => {
       {recommendedUsers.length > 0 ? (
         <Recommendations recommendedUsers={recommendedUsers} />
       ) : (
-        <main className="">
-          <section>
-            <h2 className=" mx-3 text-slate-500 font-medium tracking-normal py-2 my-1">
-              TRENDING
-            </h2>
-            <div className=" flex overflow-x-scroll hide-scrollbar ">
-              {trending.map((post) => (
-                <PostCard post={post} key={post._id} />
+        <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5">
+          <SideNav />
+          <main className=" mb-24 col-span-6 ">
+            <section>
+              <h2 className=" mx-3 text-slate-500 font-medium tracking-normal py-2 my-1">
+                TRENDING
+              </h2>
+              <div className=" flex overflow-x-scroll hide-scrollbar ">
+                {trending.map((post) => (
+                  <PostCard post={post} key={post._id} fullW={false} />
+                ))}
+              </div>
+            </section>
+            <section className=" mx-4 my-5">
+              <h2 className=" text-slate-500 font-medium tracking-normal py-2 my-1">
+                PEOPLE TO FOLLOW
+              </h2>
+              <div className=" flex flex-wrap justify-evenly  ">
+                {peopleToFollow.map((user) => (
+                  <WhoToFollow key={user._id} user={user} />
+                ))}
+              </div>
+            </section>
+            <section className=" mx-4 my-3 ">
+              <h2 className=" text-slate-500 font-medium tracking-normal py-2">
+                FOR YOU
+              </h2>
+              {postsForYou.map((post) => (
+                <div key={post._id}>{forYou(post)}</div>
               ))}
-            </div>
+            </section>
+          </main>
+          <section className=" hidden lg:block sticky top-16  col-span-3 bg-slate-40 mt-2 bg-white rounded-xl p-5 max-h-96">
+            <TrendingPosts />
           </section>
-          <section className=" mx-4 my-5">
-            <h2 className=" text-slate-500 font-medium tracking-normal py-2 my-1">
-              PEOPLE TO FOLLOW
-            </h2>
-            <div className=" flex flex-wrap justify-evenly  ">
-              {peopleToFollow.map((user) => (
-                <WhoToFollow key={user._id} user={user} />
-              ))}
-            </div>
-          </section>
-          <section className=" mx-4 my-3 ">
-            <h2 className=" text-slate-500 font-medium tracking-normal py-2">
-              FOR YOU
-            </h2>
-            {postsForYou.map((post) => (
-              <div key={post._id} >{forYou(post)}</div>
-            ))}
-          </section>
-        </main>
+        </div>
       )}
       <p className=" flex-1 text-center text-xl font-medium p-2 m-10"></p>
       <MobileNav />

@@ -4,17 +4,26 @@ import { NextUIProvider } from "@nextui-org/react";
 import "../styles/globals.css";
 import SocketLayout from "@/components/navs/SocketLayout";
 import WithSession from "@/components/uiTemplates/WithSession";
+import { useEffect } from "react";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+
+  
+  useEffect(() => {
+    import("preline");
+  }, []);
+
+  const getLayout = Component.getLayout || ((page) => page);
+
   return (
     <SessionProvider session={session}>
-      <NextUIProvider>
-        {/* <WithSession> */}
+      {getLayout(
+        <NextUIProvider>
           <SocketLayout>
             <Component {...pageProps} />
           </SocketLayout>
-        {/* </WithSession> */}
-      </NextUIProvider>
+        </NextUIProvider>
+      )}
     </SessionProvider>
   );
 }

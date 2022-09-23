@@ -22,6 +22,8 @@ export default async function handler(req, res) {
     case "POST":
       const { title, body, author, image } = req.body;
 
+      
+
       try {
         console.log(req.body, '<==reqbody api');
 

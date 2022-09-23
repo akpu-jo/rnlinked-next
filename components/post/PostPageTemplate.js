@@ -77,7 +77,7 @@ const PostPageTemplate = ({ post }) => {
   }, [makeFocus]);
 
   return (
-    <main className=" h-full flex flex-col ">
+    <main className=" h-full flex flex-col col-span-6 mt-16 ">
       <section className=" flex mb-1 items-center mx-3 bg-opacity-90 rounded-lg ">
         <Link href={`/${post.userId.username}`}>
           <a>
@@ -98,14 +98,15 @@ const PostPageTemplate = ({ post }) => {
       </section>
       <article className=" mx-3 bg-slate-00 flex-1">
         {post.image.length > 0 && (
-          <div className=" w-full">
+          <div className=" w-full block">
             <Image
-              className=" object-cover rounded-sm w-full bg-gray-300 "
+              className=" object-cover rounded-sm w-full bg-gray-700 "
               src={post.image[0].url}
               alt=""
-              width={370}
-              height={240}
-              showSkeleton
+              width={300}
+              height={170}
+              layout="responsive"
+              // showSkeleton
               objectFit="cover"
             />
           </div>
@@ -123,12 +124,12 @@ const PostPageTemplate = ({ post }) => {
               setAnimateLike(true);
               handleLike(post._id);
             }}
-            className={` flex items-center p-2 text-lg mr-2`}
+            className={` flex items-center p-2 text-lg mr-2 cursor-pointer`}
             onAnimationEnd={() => setAnimateLike(false)}
           >
             <HeartInactiveIcon animateLike={animateLike} liked={liked} />
             <span
-              className={`${"ml-1"} ${
+              className={` ml-1 ${
                 animateLike && ""
               } text-slate-500 tracking-wide`}
             >
@@ -146,7 +147,7 @@ const PostPageTemplate = ({ post }) => {
           </li>
           <li
             onClick={() => commentInputRef.current.focus()}
-            className=" flex items-center p-2  text-lg text-gray-500  "
+            className=" flex items-center p-2  text-lg text-gray-500 cursor-pointer  "
           >
             <ReplyIcon className=" w-5 h-5 mr-1 -rotate-180 " />
             <p className=" tracking-wide"> Reply </p>

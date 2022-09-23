@@ -15,14 +15,21 @@ import PostPageTemplate from "@/components/post/PostPageTemplate";
 import { Tab } from "@headlessui/react";
 import ArticleList from "@/components/articles/ArticleList";
 import { Router, useRouter } from "next/router";
+import MenuOptions from "@/components/navs/MenuOptions";
+import HomeIconUI from "@/components/icons/HomeIconUI";
+import SearchIconUI from "@/components/icons/SearchIconUI";
+import MessageIcon from "@/components/icons/MessageIcon";
+import SettingsIcon from "@/components/icons/SettingsIcon";
+import { NewspaperIcon, PencilAltIcon } from "@heroicons/react/outline";
+import TrendingPosts from "@/components/explore/TrendingPosts";
+import SideNav from "@/components/navs/SideNav";
 
 export default function Home({ posts }) {
   const { data: session } = useSession();
-  const router = useRouter()
+  const router = useRouter();
 
-  const [lastIndex, setLastIndex] = useState(0)
-  const [selectedIndex, setSelectedIndex] = useState(0)
-
+  const [lastIndex, setLastIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const categories = ["Community", "Articles"];
 
@@ -35,11 +42,15 @@ export default function Home({ posts }) {
     console.log("socket===>", socket);
   };
   // const posts = JSON.parse(p);
-useEffect(() => {
-  setSelectedIndex(categories.indexOf(router.query.feed))
-}, [router.query])
+  useEffect(() => {
+    setSelectedIndex(categories.indexOf(router.query.feed));
+  }, [router.query]);
 
-
+  const getTrendingPosts = async () => {
+    const { data } = await axios.get("/api/explore/trending");
+    console.log("Trending===>", data);
+    setTrending(data.posts);
+  };
   const head = () => {
     return (
       <Head>
@@ -52,17 +63,24 @@ useEffect(() => {
 
   if (session) {
     return (
-      <>
+      <div className=" ">
         {head()}
-        <div className=" flex flex-col h-screen">
-          <Header />
-          <main className=" flex-1">
-          <Tab.Group selectedIndex={selectedIndex} onChange={(index) => {
-            router.push(`/?feed=${categories[index]}`, categories[index]=== 'Community' && `/` )
-            setSelectedIndex(index)
-            console.log(categories[index])
-            }}>
-              <Tab.List className=" sticky top-0 z-4 bg-white space-x-3 mx-3 border-b whitespace-nowrap overflow-x-scroll hide-scrollbar">
+        <Header />
+        <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5  ">
+        <SideNav />
+          <main className=" mb-24 col-span-6 sm:mt-2  ">
+            <Tab.Group
+              selectedIndex={selectedIndex}
+              onChange={(index) => {
+                router.push(
+                  `/?feed=${categories[index]}`,
+                  categories[index] === "Community" && `/`
+                );
+                setSelectedIndex(index);
+                console.log(categories[index]);
+              }}
+            >
+              <Tab.List className=" sticky top-14 z-4 bg-white space-x-3  border-b whitespace-nowrap overflow-x-scroll hide-scrollbar">
                 {categories.map((category) => (
                   <Tab key={category}>
                     {({ selected }) => (
@@ -81,13 +99,18 @@ useEffect(() => {
                 <Tab.Panel>
                   <Timeline posts={posts} />
                 </Tab.Panel>
-                <Tab.Panel><ArticleList /></Tab.Panel>
+                <Tab.Panel>
+                  <ArticleList />
+                </Tab.Panel>
               </Tab.Panels>
             </Tab.Group>
           </main>
+          <section className=" hidden lg:block sticky top-16  col-span-3 bg-slate-40 mt-2 bg-white rounded-xl p-5 max-h-96">
+            <TrendingPosts />
+          </section>
           <MobileNav user={session.user} />
         </div>
-      </>
+      </div>
     );
   }
   return (
@@ -97,6 +120,7 @@ useEffect(() => {
     </>
   );
 }
+
 
 export const getServerSideProps = async (context) => {
   console.log(process.env.NEXT_PUBLIC_URL);

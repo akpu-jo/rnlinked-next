@@ -93,6 +93,7 @@ const NewMessage = () => {
           Next
         </button>
       </AltHeader>
+      <div className=" mt-14" />
       <SearchChat
         focusSearchRef={focusSearchRef}
         showSearch={showSearch}

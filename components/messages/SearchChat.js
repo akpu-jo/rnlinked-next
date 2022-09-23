@@ -11,21 +11,21 @@ const SearchChat = ({
   setShowSearch,
   setRecommendedUsers,
   focus = false,
+  scrollIntoViewref
 }) => {
   const router = useRouter();
 
   const [query, setQuery] = useState(router.query.q ? router.query.q : "");
   let [timer, setTimer] = useState(null);
-  const scrollIntoViewref = useRef(null);
 
   useEffect(() => {
     focus && focusSearchRef.current.focus();
   }, []);
 
-  useEffect(() => {
-    // 👇️ scroll to bottom every time messages change
-    scrollIntoViewref.current?.scrollIntoView({ behavior: "smooth" });
-  }, [selectedUsers]);
+  // useEffect(() => {
+  //   // 👇️ scroll to bottom every time messages change
+  //   scrollIntoViewref.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [selectedUsers]);
 
   const searchTimer = (e) => {
     clearTimeout(timer);
@@ -55,16 +55,16 @@ const SearchChat = ({
     return (
       <form
         onSubmit={(e) => submitSearch(e)}
-        className=" flex items-center text-lg bg-slate-100 text-slate-600 p-2 rounded-md w-full"
+        className=" flex items-center text-lg bg-slate-100 text-slate-600 p-1 rounded-md w-full"
       >
         <button type="submit" className="">
           <SearchIcon className="h-7 w-7 hover:text-primary-brick opacity-90" />
         </button>
         <input
           onClick={() => setShowSearch(true)}
-          className="bg-slate-100 px-2 border-none focus:outline-none w-full"
+          className="bg-slate-100 px-2 border-none focus:outline-none w-full text-lg placeholder:text-sm"
           type="text"
-          placeholder="Search on RNlinked"
+          placeholder="Search in messages"
           aria-label="Search for an article"
           value={query}
           ref={focusSearchRef}
@@ -88,10 +88,10 @@ const SearchChat = ({
 
   return (
     <header
-      className={` py-2 pt- text-2xl font-semibold tracking-wide  bg-white z-10`}
+      className={` py-2 pt- text-2xl font-semibold tracking-wide  bg-white z-10 flex-1 `}
     >
       {searchBox()}
-      <div className=" flex overflow-x-scroll hide-scrollbar  ">
+      <div className=" flex overflow-x-scroll hide-scrollbar mt-1  ">
         <div className=" flex flex-nowrap">
           {selectedUsers &&
             selectedUsers.map((user, i) => (
@@ -108,8 +108,8 @@ const SearchChat = ({
                 />
               </button>
             ))}
-          <div ref={scrollIntoViewref} />
         </div>
+          <div ref={scrollIntoViewref} />
       </div>
     </header>
   );
