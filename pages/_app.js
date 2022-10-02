@@ -5,10 +5,9 @@ import "../styles/globals.css";
 import SocketLayout from "@/components/navs/SocketLayout";
 import WithSession from "@/components/uiTemplates/WithSession";
 import { useEffect } from "react";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
-
-  
   useEffect(() => {
     import("preline");
   }, []);
@@ -16,15 +15,17 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const getLayout = Component.getLayout || ((page) => page);
 
   return (
-    <SessionProvider session={session}>
-      {getLayout(
-        <NextUIProvider>
-          <SocketLayout>
-            <Component {...pageProps} />
-          </SocketLayout>
-        </NextUIProvider>
-      )}
-    </SessionProvider>
+    <AuthProvider>
+      <SessionProvider session={session}>
+        {getLayout(
+          <NextUIProvider>
+            <SocketLayout>
+              <Component {...pageProps} />
+            </SocketLayout>
+          </NextUIProvider>
+        )}
+      </SessionProvider>
+    </AuthProvider>
   );
 }
 

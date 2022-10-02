@@ -6,6 +6,7 @@ import MobileNav from "@/components/navs/MobileNav";
 import SearchHeader from "@/components/navs/SearchHeader";
 import SideNav from "@/components/navs/SideNav";
 import { PostCard } from "@/components/post/PostCard";
+import AppBar from "@/layouts/AppBar";
 import { timeDifference } from "@/utils/timeStamp";
 import { SearchIcon } from "@heroicons/react/outline";
 import { Avatar, Card, Container } from "@nextui-org/react";
@@ -148,10 +149,17 @@ const Explore = () => {
           </section>
         </div>
       )}
-      <p className=" flex-1 text-center text-xl font-medium p-2 m-10"></p>
+      <p className=" flex-1 text-center text-xl font-medium p-2 m-10 "></p>
       <MobileNav />
     </div>
   );
 };
 
+Explore.getLayout = function getLayout(page){
+  return(
+    <AppBar>
+    {page}
+  </AppBar>
+  )
+}
 export default Explore;

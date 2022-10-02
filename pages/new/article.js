@@ -4,7 +4,11 @@ import dynamic from "next/dynamic";
 const ReactQuill = dynamic(
   async () => {
     const { default: RQ } = await import("react-quill");
-    return ({ forwardedRef, ...props }) => <RQ ref={forwardedRef} {...props} />;
+    const RQuill = React.forwardRef((forwardedRef, ...props ) => {
+      
+      return <RQ ref={forwardedRef} {...props} />;
+    })
+    RQuill.displayName = 'ReactQuill'
   },
   { ssr: false }
 );
