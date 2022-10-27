@@ -10,8 +10,8 @@ export const Signup = ({ open, onClose, openSignIn }) => {
   const [error, setError] = useState('');
   const isInvalid = userName === '' || fullName === '' || password === '' || email === '';
 
-  const handleSignUp = async (event) => {
-    event.preventDefault();
+  const handleSignUp = async (e) => {
+    e.preventDefault();
   };
   if (!open) return null;
 

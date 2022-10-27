@@ -5,6 +5,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 
 import { Signup } from "../components/auth/Signup";
 import Header from "../components/navs/Header";
+import { Signin } from "@/components/auth/Signin";
 
 const Welcome = () => {
   const [signInOpen, setSignInOpen] = useState(false);
@@ -88,7 +89,9 @@ const Welcome = () => {
             </div>
 
             <button
-              onClick={() => signIn()}
+                onClick={() => {
+                  setSignUpOpen(true);
+                }}
               className=" sm:my-0 tracking-widest justify-center bg-elm-600 dark:bg-burntSienna-600 shadow-md px-3 py-2  rounded-full sm:w-56  w-4/6 text-sm uppercase font-head font-semibold text-elephant-50"
             >
               Get Started
@@ -96,14 +99,14 @@ const Welcome = () => {
           </main>
         </div>
       </div>
-      {/* <Signin
+      <Signin
         onClose={() => {
           setSignInOpen(false);
         }}
         openSignUp={openSignUpDialog}
         open={signInOpen}
         openPassword={openPasswordDialog}
-      /> */}
+      />
       <Signup
         onClose={() => {
           setSignUpOpen(false);

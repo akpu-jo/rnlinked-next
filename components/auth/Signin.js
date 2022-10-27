@@ -1,15 +1,42 @@
+import { useAuth } from "@/contexts/AuthContext";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, google, twitter } from "firebaseConfig";
 import React, { useState } from "react";
 
 export const Signin = ({ open, openSignUp, onClose, openPassword }) => {
+  const session = useAuth()
+  const {signin} = session
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
   const isInvalid = password === "" || email === "";
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+  
+      console.log(userCredential)
+      
+    } catch (error) {
+      console.log(error)
+    }
 };
+
+const signinWithGoogle = async () => {
+  const userCredential = await signInWithPopup(auth, google) 
+  console.log(auth, userCredential)
+}
+
+const signinWithTwitter = async () => {
+ const userCredential = await signInWithPopup(auth, twitter)
+  console.log(userCredential)
+}
 
   if (!open) return null;
 
@@ -31,22 +58,23 @@ export const Signin = ({ open, openSignUp, onClose, openPassword }) => {
             </h6>
           </div>
           <div className="btn-wrapper text-center">
-            <button
-              onClick={""}
-              className="bg-white dark:bg-slate-200 active:bg-gray-100 text-elephant-600 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center text-xs"
-              type="button"
-            >
-              <img alt="..." className="w-5 mr-1" src="/twitter.svg" />
-              Twitter
-            </button>
-            <button
-              onClick={""}
+          <button
+              onClick={signinWithGoogle}
               className="bg-white dark:bg-slate-200 active:bg-gray-100 text-elephant-600 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center text-xs"
               type="button"
             >
               <img alt="..." className="w-5 mr-1" src="/google.svg" />
               Google
             </button>
+            <button
+              onClick={signinWithTwitter}
+              className="bg-white dark:bg-slate-200 active:bg-gray-100 text-elephant-600 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center text-xs"
+              type="button"
+            >
+              <img alt="..." className="w-5 mr-1" src="/twitter.svg" />
+              Twitter
+            </button>
+         
           </div>
           <hr className="mt-6 border-b-1 border-gray-400" />
           <div className="text-center mb-3 font-bold">

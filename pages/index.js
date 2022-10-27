@@ -41,6 +41,7 @@ export default function Home({ posts }) {
     return (
       <div className=" ">
         {head()}
+        <AppBar />
         <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5  ">
         <SideNav />
           <main className=" mb-24 col-span-6 sm:mt-2  ">
@@ -108,10 +109,10 @@ export const getServerSideProps = async (context) => {
   };
 };
 
-Home.getLayout = function getLayout(page){
-  return(
-    <AppBar>
-      {page}
-    </AppBar>
-  )
-}
+// Home.getLayout = function getLayout(page){
+//   return(
+//     <AppBar>
+//       {page}
+//     </AppBar>
+//   )
+// }

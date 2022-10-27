@@ -23,7 +23,7 @@ const Profile = ({ u }) => {
   const isSessionUser = session && user._id === session.user.id;
 
   return (
-    <div className="mx-3">
+    <div className="mx-3 pt-24">
       <AltHeader>
         {isSessionUser && (
           <>
@@ -89,6 +89,16 @@ const Profile = ({ u }) => {
           </Modal.Footer>
         </Modal>
       )}
+         {isSessionUser && (
+          <>
+            <Button
+              onClick={() => setVisible(true)}
+              auto
+              color
+              icon={<SettingsIcon />}
+            />
+          </>
+        )}
       <ProfileHead user={user} isSessionUser={isSessionUser} />
       <Tabs cats={categories}>
         <UserPosts user={user} />
