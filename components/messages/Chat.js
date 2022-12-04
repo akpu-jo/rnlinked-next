@@ -1,5 +1,3 @@
-import AltHeader from "@/components/navs/AltHeader";
-import MobileNav from "@/components/navs/MobileNav";
 import {
   ChevronLeftIcon,
   DotsVerticalIcon,
@@ -9,18 +7,18 @@ import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useMemo, useRef } from "react";
-import { io } from "socket.io-client";
 import styles from "../../styles/Message.module.css";
 
 import { Loading, Textarea } from "@nextui-org/react";
 import Message from "@/components/messages/Message";
-import { useSession } from "next-auth/react";
 import socket from "@/utils/clientSocket";
+import { useAuth } from "@/contexts/AuthContext";
+import { auth } from "firebaseConfig";
 
 const Chat = () => {
   const router = useRouter();
   const { msgId } = router.query;
-  const { data: session } = useSession();
+  const { user } = useAuth();
 
   const [chat, setChat] = useState({});
   // const [isGroupChat, setIsGroupChat] = useState(false)
@@ -29,7 +27,6 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
 
   const [content, setContent] = useState("");
-  // const [isMine] = useState(message.sender._id === session.user.id);
   const [chatMeta, setChatMeta] = useState({
     chatName: "ChatName",
     lastSenderId: "",
@@ -42,7 +39,12 @@ const Chat = () => {
   const bottomRef = useRef(null);
 
   const getChat = async () => {
-    const { data } = await axios.get(`/api/messages/${msgId}`);
+    const token = await auth.currentUser.getIdToken(true);
+    const { data } = await axios.get(`/api/messages/${msgId}`, {
+      headers: {
+        token,
+      },
+    });
     console.log(data);
     setChat(data.chat);
     // setIsGroupChat(data.chat.isGroup)
@@ -62,8 +64,13 @@ const Chat = () => {
   };
 
   const getChatMessages = async () => {
+    const token = await auth.currentUser.getIdToken(true);
     console.log(chat._id);
-    const { data } = await axios.get(`/api/messages?chatId=${msgId}`);
+    const { data } = await axios.get(`/api/messages?chatId=${msgId}`, {
+      headers: {
+        token,
+      },
+    });
     console.log(data);
     setMessages(data.messages);
     bottomRef.current.scrollIntoView();
@@ -72,10 +79,19 @@ const Chat = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { data } = await axios.post(`/api/messages`, {
-      content,
-      chatId: chat._id,
-    });
+    const token = await auth.currentUser.getIdToken(true);
+    const { data } = await axios.post(
+      `/api/messages`,
+      {
+        content,
+        chatId: chat._id,
+      },
+      {
+        headers: {
+          token,
+        },
+      }
+    );
     console.log("newMessage", data);
 
     if (socket.connected) {
@@ -89,7 +105,7 @@ const Chat = () => {
   };
 
   const getLiClassNames = (msg, prevMsg, nxtMsg) => {
-    const isMine = msg.sender._id === session.user.id;
+    const isMine = msg.sender._id === user._id;
     let liClassName = isMine ? "mine" : "theirs";
 
     let lastSenderId = prevMsg != null ? prevMsg.sender._id : "";

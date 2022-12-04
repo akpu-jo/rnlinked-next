@@ -3,8 +3,7 @@ import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.bubble.css";
 
-import { ArrowNarrowLeftIcon, PhotographIcon } from "@heroicons/react/outline";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { PhotographIcon } from "@heroicons/react/outline";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
@@ -13,13 +12,14 @@ import { TrashIcon } from "@heroicons/react/solid";
 import AltHeader from "@/components/navs/AltHeader";
 import { Avatar } from "@nextui-org/react";
 import { resizeImage } from "@/utils/functions";
+import { useAuth } from "@/contexts/AuthContext";
 
 const modules = {
   toolbar: [["bold", "italic", "underline", "strike"]],
 };
 
 const NewPost = () => {
-  const { data: session } = useSession();
+  const {user} = useAuth()
   const router = useRouter();
 
   const [value, setValue] = useState("");
@@ -60,7 +60,7 @@ const NewPost = () => {
       let { data } = await axios.post(`/api/posts`, {
         image,
         body: value,
-        userId: session.user.id,
+        userId: user._id,
       });
 
       console.log("Data===>", data);
@@ -106,7 +106,7 @@ const NewPost = () => {
         <p className=" text-xl tracking-wide">New Post</p>
         <div className=" w-1/3"></div>
       </AltHeader>
-      <div className=" mx-3 pb-40">
+      <div className=" max-w-md  mx-auto pb-40 mt-16">
         {previewImg !== "" && (
           <div className="py-4 group relative">
             <>
@@ -127,18 +127,11 @@ const NewPost = () => {
             </>
           </div>
         )}
-        <form className="" onSubmit={handleSubmit}>
+        <form className=" max-w-md mx-auto" onSubmit={handleSubmit}>
           <div className=" flex">
-            {session && (
+            {user && (
               <div>
-                <Avatar squared src={session.user.image} />
-                {/* <Image
-                  className=" rounded-full"
-                  src={session.user.image}
-                  alt="Picture of the logo"
-                  width={50}
-                  height={50}
-                /> */}
+                <Avatar squared src={user.image} />
               </div>
             )}
             <ReactQuill
@@ -148,10 +141,11 @@ const NewPost = () => {
               placeholder="Start a post..."
               value={value}
               onChange={setValue}
+              autoFocus
             />
           </div>
 
-          <div className=" fixed bottom-0 left-0 right-0 mx-3 bg-white shadow-lg py-4">
+          <div className=" fixed bottom-0 left-0 right-0 bg-white shadow-lg py-4 max-w-md mx-auto">
             <div className=" flex justify-between items-center">
               <label className="">
                 <input

@@ -1,16 +1,16 @@
 import Link from "next/link";
 import React from "react";
 import parse from "html-react-parser";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Avatar } from "@nextui-org/react";
 import { timeDifference } from "@/utils/timeStamp";
 import { ChatIcon } from "@heroicons/react/outline";
 import Image from "next/image";
+import { useAuth } from "@/contexts/AuthContext";
 
 const ArticleCard = ({ article, showAtions = true, clipText = true }) => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const {user} = useAuth()
 
   const timestamp = timeDifference(Date.now(), new Date(article.createdAt));
 
@@ -40,7 +40,7 @@ const ArticleCard = ({ article, showAtions = true, clipText = true }) => {
           </div>
         )}
       </article>
-      {session && showAtions && (
+      {user && showAtions && (
         <div className=" flex justify-between items-center z-10">
           <div className={` flex items-center `}>
             <Link href={`/${article.author.username}`}>

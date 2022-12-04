@@ -1,29 +1,29 @@
+import { useAuth } from "@/contexts/AuthContext";
 import { handleFollowing } from "@/utils/users";
 import { CheckIcon, PlusIcon } from "@heroicons/react/outline";
 import { Avatar } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
 const UserCard = ({ user, showBio = false }) => {
-  const { data: session } = useSession();
+  const sessionUser = useAuth().user
 
   const [followers, setFollowers] = useState(user.followers);
   const [isFollowing, setIsFollowing] = useState(
-    user.followers.includes(session && session.user.id)
+    user.followers.includes(sessionUser && sessionUser._id)
   );
 
   const handleFollow = async () => {
 
-    const data = await handleFollowing(user._id, session.user.id)
+    const data = await handleFollowing(user._id, sessionUser._id)
 
-    setIsFollowing(data.followers.includes(session.user.id));
+    setIsFollowing(data.followers.includes(sessionUser._id));
   };
 
   useEffect(() => {
-    setIsFollowing(user.followers.includes(session && session.user.id)); 
-  }, [session]);
+    setIsFollowing(user.followers.includes(sessionUser && sessionUser._id)); 
+  }, [sessionUser]);
 
   return (
     <div className=" py-2 my-3 mx-2">
@@ -48,7 +48,7 @@ const UserCard = ({ user, showBio = false }) => {
             </div>
           </a>
         </Link>
-        {session && session.user.id !== user._id && <button
+        {sessionUser && sessionUser._id !== user._id && <button
           onClick={() => handleFollow()}
           className=" p-2 bg-slate-100 text-slate-600 font-medium rounded-md mr-5"
         >

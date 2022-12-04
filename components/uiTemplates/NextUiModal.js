@@ -1,36 +1,18 @@
-import { XIcon } from "@heroicons/react/outline";
-import { Modal } from "@nextui-org/react";
 import React from "react";
-import PostPageTemplate from "../post/PostPageTemplate";
 
-const NextUiModal = ({ mHeader, mBody, mFooter, children, mOptions }) => {
+const NextUiModal = ({ open, onClose }) => {
+  if (open) return null;
+
   return (
-    <Modal
-      scroll
-      fullScreen
-      aria-labelledby="modal-title"
-      aria-describedby="modal-description"
-      {...bindings}
-    >
-      <Modal.Header className=" flex justify-between p-3 mx-3 my-3">
-        <button
-          className=" text-slate-500 rounded-md p-1 bg-slate-100 mr-3 "
-          onClick={() => {
-            router.back();
-            setIsOpen(false);
-            setMakeFocus(false);
-          }}
-        >
-          <XIcon className=" w-6 h-6" />
-        </button>
-
-        <h2 className=" text-xl text-slate-800 font-medium">Post</h2>
-        <div className=" w-1/3" />
-      </Modal.Header>
-      <Modal.Body>
-        <PostPageTemplate post={post} makeFocus={makeFocus} />
-      </Modal.Body>
-    </Modal>
+    <>
+      <div
+        onClick={onClose}
+        className="fixed z-20 inset-0 bg-elephant-50 bg-opacity-90 dark:bg-gray-900 dark:bg-opacity-80  "
+      />
+      <main className="z-50 max-w-lg w-full m-3 mx-auto h-[calc(100%-0rem)] sm:h-[calc(100%-2.5rem)]">
+       
+      </main>
+    </>
   );
 };
 

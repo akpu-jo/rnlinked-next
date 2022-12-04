@@ -1,17 +1,27 @@
-import AltHeader from "@/components/navs/AltHeader";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+// const ReactQuill = dynamic(
+//   async () => {
+//     const { default: RQ } = await import("react-quill");
+//     const RQuill = forwardRef((ref, ...props ) => {
+
+//       return <RQ ref={ref} {...props} />;
+//     })
+//     RQuill.displayName = 'ReactQuill'
+//   },
+//   { ssr: false }
+// );
 const ReactQuill = dynamic(
   async () => {
     const { default: RQ } = await import("react-quill");
-    const RQuill = React.forwardRef((forwardedRef, ...props ) => {
-      
-      return <RQ ref={forwardedRef} {...props} />;
-    })
-    RQuill.displayName = 'ReactQuill'
+    const RQuill = forwardRef((ref, ...props) => {
+      return <RQ ref={ref} {...props} />;
+    });
+    RQuill.displayName = "ReactQuill";
   },
   { ssr: false }
 );
+
 import "react-quill/dist/quill.bubble.css";
 import "react-quill/dist/quill.snow.css";
 import Resizer from "react-image-file-resizer";
@@ -29,20 +39,19 @@ import AddPhotoIcon from "@/components/icons/AddPhotoIcon";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { resizeImage } from "@/utils/functions";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Article = () => {
-  const { data: session } = useSession();
+  const { user } = useAuth();
   const router = useRouter();
-  const [editorImageUrl, setEditorImageUrl] = useState([])
-
+  const [editorImageUrl, setEditorImageUrl] = useState([]);
 
   const getContentFromLS = () => {
     if (typeof window === "undefined") {
-      return '';
+      return "";
     }
 
     if (localStorage.getItem("content")) {
@@ -54,7 +63,7 @@ const Article = () => {
 
   const getTitleFromLS = () => {
     if (typeof window === "undefined") {
-      return '';
+      return "";
     }
 
     if (localStorage.getItem("title")) {
@@ -82,36 +91,37 @@ const Article = () => {
     input.click();
 
     input.onchange = async () => {
-        const file = input.files[0];
+      const file = input.files[0];
 
-        // file type is only image.
-        if (/^image\//.test(file.type)) {
-          const img = await resizeImage(file);
+      // file type is only image.
+      if (/^image\//.test(file.type)) {
+        const img = await resizeImage(file);
 
-          
-          const editor = editorRef.current.getEditor()
-          const unprivilegedEditor = editorRef.current.makeUnprivilegedEditor(editor);
-          const range = unprivilegedEditor.getSelection()
+        const editor = editorRef.current.getEditor();
+        const unprivilegedEditor =
+          editorRef.current.makeUnprivilegedEditor(editor);
+        const range = unprivilegedEditor.getSelection();
 
-          
+        const { data } = await axios.post(
+          `${process.env.NEXT_PUBLIC_NODE_API}/api/n/articles/upload-image`,
+          { img }
+        );
 
-          const { data } = await axios.post(
-            `${process.env.NEXT_PUBLIC_NODE_API}/api/n/articles/upload-image`,
-            { img }
-          );
+        const url = data.image.url;
 
-          const url = data.image.url
+        editorRef.current.getEditor().insertEmbed(range.index, "image", url);
 
-          editorRef.current.getEditor().insertEmbed(range.index, "image", url);
+        editorRef.current.getEditor().setSelection(range.index + 1);
 
-          editorRef.current.getEditor().setSelection(range.index + 1)
-
-          setEditorImageUrl((editorImageUrl) => [...editorImageUrl, ...[data.image]])
-        } else {
-            console.warn("You could only upload images.");
-        }
+        setEditorImageUrl((editorImageUrl) => [
+          ...editorImageUrl,
+          ...[data.image],
+        ]);
+      } else {
+        console.warn("You could only upload images.");
+      }
     };
-};
+  };
 
   const [content, setContent] = useState(getContentFromLS());
   const [title, setTitle] = useState(getTitleFromLS());
@@ -121,21 +131,24 @@ const Article = () => {
   const bottomRef = useRef(null);
   const editorRef = useRef(null);
 
-  const modules = useMemo(() => ({
-    toolbar: {
-      container: [
-        [{ header: "1" }, { header: "2" }],
-        // [{ size: [] }],
-        ["bold", "italic", "underline"],
-        [{ list: "ordered" }, { list: "bullet" }],
-        ["link", "image"],
-        ["clean"],
-      ],
-      handlers: {
-        image: imageHandler,
+  const modules = useMemo(
+    () => ({
+      toolbar: {
+        container: [
+          [{ header: "1" }, { header: "2" }],
+          // [{ size: [] }],
+          ["bold", "italic", "underline"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["link", "image"],
+          ["clean"],
+        ],
+        handlers: {
+          image: imageHandler,
+        },
       },
-    },
-  }),[]);
+    }),
+    []
+  );
 
   const formats = [
     "header",
@@ -150,7 +163,6 @@ const Article = () => {
     "image",
     "video",
   ];
-
 
   // const resizeImage = (file) => {
   //   //Resize
@@ -173,11 +185,11 @@ const Article = () => {
 
   const cloudinaryImageCleanUp = (content) => {
     editorImageUrl.map(async (img) => {
-      if(!content.includes(img.url)){
-        deleteImage(img.publicId)
+      if (!content.includes(img.url)) {
+        deleteImage(img.publicId);
       }
-    })
-  }
+    });
+  };
 
   const uploadImage = async (e) => {
     setImageUploading(true);
@@ -197,7 +209,7 @@ const Article = () => {
   };
 
   const deleteImage = async (publicId, e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_NODE_API}/api/n/articles/remove-image`,
@@ -217,14 +229,12 @@ const Article = () => {
   const publish = async () => {
     const reqBody =
       image === null
-        ? { title, body: content, author: session.user.id }
-        : { title, body: content, image, author: session.user.id };
+        ? { title, body: content, author: user._id }
+        : { title, body: content, image, author: user._id };
     console.log(reqBody, "<==reqbody");
 
-
-
     try {
-      cloudinaryImageCleanUp(reqBody.body)
+      cloudinaryImageCleanUp(reqBody.body);
       const { data } = await axios.post(`/api/articles`, reqBody);
 
       console.log(data);
@@ -232,7 +242,7 @@ const Article = () => {
       setTitle("");
       localStorage.setItem("title", "");
       setImage(null);
-      router.push(`/${session.user.username}/${data.article.slug}`);
+      router.push(`/${user.username}/${data.article.slug}`);
     } catch (error) {
       console.log(error);
     }
@@ -259,7 +269,7 @@ const Article = () => {
           <Link href="/">
             <a className="w-36 md:w-44  hidden sm:block ">
               <Image
-                src="/rn-logo.png"
+                src="/rn.svg"
                 alt="rnlinked logo"
                 width={125}
                 height={28}
@@ -309,7 +319,7 @@ const Article = () => {
             />
 
             <button
-              onClick={(e) => deleteImage( image.publicId, e)}
+              onClick={(e) => deleteImage(image.publicId, e)}
               className="hidden group-hover:block absolute top-0 right-0 text-center rounded-sm p-2 bg-blue-50  text-red-600"
             >
               <TrashIcon className=" w-5 h-5 " />

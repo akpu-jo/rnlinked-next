@@ -1,4 +1,5 @@
 import Recommendations from "@/components/explore/Recommendations";
+import SearchBox from "@/components/explore/SearchBox";
 import TrendingPosts from "@/components/explore/TrendingPosts";
 import WhoToFollow from "@/components/explore/WhoToFollow";
 import AltHeader from "@/components/navs/AltHeader";
@@ -6,38 +7,60 @@ import MobileNav from "@/components/navs/MobileNav";
 import SearchHeader from "@/components/navs/SearchHeader";
 import SideNav from "@/components/navs/SideNav";
 import { PostCard } from "@/components/post/PostCard";
+import { useAuth } from "@/contexts/AuthContext";
 import AppBar from "@/layouts/AppBar";
 import { timeDifference } from "@/utils/timeStamp";
 import { SearchIcon } from "@heroicons/react/outline";
 import { Avatar, Card, Container } from "@nextui-org/react";
 import axios from "axios";
+import { auth } from "firebaseConfig";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 
 const Explore = () => {
   const router = useRouter();
+
   const [showSearch, setShowSearch] = useState(false);
   const [recommendedUsers, setRecommendedUsers] = useState([]);
   const [trending, setTrending] = useState([]);
   const [postsForYou, setPostsForYou] = useState([]);
   const [peopleToFollow, setPeopleToFollow] = useState([]);
 
+  const getIdToken = async () => {
+    return await auth.currentUser.getIdToken(true)
+  }
   const getTrendingPosts = async () => {
-    const { data } = await axios.get("/api/explore/trending");
+    const token = await auth.currentUser.getIdToken(true)
+    const { data } = await axios.get("/api/explore/trending", {
+      headers: {
+        token
+      },
+    });
     console.log("Trending===>", data);
     setTrending(data.posts);
   };
 
   const getPostsForYou = async () => {
-    const { data } = await axios.get("/api/explore/foryou");
+    const token = await auth.currentUser.getIdToken(true)
+
+    const { data } = await axios.get("/api/explore/foryou", {
+      headers: {
+        token
+      },
+    });
     console.log("for you===>", data);
     setPostsForYou(data.posts);
   };
 
   const getPeopleToFollow = async () => {
-    const { data } = await axios.get("/api/explore/whotofollow");
-    console.log("for you===>", data);
+    const token = await auth.currentUser.getIdToken(true)
+
+    const { data } = await axios.get(`/api/explore/whotofollow`, {
+      headers: {
+        token
+      },
+    });
     setPeopleToFollow(data.users);
   };
 
@@ -101,65 +124,63 @@ const Explore = () => {
           setRecommendedUsers={setRecommendedUsers}
         />
       ) : (
-        <AltHeader>
-          <p className=" text-xl">Explore</p>
-          <SearchIcon
-            onClick={async () => setShowSearch(true)}
-            className=" w-7 h-7"
+        <AppBar>
+          <SearchBox
+            setRecommendedUsers={setRecommendedUsers}
+            setShowSearch={setShowSearch}
           />
-        </AltHeader>
+        </AppBar>
       )}
-      {recommendedUsers.length > 0 ? (
-        <Recommendations recommendedUsers={recommendedUsers} />
-      ) : (
-        <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5">
-          <SideNav />
-          <main className=" mb-24 col-span-6 ">
-            <section>
-              <h2 className=" mx-3 text-slate-500 font-medium tracking-normal py-2 my-1">
-                TRENDING
-              </h2>
-              <div className=" flex overflow-x-scroll hide-scrollbar ">
-                {trending.map((post) => (
-                  <PostCard post={post} key={post._id} fullW={false} />
+
+      <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5">
+        <SideNav />
+        <main className=" mb-24 col-span-6 ">
+          {recommendedUsers.length ? (
+            <Recommendations recommendedUsers={recommendedUsers} />
+          ) : (
+            <>
+              <section>
+                <h2 className=" mx-3 text-slate-500 font-medium tracking-normal py-2 my-1">
+                  TRENDING
+                </h2>
+                <div className=" flex overflow-x-scroll hide-scrollbar ">
+                  {trending.map((post) => (
+                    <PostCard post={post} key={post._id} fullW={false} />
+                  ))}
+                </div>
+              </section>
+              <section className=" mx-4 my-5">
+                <h2 className=" text-slate-500 font-medium tracking-normal py-2 my-1">
+                  PEOPLE TO FOLLOW
+                </h2>
+                <div className=" flex flex-wrap justify-evenly  ">
+                  {peopleToFollow.map((user) => (
+                    <WhoToFollow key={user._id} user={user} />
+                  ))}
+                </div>
+              </section>
+              <section className=" mx-4 my-3 ">
+                <h2 className=" text-slate-500 font-medium tracking-normal py-2">
+                  FOR YOU
+                </h2>
+                {postsForYou.map((post) => (
+                  <div key={post._id}>{forYou(post)}</div>
                 ))}
-              </div>
-            </section>
-            <section className=" mx-4 my-5">
-              <h2 className=" text-slate-500 font-medium tracking-normal py-2 my-1">
-                PEOPLE TO FOLLOW
-              </h2>
-              <div className=" flex flex-wrap justify-evenly  ">
-                {peopleToFollow.map((user) => (
-                  <WhoToFollow key={user._id} user={user} />
-                ))}
-              </div>
-            </section>
-            <section className=" mx-4 my-3 ">
-              <h2 className=" text-slate-500 font-medium tracking-normal py-2">
-                FOR YOU
-              </h2>
-              {postsForYou.map((post) => (
-                <div key={post._id}>{forYou(post)}</div>
-              ))}
-            </section>
-          </main>
-          <section className=" hidden lg:block sticky top-16  col-span-3 bg-slate-40 mt-2 bg-white rounded-xl p-5 max-h-96">
-            <TrendingPosts />
-          </section>
-        </div>
-      )}
+              </section>
+            </>
+          )}
+        </main>
+        <section className=" hidden lg:block sticky top-16  col-span-3 bg-slate-40 mt-2 bg-white rounded-xl p-5 max-h-96">
+          {/* <TrendingPosts /> */}
+        </section>
+      </div>
       <p className=" flex-1 text-center text-xl font-medium p-2 m-10 "></p>
       <MobileNav />
     </div>
   );
 };
 
-Explore.getLayout = function getLayout(page){
-  return(
-    <AppBar>
-    {page}
-  </AppBar>
-  )
-}
+// Explore.getLayout = function getLayout(page) {
+//   return <AppBar>{page}</AppBar>;
+// };
 export default Explore;

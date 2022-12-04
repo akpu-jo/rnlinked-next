@@ -1,9 +1,7 @@
 import { Avatar, Textarea } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import AltHeader from "../navs/AltHeader";
 import parse from "html-react-parser";
 import Image from "next/image";
 import { timeDifference } from "@/utils/timeStamp";
@@ -12,9 +10,10 @@ import { ChatIcon, PaperAirplaneIcon } from "@heroicons/react/outline";
 import axios from "axios";
 import { ReplyIcon } from "@heroicons/react/solid";
 import ArticleComments from "../articles/ArticleComments";
+import { useAuth } from "@/contexts/AuthContext";
 
 const PostPageTemplate = ({ post }) => {
-  const { data: session } = useSession();
+  const {user} = useAuth()
   const router = useRouter();
 
   const [comments, setComments] = useState([]);
@@ -23,7 +22,7 @@ const PostPageTemplate = ({ post }) => {
   const [body, setBody] = useState("");
 
   const [liked, setLiked] = useState(
-    post.likes.includes(session && session.user.id)
+    post.likes.includes(user && user._id)
   );
   const [animateLike, setAnimateLike] = useState(false);
   const [postLikes, setPostLikes] = useState(post.likes);
@@ -33,14 +32,14 @@ const PostPageTemplate = ({ post }) => {
   const handleLike = async (id) => {
     const { likes } = post;
     const { data } = await axios.post(`/api/posts/like`, {
-      userId: session.user.id,
+      userId: user._id,
       postId: id,
     });
 
     console.log(data);
     setPostLikes(data.likes);
     setAnimateLike(!data.isliked);
-    setLiked(data.likes.includes(session.user.id));
+    setLiked(data.likes.includes(user._id));
   };
 
   const loadComments = async () => {
@@ -53,7 +52,7 @@ const PostPageTemplate = ({ post }) => {
     e.preventDefault();
     const { data } = await axios.post(`/api/comments`, {
       body,
-      userId: session.user.id,
+      userId: user._id,
       postId: post._id,
     });
 
@@ -63,8 +62,8 @@ const PostPageTemplate = ({ post }) => {
   };
 
   useEffect(() => {
-    setLiked(post.likes.includes(session && session.user.id));
-  }, [session]);
+    setLiked(post.likes.includes(user && user._id));
+  }, [user]);
 
   useEffect(() => {
     loadComments();
@@ -77,7 +76,7 @@ const PostPageTemplate = ({ post }) => {
   }, [makeFocus]);
 
   return (
-    <main className=" h-full flex flex-col col-span-6 mt-16 ">
+    <main className=" h-full flex flex-col col-span-6 mt-6 ">
       <section className=" flex mb-1 items-center mx-3 bg-opacity-90 rounded-lg ">
         <Link href={`/${post.userId.username}`}>
           <a>

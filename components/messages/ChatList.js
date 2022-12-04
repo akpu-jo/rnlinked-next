@@ -1,13 +1,14 @@
+import { useAuth } from "@/contexts/AuthContext";
 import { Avatar } from "@nextui-org/react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
+import { auth } from "firebaseConfig";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
 const ChatList = () => {
-  const { data: session } = useSession();
+  const { user } = useAuth();
   const router = useRouter();
   const [chatList, setChatList] = useState([]);
 
@@ -18,8 +19,15 @@ const ChatList = () => {
   const isPortrait = useMediaQuery({ orientation: "portrait" });
   const isRetina = useMediaQuery({ minResolution: "2dppx" });
 
+
   const listChat = async () => {
-    const { data } = await axios.get(`/api/messages/get-chats`);
+    const token = await auth.currentUser.getIdToken(true)
+    const { data } = await axios.get(
+      `/api/messages/get-chats`, {
+        headers:{
+          token
+      }}
+      );
     console.log(data.chats);
     setChatList(data.chats);
   };
@@ -27,7 +35,7 @@ const ChatList = () => {
   const getMessageLatestSender = (chat) => {
     const { latestMessage, isGroupChat } = chat;
 
-    const isMine = latestMessage.sender._id === session.user.id;
+    const isMine = latestMessage.sender._id === user._id;
 
     if (isMine) {
       return "You: ";
@@ -39,7 +47,7 @@ const ChatList = () => {
   };
 
   useEffect(() => {
-    listChat();
+    listChat()
   }, []);
 
   return (

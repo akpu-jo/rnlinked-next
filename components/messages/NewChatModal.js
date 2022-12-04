@@ -7,6 +7,7 @@ import CheckedIcon from "../icons/CheckedIcon";
 import NewChatUsers from "./NewChatUsers";
 import SearchChat from "./SearchChat";
 import EmptyStates from "../uiTemplates/EmptyStates";
+import { auth } from "firebaseConfig";
 
 const NewChatModal = () => {
   const router = useRouter();
@@ -52,8 +53,16 @@ const NewChatModal = () => {
       })
     );
 
-    const { data } = await axios.post(`/api/messages/new`, {
-      users: JSON.stringify(selectedUserRequiredData),
+    const token = await auth.currentUser.getIdToken(true)
+    const { data } = await axios({
+      method: "post",
+      url: `/api/messages/new`,
+      data: {
+        users: JSON.stringify(selectedUserRequiredData),
+      },
+      headers: {
+        token,
+      },
     });
 
     router.push(`/messages/${data.chat._id}`);

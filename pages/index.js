@@ -1,20 +1,18 @@
 import Head from "next/head";
-import { useSession } from "next-auth/react";
 import MobileNav from "../components/navs/MobileNav";
 import { Timeline } from "@/components/users/Timeline";
 import Welcome from "./welcome";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import socket from "@/utils/clientSocket";
 import { Tab } from "@headlessui/react";
 import ArticleList from "@/components/articles/ArticleList";
 import { useRouter } from "next/router";
-import TrendingPosts from "@/components/explore/TrendingPosts";
 import SideNav from "@/components/navs/SideNav";
 import AppBar from "@/layouts/AppBar";
+import { useAuth } from "@/contexts/AuthContext";
 
-export default function Home({ posts }) {
-  const { data: session } = useSession();
+export default  function Home({ posts }) {
+  const {user} = useAuth()
   const router = useRouter();
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -37,7 +35,7 @@ export default function Home({ posts }) {
     );
   };
 
-  if (session) {
+  if (user) {
     return (
       <div className=" ">
         {head()}
@@ -82,9 +80,9 @@ export default function Home({ posts }) {
             </Tab.Group>
           </main>
           <section className=" hidden lg:block sticky top-16  col-span-3 bg-slate-40 mt-2 bg-white rounded-xl p-5 max-h-96">
-            <TrendingPosts />
+            {/* <TrendingPosts /> */}
           </section>
-          <MobileNav user={session.user} />
+          <MobileNav user={user} />
         </div>
       </div>
     );

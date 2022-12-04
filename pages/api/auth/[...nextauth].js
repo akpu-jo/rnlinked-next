@@ -8,7 +8,7 @@ import clientPromise from "../../../lib/mongodb";
 import User from "../../../models/userModel";
 import connectDb from "../../../utils/db";
 import crypto from "crypto";
-import { createUsername } from "../../../utils/createUsername";
+import { createUsername } from "../../../utils/checkIfUsernameExists";
 
 
 export default NextAuth({

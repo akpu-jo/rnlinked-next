@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { PasswordReset } from "../components/auth/password/PasswordReset";
-// import { Signin } from "../components/auth/Signin";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { Signin } from "../components/auth/Signin";
 
 import { Signup } from "../components/auth/Signup";
 import Header from "../components/navs/Header";
-import { Signin } from "@/components/auth/Signin";
 
 const Welcome = () => {
   const [signInOpen, setSignInOpen] = useState(false);
@@ -65,10 +63,10 @@ const Welcome = () => {
           </li>
           <li>
             <button
-              onClick={() => signIn()}
-              // onClick={() => {
-              //   setSignInOpen(true);
-              // }}
+              // onClick={() => signIn()}
+              onClick={() => {
+                openSignInDialog();
+              }}
               className=" hover:text-elm-900  dark:text-slate-100 font-semibold"
             >
               Sign in

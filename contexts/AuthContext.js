@@ -1,56 +1,68 @@
-import { initializeApp } from "firebase/app";
+import axios from "axios";
 import {
-  getAuth,
-  GoogleAuthProvider,
-  TwitterAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-
+import { auth } from "firebaseConfig";
+import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAsrDblrH558aloxHQ7yKksmJtVenQRbgU",
-  authDomain: "rnlinked-b7321.firebaseapp.com",
-  projectId: "rnlinked-b7321",
-  storageBucket: "rnlinked-b7321.appspot.com",
-  messagingSenderId: "719823973560",
-  appId: "1:719823973560:web:e7da27942fec6b2172184d",
-  measurementId: "G-RDERS51X7W",
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-const AuthContext = createContext();
+const AuthContext = createContext({});
+export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const session = useAuthProvider();
-  return (
-    <AuthContext.Provider value={{ session }}>{children}</AuthContext.Provider>
-  );
-};
-
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
-
-function useAuthProvider () {
+  const router = useRouter()
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const login =  (email, password) => {
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (session) => {
+      if (session) {
+        const {data} = await axios.get(`/api/users?email=${session.email}`);
+
+         setUser(data.user);
+      } else {
+        setUser(null);
+      }
+    setLoading(false);
+
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const signup = async (email, password, name) => {
+    try {
+      createUserWithEmailAndPassword(auth, email, password).then(
+        async (userCredential) => {
+          const { data } = await axios.post(`/api/users`, {
+            name,
+            uid: userCredential.user.uid,
+            email
+          });
+          setUser(data.user);
+          console.log(data.user);
+          console.log(userCredential.user);
+        }
+      );
+    } catch (error) {
+      console.log(error)
+    }
+
+  };
+
+  const signin = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-        setUser(userCredential.user)
+      .then((userCredential) => {
         console.log(userCredential);
-    })
-    .catch((error) => {
+      })
+      .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(`${errorCode}: ${errorMessage}`)
+        console.log(`${errorCode}: ${errorMessage}`);
       });
     // const userCredential =  signInWithEmailAndPassword(
     //   auth,
@@ -58,49 +70,35 @@ function useAuthProvider () {
     //   password
     // );
     // setUser(userCredential.user);
-    return userCredential
+    return userCredential;
   };
 
-
-  const signup = async (email, password) => {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    setUser(userCredential.user);
-    console.log(userCredential);
-  };
-
-  const signout = async (email, password) => {
+  const signout = async () => {
     await signOut(auth);
     setUser(null);
+    router.push('/')
   };
 
-  const sendPasswordResetEmail = async (email) => {
-    await sendPasswordResetEmail(auth, email);
-  };
 
-  const confirmPasswordReset = (password, code) => {};
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  return {
-    login,
-    signup,
-    signout,
-    sendPasswordResetEmail,
-    confirmPasswordReset,
-  };
+  return (
+    <AuthContext.Provider value={{ user, signup, signin, signout }}>
+      {loading ? null : children}
+    </AuthContext.Provider>
+  );
 };
 
+// function useAuthProvider() {
+//   const sendPasswordResetEmail = async (email) => {
+//     await sendPasswordResetEmail(auth, email);
+//   };
+
+//   const confirmPasswordReset = (password, code) => {};
+
+//   return {
+//     login,
+//     signup,
+//     signout,
+//     sendPasswordResetEmail,
+//     confirmPasswordReset,
+//   };
+// }

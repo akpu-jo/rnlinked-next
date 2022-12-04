@@ -1,4 +1,3 @@
-import { SessionProvider } from "next-auth/react";
 import { NextUIProvider } from "@nextui-org/react";
 
 import "../styles/globals.css";
@@ -6,7 +5,7 @@ import SocketLayout from "@/components/navs/SocketLayout";
 import { useEffect } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+function MyApp({ Component, pageProps: {  ...pageProps } }) {
   useEffect(() => {
     import("preline");
   }, []);
@@ -14,13 +13,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 
   return (
     <AuthProvider>
-      <SessionProvider session={session}>
           <NextUIProvider>
             <SocketLayout>
               <Component {...pageProps} />
             </SocketLayout>
           </NextUIProvider>
-      </SessionProvider>
     </AuthProvider>
   );
 }

@@ -1,13 +1,13 @@
+import { useAuth } from "@/contexts/AuthContext";
 import { PaperAirplaneIcon, XIcon } from "@heroicons/react/outline";
 import { Textarea } from "@nextui-org/react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import EmptyStates from "../uiTemplates/EmptyStates";
 import ArticleComments from "./ArticleComments";
 
 const ArticleCommentSlideOver = ({ article }) => {
-  const { data: session } = useSession();
+  const {user} = useAuth()
 
   const [comments, setComments] = useState([]);
   const [body, setBody] = useState("");
@@ -22,7 +22,7 @@ const ArticleCommentSlideOver = ({ article }) => {
     e.preventDefault();
     const { data } = await axios.post(`/api/comments`, {
       body,
-      userId: session.user.id,
+      userId: user._id,
       articleId: article._id,
       isArticle: true,
     });

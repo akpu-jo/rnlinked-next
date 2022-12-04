@@ -1,26 +1,20 @@
 import React, { useState, useEffect } from "react";
-import {
-  ChatIcon,
-  HeartIcon,
-  PaperAirplaneIcon,
-} from "@heroicons/react/outline";
-import moment from "moment";
-// import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useSession, signIn, signOut } from "next-auth/react";
 import axios from "axios";
 import { Avatar, Textarea, Image } from "@nextui-org/react";
 import { timeDifference } from "@/utils/timeStamp";
 import HeartInactiveIcon from "../icons/HeartInactiveIcon";
 import parse from "html-react-parser";
+import { useAuth } from "@/contexts/AuthContext";
 
 
 export const CommentCard = ({ comment }) => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const {user} = useAuth()
+  
   const [liked, setLiked] = useState(
-    comment.likes.includes(session && session.user.id)
+    comment.likes.includes(user && user._id)
   );
   const [animateLike, setAnimateLike] = useState(false);
   const [commentLikes, setCommentLikes] = useState(comment.likes);
@@ -30,19 +24,19 @@ export const CommentCard = ({ comment }) => {
   const handleLike = async (id) => {
     const { likes } = comment;
     const { data } = await axios.post(`/api/comments/like`, {
-      userId: session.user.id,
+      userId: user._id,
       commentId: id,
     });
 
     console.log(data);
     setCommentLikes(data.likes);
     setAnimateLike(!data.isliked);
-    setLiked(data.likes.includes(session.user.id));
+    setLiked(data.likes.includes(user._id));
   };
 
   useEffect(() => {
-    setLiked(comment.likes.includes(session && session.user.id));
-  }, [session]);
+    setLiked(comment.likes.includes(user && user._id));
+  }, [user]);
 
   return (
     <div className=" mr-1 my-1 px-2 rounded-lg py-1 ml-12 bg-primary-springWood bg-opacity-20">

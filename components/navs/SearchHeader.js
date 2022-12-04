@@ -88,7 +88,7 @@ const SearchHeader = ({
 
   return (
     <header
-      className={` border-b-2 shadow flex px-3 pb-2 pt-3 text-2xl font-semibold tracking-wide sticky top-0 right-0 left-0 bg-white z-10`}
+      className={` sm:hidden border-b-2 shadow flex px-3 pb-2 pt-3 text-2xl font-semibold tracking-wide sticky top-0 right-0 left-0 bg-white z-10`}
     >
       {showSearch && (
         <button onClick={() => setShowSearch(false)}>

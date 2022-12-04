@@ -1,19 +1,22 @@
 import User from "@/models/userModel";
 import connectDb from "@/utils/db";
-import Post from "models/postModel";
-import { getSession } from "next-auth/react";
+import { authenticate } from "@/utils/auth";
 
 export default async function handler(req, res) {
-    const session = await getSession({ req })
+  const { token } = req.headers;
+  console.log(token)
 
-  const { method } = req;
+  const sessionUser = await authenticate(token)
+  
+    const { method } = req;
+  
+    await connectDb();
 
-  await connectDb();
 
-  switch (method) {
+  switch (method) { 
     case "GET":
       try {
-        const users = await User.find({_id: {$ne: session.user.id}})
+        const users = await User.find({_id: {$ne: sessionUser._id}})
           .select( "followers following name username image _id ")
           .limit(6); /* find all the data in our database */
           //   .sort("-createdAt")

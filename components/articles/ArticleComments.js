@@ -1,17 +1,17 @@
 import { timeDifference } from "@/utils/timeStamp";
 import { Avatar } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import HeartInactiveIcon from "../icons/HeartInactiveIcon";
 import parse from "html-react-parser";
 import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 
 const ArticleComments = ({ comment }) => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const {user} = useAuth() 
   const [liked, setLiked] = useState(
-    comment.likes.includes(session && session.user.id)
+    comment.likes.includes(user && user._id)
   );
   const [animateLike, setAnimateLike] = useState(false);
   const [commentLikes, setCommentLikes] = useState(comment.likes);
@@ -21,19 +21,19 @@ const ArticleComments = ({ comment }) => {
   const handleLike = async (id) => {
     const { likes } = comment;
     const { data } = await axios.post(`/api/comments/like`, {
-      userId: session.user.id,
+      userId: user._id,
       commentId: id,
     });
 
     console.log(data);
     setCommentLikes(data.likes);
     setAnimateLike(!data.isliked);
-    setLiked(data.likes.includes(session.user.id));
+    setLiked(data.likes.includes(user._id));
   };
 
   useEffect(() => {
-    setLiked(comment.likes.includes(session && session.user.id));
-  }, [session]);
+    setLiked(comment.likes.includes(user && user._id));
+  }, [user]);
 
   return (
     <div className=" border-b py-2 mb-2 ">

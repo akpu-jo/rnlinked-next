@@ -1,32 +1,32 @@
+import { useAuth } from "@/contexts/AuthContext";
 import { CheckIcon, PlusIcon } from "@heroicons/react/outline";
 import { Avatar, Card } from "@nextui-org/react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 const WhoToFollow = ({ user }) => {
-  const { data: session } = useSession();
+  const sessionUser = useAuth().user
   const [isFollowing, setIsFollowing] = useState(
-    user.followers.includes(session && session.user.id)
+    user.followers.includes(sessionUser && sessionUser._id)
   );
   const [followers, setFollowers] = useState(user.followers);
 
   const handleFollow = async () => {
     // const { likes } = post;
     const { data } = await axios.post(`/api/users/${user._id}/follow`, {
-      sessionUserId: session.user.id,
+      sessionUserId: sessionUser._id,
     });
 
     console.log(data);
     setFollowers(data.followers);
     // setAnimateLike(!data.isliked);
-    setIsFollowing(data.followers.includes(session.user.id));
+    setIsFollowing(data.followers.includes(sessionUser._id));
   };
 
   useEffect(() => {
-    setIsFollowing(user.followers.includes(session && session.user.id));
-  }, [session]);
+    setIsFollowing(user.followers.includes(sessionUser && sessionUser._id));
+  }, [sessionUser]);
 
   return (
     <div className=" z-10 w-36 h-56 flex flex-col justify-between items-center m-2 rounded-lg bg-primary-springWood bg-opacity-50 py-4 px-5 border border-slate-200 ">

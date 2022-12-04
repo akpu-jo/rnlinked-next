@@ -1,18 +1,16 @@
-import {
-  getAuth,
-  GoogleAuthProvider,
-  TwitterAuthProvider,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-} from "firebase/auth";
-import { auth } from "firebaseConfig";
+import User from "@/models/userModel";
+import admin from "firebaseConfig/fbs";
 
-export const signin = async (email, password) => {
-  const userCredential = await signInWithEmailAndPassword(
-    auth,
-    email,
-    password
-  );
-};
+export const authenticate = async (token) => {
+    let user;
+    // console.log('Token from auth===>', token)
+    // if(token){
+
+    // }
+    const firebaseUser = await admin.auth().verifyIdToken(token);
+    user = await User.findOne({ uid: firebaseUser.uid });
+
+  
+  
+    return user
+  }

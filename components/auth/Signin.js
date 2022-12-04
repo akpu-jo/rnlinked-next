@@ -1,11 +1,10 @@
 import { useAuth } from "@/contexts/AuthContext";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import {  signInWithPopup } from "firebase/auth";
 import { auth, google, twitter } from "firebaseConfig";
 import React, { useState } from "react";
 
 export const Signin = ({ open, openSignUp, onClose, openPassword }) => {
-  const session = useAuth()
-  const {signin} = session
+  const {signin} =  useAuth()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -15,14 +14,7 @@ export const Signin = ({ open, openSignUp, onClose, openPassword }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-  
-      console.log(userCredential)
-      
+      await signin(email, password)  
     } catch (error) {
       console.log(error)
     }
