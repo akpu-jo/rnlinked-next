@@ -1,11 +1,11 @@
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/contexts/AuthContext";
 import Welcome from "pages/welcome";
 import React from "react";
 
 const WithSession = ({ children }) => {
-  const { data: session } = useSession();
+  const {user} = useAuth()
 
-  if (session) {
+  if (user) {
     return <>{children}</>;
   }
 

@@ -15,18 +15,21 @@ import { Avatar, Modal, Textarea, useModal } from "@nextui-org/react";
 import UserCard from "@/components/users/UserCard";
 import HeartInactiveIcon from "@/components/icons/HeartInactiveIcon";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import ArticleComments from "@/components/articles/ArticleComments";
 import SideNav from "@/components/navs/SideNav";
 import ArticleCommentSlideOver from "@/components/articles/ArticleCommentSlideOver";
+import { useAuth } from "@/contexts/AuthContext";
+import AppBar from "@/layouts/AppBar";
+import { useMediaQuery } from "react-responsive";
 
 const ArticlePage = ({ article }) => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const {user} = useAuth()
+  const isMobile = useMediaQuery({ maxWidth: 640 });
 
   const [liked, setLiked] = useState(
-    article.likes.includes(session && session.user.id)
+    article.likes.includes(user && user._id)
   );
   const [animateLike, setAnimateLike] = useState(false);
   const [postLikes, setPostLikes] = useState(article.likes);
@@ -34,52 +37,23 @@ const ArticlePage = ({ article }) => {
   const handleLike = async (id) => {
     const { likes } = article;
     const { data } = await axios.post(`/api/articles/like`, {
-      userId: session.user.id,
+      userId: user._id,
       articleId: id,
     });
 
     console.log(data);
     setPostLikes(data.likes);
     setAnimateLike(!data.isliked);
-    setLiked(data.likes.includes(session.user.id));
+    setLiked(data.likes.includes(user._id));
   };
 
   useEffect(() => {
-    setLiked(article.likes.includes(session && session.user.id));
-  }, [session]);
+    setLiked(article.likes.includes(user && user._id));
+  }, [user]);
 
   return (
     <div className=" bg-slate-50 ">
-      <header className=" fixed top-0 right-0 left-0 z-50 py-2 bg-slate-100 ">
-        <div className=" flex items-center justify-between max-w-6xl mx-auto px-3 ">
-          <button
-            className=" text-slate-500 rounded-md p-1 bg-slate-100 mr-3 sm:hidden "
-            onClick={(e) => {
-              e.preventDefault();
-              router.back();
-            }}
-          >
-            <ChevronLeftIcon className=" w-5 h-5" />
-          </button>
-          <Link href="/">
-            <a className="w-36 md:w-44  hidden sm:block ">
-              <Image
-                src="/rn-logo.png"
-                alt="rnlinked logo"
-                width={125}
-                height={28}
-              />
-            </a>
-          </Link>
-          {session && (
-            <Link href={`/${session.user.username}`}>
-              <a>
-                <Avatar squared src={session.user.image} />
-              </a>
-            </Link>
-          )}
-        </div>
-      </header>
+      <AppBar extraclass={'fixed'} alt={isMobile} />
       {/* <AltHeader>
         <div className=" flex items-center ">
           <button className=" px-2 mx-1">

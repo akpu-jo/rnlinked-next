@@ -1,13 +1,13 @@
+import { useAuth } from "@/contexts/AuthContext";
 import { PaperAirplaneIcon, XIcon } from "@heroicons/react/outline";
 import { Textarea } from "@nextui-org/react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import EmptyStates from "../uiTemplates/EmptyStates";
 import ArticleComments from "./ArticleComments";
 
 const ArticleCommentSlideOver = ({ article }) => {
-  const { data: session } = useSession();
+  const {user} = useAuth()
 
   const [comments, setComments] = useState([]);
   const [body, setBody] = useState("");
@@ -22,7 +22,7 @@ const ArticleCommentSlideOver = ({ article }) => {
     e.preventDefault();
     const { data } = await axios.post(`/api/comments`, {
       body,
-      userId: session.user.id,
+      userId: user._id,
       articleId: article._id,
       isArticle: true,
     });
@@ -40,7 +40,7 @@ const ArticleCommentSlideOver = ({ article }) => {
     <div
       id="hs-overlay-right"
       className="hs-overlay hs-overlay-open:translate-x-0 hidden translate-x-full fixed top-0 right-0 transition-all duration-300 transform h-full max-w-md w-full z-[60] bg-white border-l dark:bg-gray-800 dark:border-gray-700"
-      tabindex="-1"
+      tabIndex="-1"
     >
       <div className=" fixed top-0 left-0 right-0 bg-white z-10 flex justify-between items-center flex-row-reverse sm:flex-row py-3 px-4 border-b dark:border-gray-700">
         <div className=" w-1/3  sm:hidden" />

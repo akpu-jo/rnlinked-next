@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from "react";
 import { ArrowNarrowLeftIcon, PhotographIcon } from "@heroicons/react/outline";
-import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
@@ -9,9 +8,10 @@ import axios from "axios";
 import { TrashIcon } from "@heroicons/react/solid";
 import AltHeader from "@/components/navs/AltHeader";
 import { PostCard } from "@/components/post/PostCard";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Comment = ({ post }) => {
-  const { data: session } = useSession();
+  const {user} = useAuth()
   const router = useRouter();
 
  
@@ -68,7 +68,7 @@ const Comment = ({ post }) => {
             let { data } = await axios.post(`/api/posts/comments`, {
               uri,
               body,
-              userId: session.user.id,
+              userId: user.id,
               postId: post._id,
             });
 
@@ -92,7 +92,7 @@ const Comment = ({ post }) => {
       try {
         let { data } = await axios.post(`/api/posts/comments`, {
           body,
-          userId: session.user.id,
+          userId: user.id,
           postId: post._id,
         });
 
@@ -119,11 +119,11 @@ const Comment = ({ post }) => {
       <div className=" pl-10  mx-3 pb-40">
         <form className="" onSubmit={handleSubmit}>
           <div className="grid grid-cols-7">
-            {session && (
+            {user && (
               <div>
                 <Image
                   className=" rounded-full"
-                  src={session.user.image}
+                  src={user.image}
                   alt="Picture of the logo"
                   width={50}
                   height={50}

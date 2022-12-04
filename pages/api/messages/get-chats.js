@@ -1,37 +1,35 @@
 import Chat from "@/models/chatModel";
-import User from "@/models/userModel";
-import Message from "@/models/messageModel";
 import connectDb from "@/utils/db";
-import Post from "models/postModel";
-import { getSession } from "next-auth/react";
+import { authenticate } from "@/utils/auth";
+import Message from "@/models/messageModel";
 
 export default async function handler(req, res) {
-  const session = await getSession({ req });
+  const { token } = req.headers;
 
-  const { method } = req;
+  const sessionUser = await authenticate(token)
 
-  
+  const { method } = req; 
+
   const getOtherChatUsers = (chatUsers) => {
     if (chatUsers.length === 1) return chatUsers;
-    
-    return chatUsers.filter((user) => user.username !== session.user.username);
+
+    return chatUsers.filter((user) => user.username !== sessionUser.username);
   };
   await connectDb();
-  
+
   switch (method) {
     case "GET":
       try {
         const chats = await Chat.find({
-          users: { $elemMatch: { $eq: session.user.id } },
+          users: { $elemMatch: { $eq: sessionUser._id } },
         })
           .populate("users", "name username _id image")
           .populate({
             path: "latestMessage",
-            select: 'sender content _id',
+            select: "sender content _id",
             populate: { path: "sender", select: "username name" },
-          }) 
+          })
           .sort({ updatedAt: "-1" });
-        // console.log("Chat====>", chats);
 
         //Get chat name and images
         chats.map((chat) => {
@@ -46,11 +44,12 @@ export default async function handler(req, res) {
           }
 
           const imageArray = otherChatUsers.map((user) => user.image);
+
+          // console.log("imagesArray ===> 1", otherChatUsers)
           chat.chatImages =
             otherChatUsers.length === 1
               ? imageArray
               : [imageArray.at(0), imageArray.at(1)];
-          // console.log("imagesArray ===>", chat.chatImages)
         });
 
         //Get chat Image
@@ -60,20 +59,20 @@ export default async function handler(req, res) {
           chats,
         });
       } catch (error) {
-        console.log("don't know why error++++>", error);
+        console.log("don't still know why error++++>", error);
         res.status(400).json({ success: false });
       }
       break;
     case "POST":
       try {
         const users = JSON.parse(req.body.users);
-        console.log("chat api===>", session.user);
+        console.log("chat api===>???", sessionUser);
         if (users.length === 0) {
           console.log("users array is empty");
           return res.sendStatus(400);
         }
 
-        users.push(session.user.id);
+        users.push(sessionUser._id);
         console.log("users array ====>", users);
 
         let chatData = {

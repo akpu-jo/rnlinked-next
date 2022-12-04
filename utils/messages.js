@@ -9,14 +9,14 @@ export const getChatByUserId = async (sessionUser, otherUser) => {
        users: {
          $size: 2,
          $all: [
-           { $elemMatch: { $eq: mongoose.Types.ObjectId(sessionUser.id) } },
+           { $elemMatch: { $eq: mongoose.Types.ObjectId(sessionUser._id) } },
            { $elemMatch: { $eq: mongoose.Types.ObjectId(otherUser._id) } },
          ],
        },
      },
      {
        $setOnInsert: {
-         users: [sessionUser.id, otherUser._id],
+         users: [sessionUser._id, otherUser._id],
 
        },
      },

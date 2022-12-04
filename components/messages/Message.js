@@ -1,11 +1,11 @@
-import { useSession } from "next-auth/react";
-import { css, Button } from "@nextui-org/react";
+
 import React, { useState }  from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Message = ({ message, getLiClassNames, isGroup }) => {
-  const { data: session } = useSession();
+  const { user } = useAuth()
 
-  const [isMine] = useState(message.sender._id === session.user.id);
+  const [isMine] = useState(message.sender._id === user._id);
 
   const liClassName = isMine ? "mine" : "theirs";
 

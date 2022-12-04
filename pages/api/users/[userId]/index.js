@@ -1,10 +1,9 @@
 import User from "@/models/userModel";
+import { authenticate } from "@/utils/auth";
 import connectDb from "@/utils/db";
 import Post from "models/postModel";
-import { getSession } from "next-auth/react";
 
 export default async function handler(req, res) {
-  const session = await getSession({ req });
 
   const { method } = req;
 

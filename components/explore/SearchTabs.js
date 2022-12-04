@@ -11,6 +11,7 @@ function classNames(...classes) {
 
 export default function SearchTabs({ cats, children }) {
   const router = useRouter();
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const [searchResult, setSearchResult] = useState({
     posts: [],
@@ -43,22 +44,28 @@ export default function SearchTabs({ cats, children }) {
 
   return (
     <div className="w-full max-w-md px-2 sm:px-0">
-      <Tab.Group>
+      <Tab.Group
+        selectedIndex={selectedIndex}
+        onChange={(index) => {
+          setSelectedIndex(index);
+        }}
+      >
         <Tab.List className="flex p-1 space-x-3 rounded-full ">
           {cats.map((category) => (
             <Tab
               key={category}
-              className={({ selected }) =>
-                classNames(
-                  "w-full py-2.5 text-sm leading-5 font-medium text-slate-100 rounded-lg",
-                  "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-elm-400 ring-slate-300 ring-opacity-60",
-                  selected
-                    ? "bg-slate-900 shadow"
-                    : "text-slate-600 bg-slate-100 hover:bg-white/[0.12] hover:text-white"
-                )
-              }
+              // className={({ selected }) =>
+              //   classNames(
+              //     "w-full py-2.5 text-sm leading-5 font-medium text-slate-100 rounded-lg",
+              //     "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-elm-400 ring-slate-300 ring-opacity-60",
+              //     selected
+              //       ? "bg-slate-900 shadow"
+              //       : "text-slate-600 bg-slate-100 hover:bg-white/[0.12] hover:text-white"
+              //   )
+              // }
             >
-              <div
+              {({ selected }) => (
+                <div className={` p-2 px-3 text-slate-800 tracking-wide ${selected && " font-medium  border-b-2 border-primary-confetti"}`}
                 onClick={() => {
                   router.replace(
                     `${router.pathname}?q=${
@@ -66,9 +73,15 @@ export default function SearchTabs({ cats, children }) {
                     }&src=${category.toLowerCase()}`
                   );
                 }}
+                >
+                  {category}
+                </div>
+              )}
+              {/* <div
+                
               >
                 {category}
-              </div>
+              </div> */}
             </Tab>
           ))}
         </Tab.List>

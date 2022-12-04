@@ -1,6 +1,9 @@
+import { useAuth } from "@/contexts/AuthContext";
 import React, { useState } from "react";
 
 export const Signup = ({ open, onClose, openSignIn }) => {
+  const {signup} = useAuth()
+
 
   const [userName, setUserName] = useState('');
   const [fullName, setFullName] = useState('')
@@ -8,10 +11,15 @@ export const Signup = ({ open, onClose, openSignIn }) => {
   const [password, setPassword] = useState('');
 
   const [error, setError] = useState('');
-  const isInvalid = userName === '' || fullName === '' || password === '' || email === '';
+  const isInvalid = fullName === '' || password === '' || email === '';
 
-  const handleSignUp = async (event) => {
-    event.preventDefault();
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    try {
+      await signup(email, password, fullName)
+    } catch (err) {
+      console.log(err)
+    }
   };
   if (!open) return null;
 
@@ -60,7 +68,7 @@ export const Signup = ({ open, onClose, openSignIn }) => {
             </p>
           )}
           <form method="POST" onSubmit={handleSignUp}>
-            <div className="relative w-full mb-3">
+            {/* <div className="relative w-full mb-3">
               <label className="block uppercase  text-xs font-bold mb-2">
                 Username
               </label>
@@ -74,7 +82,7 @@ export const Signup = ({ open, onClose, openSignIn }) => {
                   setUserName(target.value.toLowerCase())
                 }
               />
-            </div>
+            </div> */}
             <div className="relative w-full mb-3">
               <label className="block uppercase text-xs font-bold mb-2">
                 Full Name

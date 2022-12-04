@@ -1,11 +1,11 @@
+import { useAuth } from '@/contexts/AuthContext';
 import { PaperAirplaneIcon } from '@heroicons/react/outline';
 import { Textarea } from '@nextui-org/react';
 import axios from 'axios';
-import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react'
 
 const CommentForm = ({setComments, comments, makeFocus=false, postId}) => {
-    const { data: session } = useSession();
+  const {user} = useAuth()
     const commentInputRef = useRef();
     const [body, setBody] = useState("");
 
@@ -14,7 +14,7 @@ const CommentForm = ({setComments, comments, makeFocus=false, postId}) => {
         e.preventDefault();
         const { data } = await axios.post(`/api/comments`, {
           body,
-          userId: session.user.id,
+          userId: user._id,
           postId,
         });
     

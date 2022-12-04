@@ -3,7 +3,6 @@ import { ChatIcon, HeartIcon, XIcon } from "@heroicons/react/outline";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useSession, signIn, signOut } from "next-auth/react";
 import axios from "axios";
 import { timeDifference } from "@/utils/timeStamp";
 import {
@@ -21,6 +20,7 @@ import PostPageTemplate from "./PostPageTemplate";
 import PostPageModal from "./PostPageModal";
 import { Dialog } from "@headlessui/react";
 import CommentForm from "./CommentForm";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const PostCard = ({
   post,
@@ -29,10 +29,10 @@ export const PostCard = ({
   fullW = true,
 }) => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const {user} = useAuth()
 
   const [liked, setLiked] = useState(
-    post.likes.includes(session && session.user.id)
+    post.likes.includes(user && user._id)
   );
   const [animateLike, setAnimateLike] = useState(false);
   const [postLikes, setPostLikes] = useState(post.likes);
@@ -47,19 +47,19 @@ export const PostCard = ({
   const handleLike = async (id) => {
     const { likes } = post;
     const { data } = await axios.post(`/api/posts/like`, {
-      userId: session.user.id,
+      userId: user._id,
       postId: id,
     });
 
     console.log(data);
     setPostLikes(data.likes);
     setAnimateLike(!data.isliked);
-    setLiked(data.likes.includes(session.user.id));
+    setLiked(data.likes.includes(user._id));
   };
 
   useEffect(() => {
-    setLiked(post.likes.includes(session && session.user.id));
-  }, [session]);
+    setLiked(post.likes.includes(user && user._id));
+  }, [user]);
 
   const queryBuilder = () => {
     const currentQuery = router.query; //target
@@ -146,7 +146,7 @@ export const PostCard = ({
             }}
           /> */}
         </article>
-        {session && showAtions && (
+        {user && showAtions && (
           <div className=" flex justify-between items-center z-10">
             <div className={` flex items-center `}>
               <Link href={`/${post.userId.username}`}>

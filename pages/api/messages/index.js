@@ -1,12 +1,13 @@
 import Chat from "@/models/chatModel";
 import Message from "@/models/messageModel";
-import User from "@/models/userModel";
+import { authenticate } from "@/utils/auth";
 import connectDb from "@/utils/db";
-import { getChatByUserId } from "@/utils/messages";
-import { getSession } from "next-auth/react";
 
 export default async function handler(req, res) {
-  const session = await getSession({ req });
+  const { token } = req.headers;
+
+  const sessionUser = await authenticate(token)
+
 
   const { method } = req;
 
@@ -46,7 +47,7 @@ export default async function handler(req, res) {
         }
 
         const message = await Message.create({
-          sender: session.user.id,
+          sender: sessionUser._id,
           chat: chatId,
           content,
         });

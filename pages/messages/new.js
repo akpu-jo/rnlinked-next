@@ -4,6 +4,7 @@ import NewChatUsers from "@/components/messages/NewChatUsers";
 import SearchChat from "@/components/messages/SearchChat";
 import AltHeader from "@/components/navs/AltHeader";
 import axios from "axios";
+import { auth } from "firebaseConfig";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState, useRef } from "react";
@@ -49,13 +50,20 @@ const NewMessage = () => {
         image: user.image,
       })
     );
-    
-    const { data } = await axios.post(`/api/messages/new`, {
-      users: JSON.stringify(selectedUserRequiredData),
+
+    const token = await auth.currentUser.getIdToken(true)
+    const { data } = await axios({
+      method: "post",
+      url: `/api/messages/new`,
+      data: {
+        users: JSON.stringify(selectedUserRequiredData),
+      },
+      headers: {
+        token,
+      },
     });
 
     router.push(`/messages/${data.chat._id}`);
-    
   };
 
   const chatRecommendations = () => {

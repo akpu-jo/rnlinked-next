@@ -4,12 +4,12 @@ import Link from "next/link";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
 
-import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import { Avatar } from "@nextui-org/react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function UserOptions() {
-  const { data: session } = useSession();
+  const {user, signout} = useAuth()
 
   const router = useRouter();
 
@@ -20,14 +20,14 @@ export default function UserOptions() {
       <Menu as="div" className="relative inline-block text-left">
         <div className=" flex items-center">
           <Menu.Button className=" hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            {session && (
+            {user && (
                 <Avatar
                   squared
-                  src={session.user.image}
+                  src={user.image}
                 />
                 // {/* <Image
                 //   className=" rounded-full"
-                //   src={session.user.image}
+                //   src={user.image}
                 //   alt="Picture of the logo"
                 //   width={50}
                 //   height={50}
@@ -49,7 +49,7 @@ export default function UserOptions() {
             <div className="px-1 py-1">
               <Menu.Item>
                 <button
-                  onClick={() => signOut()}
+                  onClick={() => signout()}
                   className="text-gray-600 hover:text-gray-900 hover:font-semibold hover:text-base  flex rounded-md items-center w-full px-2 py-2 text-sm"
                 >
                   Sign Out

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { PasswordReset } from "../components/auth/password/PasswordReset";
-// import { Signin } from "../components/auth/Signin";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { Signin } from "../components/auth/Signin";
 
 import { Signup } from "../components/auth/Signup";
 import Header from "../components/navs/Header";
@@ -64,10 +63,10 @@ const Welcome = () => {
           </li>
           <li>
             <button
-              onClick={() => signIn()}
-              // onClick={() => {
-              //   setSignInOpen(true);
-              // }}
+              // onClick={() => signIn()}
+              onClick={() => {
+                openSignInDialog();
+              }}
               className=" hover:text-elm-900  dark:text-slate-100 font-semibold"
             >
               Sign in
@@ -88,7 +87,9 @@ const Welcome = () => {
             </div>
 
             <button
-              onClick={() => signIn()}
+                onClick={() => {
+                  setSignUpOpen(true);
+                }}
               className=" sm:my-0 tracking-widest justify-center bg-elm-600 dark:bg-burntSienna-600 shadow-md px-3 py-2  rounded-full sm:w-56  w-4/6 text-sm uppercase font-head font-semibold text-elephant-50"
             >
               Get Started
@@ -96,14 +97,14 @@ const Welcome = () => {
           </main>
         </div>
       </div>
-      {/* <Signin
+      <Signin
         onClose={() => {
           setSignInOpen(false);
         }}
         openSignUp={openSignUpDialog}
         open={signInOpen}
         openPassword={openPasswordDialog}
-      /> */}
+      />
       <Signup
         onClose={() => {
           setSignUpOpen(false);

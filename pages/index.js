@@ -1,56 +1,30 @@
 import Head from "next/head";
-import Image from "next/image";
-import Header from "../components/navs/Header";
-import { useSession, signIn, signOut } from "next-auth/react";
 import MobileNav from "../components/navs/MobileNav";
-import { PostCard } from "@/components/post/PostCard";
 import { Timeline } from "@/components/users/Timeline";
 import Welcome from "./welcome";
 import axios from "axios";
-import { Fragment, useEffect, useState } from "react";
-import socket from "@/utils/clientSocket";
-import { Button, Modal, Text, useModal } from "@nextui-org/react";
-import PostId from "./post/[postid]";
-import PostPageTemplate from "@/components/post/PostPageTemplate";
+import { useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
 import ArticleList from "@/components/articles/ArticleList";
-import { Router, useRouter } from "next/router";
-import MenuOptions from "@/components/navs/MenuOptions";
-import HomeIconUI from "@/components/icons/HomeIconUI";
-import SearchIconUI from "@/components/icons/SearchIconUI";
-import MessageIcon from "@/components/icons/MessageIcon";
-import SettingsIcon from "@/components/icons/SettingsIcon";
-import { NewspaperIcon, PencilAltIcon } from "@heroicons/react/outline";
-import TrendingPosts from "@/components/explore/TrendingPosts";
+import { useRouter } from "next/router";
 import SideNav from "@/components/navs/SideNav";
+import AppBar from "@/layouts/AppBar";
+import { useAuth } from "@/contexts/AuthContext";
 
-export default function Home({ posts }) {
-  const { data: session } = useSession();
+export default  function Home({ posts }) {
+  const {user} = useAuth()
   const router = useRouter();
 
-  const [lastIndex, setLastIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const categories = ["Community", "Articles"];
 
-  const connectSocket = (user) => {
-    let connected = false;
 
-    socket.emit("setup", user);
-
-    socket.on("connected", () => (connected = true));
-    console.log("socket===>", socket);
-  };
-  // const posts = JSON.parse(p);
   useEffect(() => {
     setSelectedIndex(categories.indexOf(router.query.feed));
   }, [router.query]);
 
-  const getTrendingPosts = async () => {
-    const { data } = await axios.get("/api/explore/trending");
-    console.log("Trending===>", data);
-    setTrending(data.posts);
-  };
+
   const head = () => {
     return (
       <Head>
@@ -61,11 +35,11 @@ export default function Home({ posts }) {
     );
   };
 
-  if (session) {
+  if (user) {
     return (
       <div className=" ">
         {head()}
-        <Header />
+        <AppBar />
         <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5  ">
         <SideNav />
           <main className=" mb-24 col-span-6 sm:mt-2  ">
@@ -106,9 +80,9 @@ export default function Home({ posts }) {
             </Tab.Group>
           </main>
           <section className=" hidden lg:block sticky top-16  col-span-3 bg-slate-40 mt-2 bg-white rounded-xl p-5 max-h-96">
-            <TrendingPosts />
+            {/* <TrendingPosts /> */}
           </section>
-          <MobileNav user={session.user} />
+          <MobileNav user={user} />
         </div>
       </div>
     );
@@ -125,10 +99,18 @@ export default function Home({ posts }) {
 export const getServerSideProps = async (context) => {
   console.log(process.env.NEXT_PUBLIC_URL);
   const { data } = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/posts`);
-
+  
   return {
     props: {
       posts: data.posts,
     },
   };
 };
+
+// Home.getLayout = function getLayout(page){
+//   return(
+//     <AppBar>
+//       {page}
+//     </AppBar>
+//   )
+// }

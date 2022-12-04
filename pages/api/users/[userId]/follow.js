@@ -1,7 +1,5 @@
 import User from "@/models/userModel";
 import connectDb from "@/utils/db";
-import Post from "models/postModel";
-
 
 
 export default async function handler(req, res) {

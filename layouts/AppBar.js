@@ -2,45 +2,50 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useSession, signIn, signOut } from "next-auth/react";
-import { Avatar } from "@nextui-org/react";
+import { useAuth } from "@/contexts/AuthContext";
+import { ChevronLeftIcon, UserCircleIcon } from "@heroicons/react/outline";
+import UserOptionsDropdown from "@/components/users/UserOptionsDropdown";
 
-const AppBar = ({ children }) => {
+const AppBar = ({ children, extraclass, alt=false, showUser=true }) => {
+  const { user } = useAuth();
+
   const router = useRouter();
-  const { data: session } = useSession();
   return (
-    <div>
-      <header className="fixe top-0 right-0 left-0 z-50 py-2 bg-slate-50 border-b">
-        <nav className=" flex justify-between items-center max-w-6xl mx-auto ">
-          <ul className="flex items-center">
+    <header
+      className={`${extraclass} top-0 right-0 left-0 z-50 py-3 bg-slate-50 border-b`}
+    >
+      <nav className=" flex justify-between items-center max-w-6xl mx-auto space-x- ">
+        <ul className="flex items-center ml-3">
+          {alt ? (
+            <button
+              className=" text-slate-500 rounded-md p-2 bg-slate-100 mr-3 sm:hidden "
+              onClick={(e) => {
+                e.preventDefault();
+                router.back();
+              }}
+            >
+              <ChevronLeftIcon className=" w-5 h-5" />
+            </button>
+          ):  (
             <Link href="/">
-              <a className="w-36 md:w-44  ">
+              <a className={`${alt && 'hidden sm:block'}`}>
                 <Image
-                  src="/rn-logo.png"
-                  alt="Picture of the logo"
-                  width={125}
-                  height={28}
+                  src="/rn.svg"
+                  alt="rnlinked logo"
+                  width={60}
+                  height={30}
                 />
               </a>
             </Link>
-          </ul>
-          <ul className="flex items-center z-20">
-            {children}
+          )}
+        </ul>
 
-            {session && (
-              <li className="z-30 text-gray-500 hover:text-gray-600 text-base font-semibold tracking-wider">
-                <Link href={`/${session.user.username}`}>
-                  <a>
-                    <Avatar squared src={session.user.image} />
-                  </a>
-                </Link>
-              </li>
-            )}
-          </ul>
-        </nav>
-      </header>
-      {children}
-    </div>
+        {children}
+        {showUser && <ul className="flex items-center z-20 mr-3">
+          {user && <UserOptionsDropdown />}
+        </ul>}
+      </nav>
+    </header>
   );
 };
 

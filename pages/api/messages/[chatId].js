@@ -1,12 +1,16 @@
 import Chat from "@/models/chatModel";
 import User from "@/models/userModel";
+import { authenticate } from "@/utils/auth";
 import connectDb from "@/utils/db";
 import { getChatByUserId, getOtherChatUsers } from "@/utils/messages";
 import mongoose from "mongoose";
-import { getSession } from "next-auth/react";
 
 export default async function handler(req, res) {
-  const session = await getSession({ req });
+
+  const { token } = req.headers;
+
+  const sessionUser = await authenticate(token)
+
 
   const { method } = req;
 
@@ -28,11 +32,11 @@ export default async function handler(req, res) {
               "Chat does not exist or you do not have permission to view it",
           });
         }
-        console.log("chat api===>", session.user);
+        console.log("chat api===>", sessionUser);
 
         chat = await Chat.findOne({
           _id: chatId,
-          users: { $elemMatch: { $eq: session.user.id } },
+          users: { $elemMatch: { $eq: sessionUser._id } },
         }).populate("users", "name username _id image");
 
         if (chat === null) {
@@ -41,7 +45,7 @@ export default async function handler(req, res) {
 
           if (userFound !== null) {
             //get chat using user id
-            chat = await getChatByUserId(session.user, userFound);
+            chat = await getChatByUserId(sessionUser, userFound);
           }
         }
 
@@ -52,7 +56,7 @@ export default async function handler(req, res) {
               "Chat does not exist or you do not have permission to view it",
           });
         }
-        const otherChatUsers = getOtherChatUsers(chat.users, session.user);
+        const otherChatUsers = getOtherChatUsers(chat.users, sessionUser);
         console.log("otherChatUsers====>", otherChatUsers);
         //Get Chatname
         if (chat.chatName === undefined) {
@@ -71,7 +75,7 @@ export default async function handler(req, res) {
 
         res.status(200).json({ success: true, chat,  remainingChatImages, otherChatUsers});
       } catch (error) {
-        console.log("Like Err0r====>", error);
+        console.log("get chat Err0r====>", error);
         res.status(400).json({ error });
       }
       break;

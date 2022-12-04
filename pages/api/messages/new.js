@@ -1,11 +1,15 @@
 import Chat from "@/models/chatModel";
-import User from "@/models/userModel";
+import { authenticate } from "@/utils/auth";
 import connectDb from "@/utils/db";
 import { getChatByUserId } from "@/utils/messages";
-import { getSession } from "next-auth/react";
 
 export default async function handler(req, res) {
-  const session = await getSession({ req });
+
+  const { token } = req.headers;
+
+  console.log(req.headers)
+
+  const sessionUser = await authenticate(token)
 
   const { method } = req;
 
@@ -30,7 +34,7 @@ export default async function handler(req, res) {
         let chat;
 
         const users = JSON.parse(req.body.users);
-        console.log("chat api===>", session.user);
+        console.log("chat api===>", sessionUser);
 
         if (users.length === 0) {
           console.log("users array is empty");
@@ -40,10 +44,10 @@ export default async function handler(req, res) {
         if(users.length === 1){
           //Create Private Chat
           console.log('Private chat', users.toString())
-          chat = await getChatByUserId(session.user, users[0])
+          chat = await getChatByUserId(sessionUser, users[0])
         }else{
           //Create group chat
-          users.push(session.user.id);
+          users.push(sessionUser._id);
           chat = await Chat.create({users, isGroupChat: true});
         }
         

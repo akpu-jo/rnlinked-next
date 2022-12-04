@@ -1,4 +1,5 @@
 import axios from "axios";
+import { auth } from "firebaseConfig";
 import React, { useEffect, useState } from "react";
 import { PostCard } from "../post/PostCard";
 import WhoToFollow from "./WhoToFollow";
@@ -14,7 +15,12 @@ const TrendingPosts = () => {
     setTrending(data.posts);
   };
   const getPeopleToFollow = async () => {
-    const { data } = await axios.get("/api/explore/whotofollow");
+    const token = await auth.currentUser.getIdToken(true)
+    const { data } = await axios.get("/api/explore/whotofollow", {
+      headers: {
+        token,
+      },
+    });
     console.log("for you===>", data);
     setPeopleToFollow(data.users);
   };

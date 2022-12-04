@@ -1,9 +1,9 @@
+import { useAuth } from '@/contexts/AuthContext';
 import socket from '@/utils/clientSocket';
-import { useSession } from 'next-auth/react';
 import React, { useEffect } from 'react'
 
 const SocketLayout = ({children}) => {
-    const { data: session } = useSession();
+  const sessionUser = useAuth().user
 
 
     const connectSocket = (user) => { 
@@ -16,8 +16,8 @@ const SocketLayout = ({children}) => {
       };
 
       useEffect(() => {
-        session !== undefined && session !== null && connectSocket(session.user);
-      }, [session]);
+        sessionUser !== undefined && sessionUser !== null && connectSocket(sessionUser);
+      }, [sessionUser]);
 
   return (
     <div>

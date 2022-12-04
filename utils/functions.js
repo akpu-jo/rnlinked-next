@@ -1,3 +1,4 @@
+
 import Resizer from "react-image-file-resizer";
 
 export const serialize = () => {
@@ -22,3 +23,5 @@ export const serialize = () => {
       );
     });
   };
+
+ 
