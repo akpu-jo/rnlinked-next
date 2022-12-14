@@ -11,19 +11,17 @@ import SideNav from "@/components/navs/SideNav";
 import AppBar from "@/layouts/AppBar";
 import { useAuth } from "@/contexts/AuthContext";
 
-export default  function Home({ posts }) {
-  const {user} = useAuth()
+export default function Home({ posts }) {
+  const { user } = useAuth();
   const router = useRouter();
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const categories = ["Community", "Articles"];
 
-
   useEffect(() => {
     setSelectedIndex(categories.indexOf(router.query.feed));
   }, [router.query]);
-
 
   const head = () => {
     return (
@@ -41,7 +39,7 @@ export default  function Home({ posts }) {
         {head()}
         <AppBar />
         <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5  ">
-        <SideNav />
+          <SideNav />
           <main className=" mb-24 col-span-6 sm:mt-2  ">
             <Tab.Group
               selectedIndex={selectedIndex}
@@ -95,11 +93,10 @@ export default  function Home({ posts }) {
   );
 }
 
-
 export const getServerSideProps = async (context) => {
   console.log(process.env.NEXT_PUBLIC_URL);
   const { data } = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/posts`);
-  
+
   return {
     props: {
       posts: data.posts,

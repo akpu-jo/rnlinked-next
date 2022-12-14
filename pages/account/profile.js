@@ -46,7 +46,7 @@ const Profile = () => {
 
   return (
     <div>
-      <AppBar alt={isMobile}>
+      <AppBar alt={isMobile} showUser={!isMobile}>
         <p className=" text-xl tracking-wide sm:hidden">Edit profile</p>
         <div className="w-1/3"></div>
         <button

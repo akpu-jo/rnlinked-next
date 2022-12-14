@@ -27,8 +27,6 @@ export const AuthProvider = ({ children }) => {
       } else {
         setUser(null);
       }
-    setLoading(false);
-
     });
 
     return () => unsubscribe();
@@ -82,7 +80,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user, signup, signin, signout }}>
-      {loading ? null : children}
+      { children}
     </AuthContext.Provider>
   );
 };

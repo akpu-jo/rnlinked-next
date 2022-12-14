@@ -1,30 +1,20 @@
 import React, { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-// const ReactQuill = dynamic(
-//   async () => {
-//     const { default: RQ } = await import("react-quill");
-//     const RQuill = forwardRef((ref, ...props ) => {
 
-//       return <RQ ref={ref} {...props} />;
-//     })
-//     RQuill.displayName = 'ReactQuill'
-//   },
-//   { ssr: false }
-// );
 const ReactQuill = dynamic(
   async () => {
     const { default: RQ } = await import("react-quill");
-    const RQuill = forwardRef((ref, ...props) => {
-      return <RQ ref={ref} {...props} />;
-    });
-    RQuill.displayName = "ReactQuill";
+
+// eslint-disable-next-line react/display-name
+return ({ ref, ...props }) => <RQ ref={ref} {...props} />;
+
   },
-  { ssr: false }
+  {
+    ssr: false
+  }
 );
 
-import "react-quill/dist/quill.bubble.css";
 import "react-quill/dist/quill.snow.css";
-import Resizer from "react-image-file-resizer";
 
 import { Loading, Textarea } from "@nextui-org/react";
 import {
@@ -164,24 +154,6 @@ const Article = () => {
     "video",
   ];
 
-  // const resizeImage = (file) => {
-  //   //Resize
-  //   return new Promise((resolve) => {
-  //     Resizer.imageFileResizer(
-  //       file,
-  //       720,
-  //       500,
-  //       "JPEG",
-  //       100,
-  //       0,
-  //       (uri) => {
-  //         // console.log("uri===>", uri);
-  //         resolve(uri);
-  //       },
-  //       "base64"
-  //     );
-  //   });
-  // };
 
   const cloudinaryImageCleanUp = (content) => {
     editorImageUrl.map(async (img) => {
@@ -371,3 +343,5 @@ const Article = () => {
 };
 
 export default Article;
+
+
