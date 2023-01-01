@@ -4,7 +4,7 @@ import parse from "html-react-parser";
 import { useRouter } from "next/router";
 import { Avatar } from "@nextui-org/react";
 import { timeDifference } from "@/utils/timeStamp";
-import { ChatIcon } from "@heroicons/react/outline";
+import { ChatIcon, UserCircleIcon } from "@heroicons/react/outline";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -45,7 +45,7 @@ const ArticleCard = ({ article, showAtions = true, clipText = true }) => {
           <div className={` flex items-center `}>
             <Link href={`/${article.author.username}`}>
               <a className=" flex justify-start items-center z-10">
-                <Avatar src={article.author.image} squared size="sm" zoomed />
+                <Avatar icon={!article.author.image && (<UserCircleIcon className=" w-8 h-8 opacity-40 " />)} src={article.author.image} squared size="sm" zoomed />
                 <div className=" ml-2">
                   <p className=" tracking-normal text-slate-800 text-sm capitalize">
                     {article.author.name}

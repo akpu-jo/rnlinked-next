@@ -184,7 +184,7 @@ const Article = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_NODE_API}/api/n/articles/remove-image`,
+        `${process.env.NEXT_PUBLIC_NODE_API}/articles/remove-image`,
         { publicId }
       );
 

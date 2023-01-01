@@ -1,4 +1,5 @@
 
+import axios from "axios";
 import Resizer from "react-image-file-resizer";
 
 export const serialize = () => {
@@ -24,4 +25,15 @@ export const serialize = () => {
     });
   };
 
- 
+ export const deleteCloudinaryImage = async (publicId) => {
+   try {
+    const { data } = await axios.post(
+      `${process.env.NEXT_PUBLIC_NODE_API}/articles/remove-image`,
+      { publicId }
+    );
+    return data.result
+   } catch (error) {
+     console.log(error)
+   }
+
+ }

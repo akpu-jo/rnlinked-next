@@ -5,9 +5,7 @@ import HomeIconUI from "../icons/HomeIconUI";
 import MessageIcon from "../icons/MessageIcon";
 import SearchIconUI from "../icons/SearchIconUI";
 import SettingsIcon from "../icons/SettingsIcon";
-import NewChatModal from "../messages/NewChatModal";
 import NewPostModal from "../post/NewPostModal";
-import NextUiModal from "../uiTemplates/NextUiModal";
 import MenuOptions from "./MenuOptions";
 
 const SideNav = ({ showText = true }) => {
@@ -63,14 +61,7 @@ const SideNav = ({ showText = true }) => {
           Short post
         </p>
       </button>
-      {/* <NextUiModal /> */}
       <NewPostModal setVisible={setVisible} bindings={bindings} />
-      {/* <MenuOptions
-        text={`Short post`}
-        icon={<PencilAltIcon className=" w-7 h-7" />}
-        link="/new/post"
-        active={isActive("new/post")}
-      /> */}
       <MenuOptions
         text={`Write article`}
         icon={<NewspaperIcon className=" w-7 h-7" />}

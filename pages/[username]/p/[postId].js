@@ -6,8 +6,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import AppBar from "@/layouts/AppBar";
 import { useMediaQuery } from "react-responsive";
 
-const PostPage = ({ post }) => {
-  const {user} = useAuth()
+const PostPage = ({ post, replies }) => {
+  const { user } = useAuth();
   const isMobile = useMediaQuery({ maxWidth: 640 });
 
   return (
@@ -15,7 +15,7 @@ const PostPage = ({ post }) => {
       <AppBar alt={isMobile} />
       <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5">
         <SideNav />
-        <PostPageTemplate post={post} />
+        <PostPageTemplate post={post} replies={replies} />
       </div>
     </div>
   );
@@ -24,23 +24,30 @@ const PostPage = ({ post }) => {
 export default PostPage;
 
 export const getServerSideProps = async (context) => {
-  console.log(context.params);
   const postId = context.params.postId;
 
-  const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/posts/${postId}`
-  );
-  console.log("post  ===> ", data);
+  try {
+    const { data } = await axios.get(
+      `${process.env.NEXT_PUBLIC_URL}/api/posts/${postId}`
+    );
 
-  // if (!post) {
-  //   return {
-  //     notFound: true,
-  //   };
-  // }
+    if (data === undefined || !data.success) {
+      return {
+        notFound: true,
+      };
+    } 
+      return {
+        props: {
+          post: data.post,
+          replies: data.replies,
+        },
+      };
+  } catch (error) {
+    console.log("post client  ===> ", error);
+    return {
+      notFound: true,
+    };
+  }
 
-  return {
-    props: {
-      post: data.post,
-    },
-  };
+  
 };

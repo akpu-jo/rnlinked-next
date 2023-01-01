@@ -3,7 +3,7 @@ import React from "react";
 
 const EmptyStates = ({ heading, message, action, btnText, illustration, ...props }) => {
   return (
-    <div className=" text-center items-center bg-slate-00 h-full flex flex-col justify-center -mt-14">
+    <div className=" text-center items-center h-full flex flex-col justify-center -mt-14">
       { illustration && <Image
         src={illustration}
         alt={`${heading} illustration`}

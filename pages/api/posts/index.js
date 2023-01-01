@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       try {
-        const posts = await Post.find(userId ? { userId } : {})
+        const posts = await Post.find(userId ? { userId } : {replyTo: null}) //
           .populate("userId", "name username image ")
           .sort({ createdAt: -1 }); /* find all the data in our database */
         res.status(200).json({ success: true, posts });
@@ -22,10 +22,33 @@ export default async function handler(req, res) {
       }
       break;
     case "POST":
-      const { body, userId, image } = req.body;
+      const { body, userId, image, replyTo } = req.body;
 
       try {
-        const post = await Post.create({ body, userId, image });
+        let data;
+        replyTo === undefined
+          ? (data = {
+              body,
+              userId,
+              image,
+            })
+          : (data = {
+              body,
+              userId,
+              image,
+              replyTo,
+              isReply: true,
+            });
+
+        const post = await Post.create(data);
+        
+        if (replyTo !== undefined) {
+          await Post.findByIdAndUpdate(
+            replyTo,
+            { $push: { replies: post._id } },
+            { new: true }
+          );
+        }
         res.status(201).json({ success: true, post });
       } catch (error) {
         console.log("Create Post Error===>", error);
