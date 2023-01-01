@@ -29,8 +29,8 @@ const PostPageTemplate = ({ post, replies }) => {
       <PostCard post={post} clipText={false} mainPost={true} />
       {replies.length > 0 && (
         <div className=" mx-3">
-          {replies.map((reply) => (
-            <PostCard post={reply} />
+          {replies.map((reply, i) => (
+            <PostCard key={i} post={reply} />
           ))}
         </div>
       )}

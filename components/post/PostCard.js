@@ -81,7 +81,7 @@ export const PostCard = ({
   const mbody = () => {
     return (
       <p className=" text-slate-700 text-lg p-5 tracking-wide">
-        This will permanently delete your post! You won't be able to recover
+        This will permanently delete your post! You won&apos;t be able to recover
         this post once deleted.
       </p>
     );
