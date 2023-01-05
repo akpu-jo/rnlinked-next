@@ -21,10 +21,6 @@ const postSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-postSchema.add({
-  replies: [{ type: ObjectId, ref: "Post" }],
-})
-
 let Post;
 try {
   Post = mongoose.model("Post");

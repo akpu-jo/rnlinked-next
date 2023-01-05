@@ -15,6 +15,11 @@ export default async function handler(req, res) {
       try {
         const posts = await Post.find(userId ? { userId } : {replyTo: null}) //
           .populate("userId", "name username image ")
+          .populate({
+            path: "replyTo", 
+            select: '_id',
+            populate: { path: "userId", select: "name username" },
+          })
           .sort({ createdAt: -1 }); /* find all the data in our database */
         res.status(200).json({ success: true, posts });
       } catch (error) {

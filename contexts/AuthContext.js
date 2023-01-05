@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
+  signInWithPopup,
 } from "firebase/auth";
 import { auth } from "firebaseConfig";
 import { useRouter } from "next/router";
@@ -13,20 +14,26 @@ const AuthContext = createContext({});
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const router = useRouter()
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
+  const errorCodes = [
+    'auth/wrong-password',
+    'auth/user-not-found',
+  ]
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (session) => {
       if (session) {
-        const {data} = await axios.get(`/api/users?email=${session.email}`);
+        const { data } = await axios.get(`/api/users?email=${session.email}`);
 
-         setUser(data.user);
+        setUser(data.user);
       } else {
         setUser(null);
       }
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -39,7 +46,8 @@ export const AuthProvider = ({ children }) => {
           const { data } = await axios.post(`/api/users`, {
             name,
             uid: userCredential.user.uid,
-            email
+            email,
+            image: "",
           });
           setUser(data.user);
           console.log(data.user);
@@ -47,9 +55,8 @@ export const AuthProvider = ({ children }) => {
         }
       );
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-
   };
 
   const signin = (email, password) => {
@@ -60,27 +67,38 @@ export const AuthProvider = ({ children }) => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(`${errorCode}: ${errorMessage}`);
+        errorCodes.includes(errorCode) && setError('Please provide a valid email address and password.')
+        console.log(`${errorCode}: ${errorMessage} testing first`);
       });
-    // const userCredential =  signInWithEmailAndPassword(
-    //   auth,
-    //   email,
-    //   password
-    // );
-    // setUser(userCredential.user);
-    return userCredential;
+  };
+
+  const withProvider = (provider) => {
+    return signInWithPopup(auth, provider)
+      .then(async (result) => {
+        const isNewUser = result._tokenResponse.isNewUser;
+        const user = {
+          name: result.user.displayName,
+          email: result.user.email,
+          uid: result.user.uid,
+          image: result.user.photoURL,
+        };
+        if (isNewUser) {
+          const { data } = await axios.post(`/api/users`, user);
+          setUser(data.user);
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
   const signout = async () => {
     await signOut(auth);
     setUser(null);
-    router.push('/')
+    router.push("/");
   };
 
-
   return (
-    <AuthContext.Provider value={{ user, signup, signin, signout }}>
-      { children}
+    <AuthContext.Provider value={{ user, error, setError, signup, signin, withProvider, signout }}>
+      {loading ? null : children}
     </AuthContext.Provider>
   );
 };

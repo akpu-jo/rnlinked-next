@@ -21,7 +21,7 @@ export default async function handler(req, res) {
       }
       break;
     case "POST":
-      const { name, email, uid } = req.body;
+      const { name, email, uid, image } = req.body;
 
       let username;
 
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
       }
 
       try {
-        let user = await User.create({ name, email, uid, username });
+        let user = await User.create({ name, email, uid, username, image });
 
         res.status(201).json({ success: true, user });
       } catch (error) {

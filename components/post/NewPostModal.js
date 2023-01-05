@@ -11,6 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useMediaQuery } from "react-responsive";
 import TextareaAutosize from "react-textarea-autosize";
 import ReplyPostCard from "./ReplyPostCard";
+import RecButton from "../uiTemplates/buttons/RecButton";
 
 const NewPostModal = ({ setVisible, bindings, isReply = false, post }) => {
   const { user } = useAuth();
@@ -23,7 +24,7 @@ const NewPostModal = ({ setVisible, bindings, isReply = false, post }) => {
   const [imgFile, setImgFile] = useState(null);
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(false);
 
   const isInvalid = value === "";
   const placeholder = isReply ? "Type your reply" : "Share you thoughts";
@@ -62,7 +63,7 @@ const NewPostModal = ({ setVisible, bindings, isReply = false, post }) => {
       image,
       body: value,
       userId: user._id,
-      replyTo: isReply? post._id : undefined
+      replyTo: isReply ? post._id : undefined,
     });
 
     console.log("Data===>", data);
@@ -105,42 +106,32 @@ const NewPostModal = ({ setVisible, bindings, isReply = false, post }) => {
 
   return (
     <>
-      <Modal fullScreen={isMobile} {...bindings} width='500px' >
-        <Modal.Header autoMargin={false} className="">
-          <div className="w-full flex justify-between items-center px-5 py-3 border-b">
-            {!isReply && (
-              <h2 className="font-medium text-gray-800 dark:text-white text-lg">
-                New post
-              </h2>
-            )}
-            <button
-              type="button"
-              className=" inline-flex flex-shrink-0 justify-center items-center h-8 w-8 rounded-md text-gray-500 hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white transition-all text-sm dark:focus:ring-gray-700 dark:focus:ring-offset-gray-800"
-              onClick={() => setVisible(false)}
-            >
-              <span className="sr-only">Close</span>
-              <XIcon className="w-6 h-6" />
-            </button>
-          </div>
+      <Modal fullScreen={isMobile} {...bindings} width="500px" closeButton>
+        <Modal.Header className="">
+          {!isReply && (
+            <h2 className="w-full text-start pb-2 ml-3 font-medium text-gray-800 dark:text-white text-lg">
+              New post
+            </h2>
+          )}
         </Modal.Header>
-        <Modal.Body>
-          <div className=" mx-3 mt-1 pt-3 ">
-            {/* {isReply && <ReplyPostCard post={post} />} */}
-            {errorMsg !== null && <p>{errorMsg}</p>}
-            {isReply && (
+        <Modal.Body className="mx-3">
+          <form className="" onSubmit={handleSubmit}>
+          {/* {isReply && <ReplyPostCard post={post} />} */}
+          {errorMsg && <p>{errorMsg}</p>}
+          {isReply && (
               <p className=" flex items-center text-base text-slate-500 pb-2 tracking-normal">
                 <ReplyIcon className=" w-5 h-5 mr-1" />
                 <span>In reply to {post.userId.name}</span>
               </p>
             )}
-            {previewImg !== "" && (
-              <div className="py-4 group relative">
+          {previewImg !== "" && (
+              <div className="py-4 group ">
                 <>
                   <Image
-                    className=" object-cover rounded-md w-screen bg-black "
+                    className=" object-cover rounded-md  "
                     src={previewImg}
                     alt=""
-                    width={350}
+                    width={500}
                     height={200}
                   />
 
@@ -153,53 +144,50 @@ const NewPostModal = ({ setVisible, bindings, isReply = false, post }) => {
                 </>
               </div>
             )}
-            <form className="" onSubmit={handleSubmit}>
-              <div className=" flex mb-3">
-                {user && (
-                  <div>
-                    <Avatar squared src={user.image} />
-                  </div>
-                )}
-                <TextareaAutosize
-                  className=" w-full text-l font-medium text-slate-700 px-1 pl-2  bg-slate-70 "
-                  maxRows={10}
-                  minRows={5}
-                  maxLength={350}
-                  placeholder={placeholder}
-                  value={value}
-                  onChange={(e) => {
-                    setValue(e.target.value);
-                  }}
-                />
-              </div>
+          <div className=" flex mb-3">
+              {user && (
+                <div>
+                  <Avatar squared src={user.image} />
+                </div>
+              )}
+              <TextareaAutosize
+                className=" w-full text-lg font-medium text-slate-700 px-1 pl-2  bg-slate-70 "
+                maxRows={10}
+                minRows={5}
+                maxLength={350}
+                placeholder={placeholder}
+                value={value}
+                onChange={(e) => {
+                  setValue(e.target.value);
+                }}
+              />
+            </div>
 
-              <div className=" flex justify-between items-center mt-5">
-                <label className="">
-                  <input
-                    className=" w-0 h-0 opacity-0"
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    value={image}
-                    onChange={handleImage}
-                  />
-                  <span className=" p-1 rounded-xl bg-slate-100 inline-block">
-                    <PhotographIcon className=" w-7 h-7 text-elm-600" />
-                  </span>
-                </label>
-                <button
-                  type="button"
-                  disabled={isInvalid}
-                  onClick={() => handleSubmit()}
-                  className={`px-5 py-1 bg-elm-700 text-slate-50 font-semibold rounded-md text-base ${
-                    isInvalid && "cursor-not-allowed opacity-50"
-                  }`}
-                >
-                  Post
-                </button>
-              </div>
-            </form>
+          <div className=" flex justify-between items-center my-5">
+          <label className=" inline-flex w-12">
+            <input
+              className=" w-0 h-0 opacity-0"
+              type="file"
+              name="image"
+              accept="image/*"
+              value={image}
+              onChange={handleImage}
+            />
+            <Avatar size={'md'} squared icon={<PhotographIcon className=" w-9 h-9 text-elm-600" />} />
+            
+          </label>
+          <button
+            type="button"
+            disabled={isInvalid}
+            onClick={() => handleSubmit()}
+            className={`px-5 py-2 bg-elm-900 text-slate-50 font-semibold rounded-sm text-base ${
+              isInvalid && "cursor-not-allowed opacity-50"
+            }`}
+          >
+            Post
+          </button>
           </div>
+          </form>
         </Modal.Body>
       </Modal>
     </>

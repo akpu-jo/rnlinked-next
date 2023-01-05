@@ -1,15 +1,15 @@
+import AuthOptions from "@/components/auth/AuthOptions";
+import { useModal } from "@nextui-org/react";
 import React, { useState } from "react";
 import { PasswordReset } from "../components/auth/password/PasswordReset";
-import { Signin } from "../components/auth/Signin";
-
-import { Signup } from "../components/auth/Signup";
 import Header from "../components/navs/Header";
 
 const Welcome = () => {
   const [signInOpen, setSignInOpen] = useState(false);
   const [signUpOpen, setSignUpOpen] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const { setVisible, bindings } = useModal();
+  const [isSignup, setIsSignup] = useState(false);
 
   // useEffect(() => {
   //     document.title = 'Welcome - RNlinked';
@@ -21,15 +21,15 @@ const Welcome = () => {
     setPasswordOpen(false);
   }
 
-  function openSignUpDialog() {
-    setSignUpOpen(true);
-    setSignInOpen(false);
-  }
+  // function openSignUpDialog() {
+  //   setSignUpOpen(true);
+  //   setSignInOpen(false);
+  // }
 
-  function openPasswordDialog() {
-    setPasswordOpen(true);
-    setSignInOpen(false);
-  }
+  // function openPasswordDialog() {
+  //   setPasswordOpen(true);
+  //   setSignInOpen(false);
+  // }
   return (
     <div className="w-full">
       <div className=" bg-elephant-50 dark:bg-slate-50 dark:bg-opacity-10 w-screen sm:w-96 h-96 absolute rounded-br-full "></div>
@@ -54,7 +54,8 @@ const Welcome = () => {
           <li>
             <button
               onClick={() => {
-                setSignUpOpen(true);
+                setIsSignup(true)
+                setVisible(true);
               }}
               className=" hidden md:block w-32 hover:text-elm-900 dark:text-slate-200  text-sm font-semibold"
             >
@@ -63,9 +64,10 @@ const Welcome = () => {
           </li>
           <li>
             <button
-              // onClick={() => signIn()}
+              // onClick={() => setVisible(true)}
               onClick={() => {
-                openSignInDialog();
+                setIsSignup(false)
+                setVisible(true);
               }}
               className=" hover:text-elm-900  dark:text-slate-100 font-semibold"
             >
@@ -73,6 +75,13 @@ const Welcome = () => {
             </button>
           </li>
         </Header>
+
+        <AuthOptions
+          setVisible={setVisible}
+          bindings={bindings}
+          isSignup={isSignup}
+          setIsSignup={setIsSignup}
+        />
 
         <div className=" flex flex-col items-center h-screen">
           <main className=" z-10 my-auto mt-20 text-center sm:mt-44 md:mt-60  max-w-5xl ">
@@ -87,9 +96,10 @@ const Welcome = () => {
             </div>
 
             <button
-                onClick={() => {
-                  setSignUpOpen(true);
-                }}
+               onClick={() => {
+                setIsSignup(true)
+                setVisible(true);
+              }}
               className=" sm:my-0 tracking-widest justify-center bg-elm-600 dark:bg-burntSienna-600 shadow-md px-3 py-2  rounded-full sm:w-56  w-4/6 text-sm uppercase font-head font-semibold text-elephant-50"
             >
               Get Started
@@ -97,7 +107,7 @@ const Welcome = () => {
           </main>
         </div>
       </div>
-      <Signin
+      {/* <Signin
         onClose={() => {
           setSignInOpen(false);
         }}
@@ -111,7 +121,7 @@ const Welcome = () => {
         }}
         openSignIn={openSignInDialog}
         open={signUpOpen}
-      />
+      /> */}
       <PasswordReset
         onClose={() => {
           setPasswordOpen(false);

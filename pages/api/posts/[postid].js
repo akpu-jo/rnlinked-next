@@ -25,10 +25,13 @@ export default async function handler(req, res) {
           res.status(200).json({ success: false });
         }
         if (post !== null) {
-          replies = await Post.find({ replyTo: postid }).populate(
-            "userId",
-            "name username image"
-          );
+          replies = await Post.find({ replyTo: postid })
+            .populate("userId", "name username image")
+            .populate({
+              path: "replyTo",
+              select: "_id",
+              populate: { path: "userId", select: "name username" },
+            });
         }
 
         res.status(200).json({ success: true, post, replies });

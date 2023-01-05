@@ -108,6 +108,7 @@ export const PostCard = ({
 
   useEffect(() => {
     setLiked(post.likes.includes(user && user._id));
+    console.log(post)
   }, [user]);
 
   const queryBuilder = () => {
@@ -125,7 +126,7 @@ export const PostCard = ({
           <div className=" flex mb-1 items-center  bg-opacity-90 rounded-lg">
             <Link href={`/${post.userId.username}`}>
               <a>
-                <Avatar zoomed squared size="md" icon={!post.userId.image && (<UserCircleIcon className=" w-10 h-10 opacity-50 " />)} src={post.userId.image} />
+                <Avatar zoomed squared size="md"  src={post.userId.image} />
               </a>
             </Link>
 
@@ -170,7 +171,7 @@ export const PostCard = ({
           {isReply && (
             <p className=" flex items-center text-sm text-slate-500 pb-1 tracking-normal">
               <ReplyIcon className=" w-5 h-5 mr-1" />
-              <span>In reply to {post.userId.name}</span>
+              <span>In reply to {post.replyTo.userId.name}</span>
             </p>
           )}
           {post.image.length > 0 && (
@@ -194,7 +195,7 @@ export const PostCard = ({
                 fullW ? "" : "w-80"
               } ${mainPost && 'text-2xl'} text-lg font- whitespace-pre-line leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-800 `}
             >
-              {post.body}
+              <p className="  w-full">{post.body}</p>
             </a>
           </Link>
         </article>
