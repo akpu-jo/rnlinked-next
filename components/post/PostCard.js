@@ -135,13 +135,13 @@ export const PostCard = ({
                 <p className=" font-medium tracking-wide leading-5 text-md">
                   {post.userId.name}
                 </p>
-                <p className=" flex items-center font-semibold text-sm text-gray-400">
+                <div className=" flex items-center font-semibold text-sm text-gray-400">
                   @{post.userId.username}
                   <p className=" px-1 text-2xl text-gray-400">&middot;</p>
                   <p className="text-slate-400 text-sm font-light">
                     {timestamp} ago
                   </p>
-                </p>
+                </div>
               </a>
             </Link>
           </div>

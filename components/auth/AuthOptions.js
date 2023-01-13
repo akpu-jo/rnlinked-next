@@ -8,8 +8,14 @@ import RecButton from "../uiTemplates/buttons/RecButton";
 import SigninWithEmail from "./SigninWithEmail";
 import SignupWithEmail from "./SignupWithEmail";
 
-const AuthOptions = ({ bindings, isSignup = false, setIsSignup }) => {
-  const {withProvider, error, setError} = useAuth()
+const AuthOptions = ({
+  bindings,
+  isSignup = false,
+  setIsSignup,
+  onclose,
+  setVisible,
+}) => {
+  const { withProvider, error, setError } = useAuth();
   const isMobile = useMediaQuery({ maxWidth: 640 });
   const [signinForm, setSigninForm] = useState(false);
   const [signupForm, setSignupForm] = useState(false);
@@ -29,20 +35,28 @@ const AuthOptions = ({ bindings, isSignup = false, setIsSignup }) => {
     setShowOptions(true);
   };
 
+  const signInWithProvider = async (provider) => {
+    try {
+      await withProvider(provider);
+      setVisible(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const options = () => {
     return (
       <>
         <div className=" flex flex-col mx-10">
           <RecButton
-            action={() => withProvider(google)}
+            action={() => signInWithProvider(google)}
             text={`Sign ${isSignup ? "up" : "in"} with Google`}
             icon={icon(
               <img alt="..." className="w-5 mr-3" src="/google.svg" />
             )}
           />
           <RecButton
-            action={() => withProvider(twitter)}
+            action={() => signInWithProvider(twitter)}
             text={`Sign ${isSignup ? "up" : "in"} with Twitter`}
             icon={icon(
               <img alt="..." className="w-5 mr-3" src="/twitter.svg" />
@@ -80,9 +94,10 @@ const AuthOptions = ({ bindings, isSignup = false, setIsSignup }) => {
         closeButton
         className=""
         onOpen={() => {
-          showSigninOptions()
-          setError(false)
+          showSigninOptions();
+          setError(false);
         }}
+        onClose={onclose}
       >
         <Modal.Header className=" mt-20 sm:mt-0">
           <h2 className=" text-xl text-slate-800 py-10 font-medium tracking-wide">

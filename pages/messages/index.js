@@ -1,3 +1,4 @@
+import WithAuth from "@/components/auth/WithAuth";
 import Recommendations from "@/components/explore/Recommendations";
 import PencilSquareIcon from "@/components/icons/PencilSquareIcon";
 import Chat from "@/components/messages/Chat";
@@ -10,11 +11,11 @@ import EmptyStates from "@/components/uiTemplates/EmptyStates";
 import { useAuth } from "@/contexts/AuthContext";
 import AppBar from "@/layouts/AppBar";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
-const Inbox = () => {
-  const {user} = useAuth()
+const Inbox = ({ openAuthModal, setVisible, setCloseMethod }) => {
+  const { user } = useAuth();
   const router = useRouter();
   const [showSearch, setShowSearch] = useState(false);
   const [recommendedUsers, setRecommendedUsers] = useState([]);
@@ -26,9 +27,24 @@ const Inbox = () => {
   const isPortrait = useMediaQuery({ orientation: "portrait" });
   const isRetina = useMediaQuery({ minResolution: "2dppx" });
 
+  if (!user) {
+    setVisible(true);
+    console.log("no user===");
+  }else{
+    setVisible(false)
+  }
+
+  useEffect(() => {
+    setCloseMethod( () => () => {
+      console.log('closingggg===== >')
+      !user? router.push("/") : null;
+    } );
+
+  }, []);
+
   return (
     <div className="">
-      <AppBar extraclass={'fixed'} />
+      <AppBar extraclass={"fixed"} />
       <NewChatModal />
 
       <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5 h-screen md:pt-14 pt-14 ">
@@ -52,7 +68,7 @@ const Inbox = () => {
             <div className=" sm:h-0 overflow-y-auto grow px-3 ">
               <Recommendations recommendedUsers={recommendedUsers} />
 
-              <ChatList />
+              {user && <ChatList />}
               <MobileNav />
             </div>
           </div>
@@ -75,4 +91,4 @@ const Inbox = () => {
   );
 };
 
-export default Inbox;
+export default WithAuth(Inbox);

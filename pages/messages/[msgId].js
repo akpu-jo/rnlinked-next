@@ -1,6 +1,6 @@
 import Chat from "@/components/messages/Chat";
 import { ChevronLeftIcon } from "@heroicons/react/outline";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Recommendations from "@/components/explore/Recommendations";
 import PencilSquareIcon from "@/components/icons/PencilSquareIcon";
 import ChatList from "@/components/messages/ChatList";
@@ -16,8 +16,9 @@ import NewChatModal from "@/components/messages/NewChatModal";
 import { useAuth } from "@/contexts/AuthContext";
 import AppBar from "@/layouts/AppBar";
 import { useMediaQuery } from "react-responsive";
+import WithAuth from "@/components/auth/WithAuth";
 
-const ChatPage = () => {
+const ChatPage = ({ setVisible, setCloseMethod }) => {
   const { user } = useAuth();
   const router = useRouter();
   const isMobile = useMediaQuery({ maxWidth: 640 });
@@ -25,9 +26,21 @@ const ChatPage = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [recommendedUsers, setRecommendedUsers] = useState([]);
 
+  if (!user) {
+    setVisible(true);
+  } else {
+    setVisible(false);
+  }
+
+  useEffect(() => {
+    setCloseMethod(() => () => {
+      !user ? router.push("/") : null;
+    });
+  }, []);
+
   return (
     <div>
-      {!isMobile && <AppBar extraclass={'fixed'} />}
+      {!isMobile && <AppBar extraclass={"fixed"} />}
       <div className="  max-w-6xl mx-auto sm:grid grid-cols-11 gap-5 sm:h-screen sm:pt-14">
         <SideNav />
         <main
@@ -53,13 +66,13 @@ const ChatPage = () => {
             <div className=" sm:h-0 overflow-y-auto grow px-3 ">
               <Recommendations recommendedUsers={recommendedUsers} />
 
-              <ChatList />
+              {user && <ChatList />}
               <MobileNav />
             </div>
           </div>
           <section className=" col-span-5 sm:col-span-3 md:mb-0 sm:mb-16 ">
             {router.query.msgId !== undefined ? (
-              <Chat />
+              <>{user && <Chat />}</>
             ) : (
               <EmptyStates
                 heading={"Your Messages"}
@@ -77,4 +90,4 @@ const ChatPage = () => {
   );
 };
 
-export default ChatPage;
+export default WithAuth(ChatPage);

@@ -5,6 +5,7 @@ import SideNav from "@/components/navs/SideNav";
 import { useAuth } from "@/contexts/AuthContext";
 import AppBar from "@/layouts/AppBar";
 import { useMediaQuery } from "react-responsive";
+import MobileNav from "@/components/navs/MobileNav";
 
 const PostPage = ({ post, replies }) => {
   const { user } = useAuth();
@@ -17,6 +18,7 @@ const PostPage = ({ post, replies }) => {
         <SideNav />
         <PostPageTemplate post={post} replies={replies} />
       </div>
+      <MobileNav user={user} />
     </div>
   );
 };

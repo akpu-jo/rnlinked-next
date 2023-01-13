@@ -12,8 +12,9 @@ import axios from "axios";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar } from "@nextui-org/react";
+import WithAuth from "../auth/WithAuth";
 
-export const ProfileHead = ({ profileUser, isSessionUser }) => {
+const ProfileHead = ({ profileUser, isSessionUser, setVisible, setCloseMethod }) => {
   const router = useRouter();
   const { user } = useAuth();
   const [isFollowing, setIsFollowing] = useState(
@@ -23,6 +24,12 @@ export const ProfileHead = ({ profileUser, isSessionUser }) => {
   const [followers, setFollowers] = useState(profileUser.followers);
 
   // const timestamp = timeDifference(Date.now(), new Date(post.createdAt));
+
+  // if (!user) {
+  //   setVisible(true);
+  // } else {
+  //   setVisible(false);
+  // }
 
   const handleFollow = async () => {
     // const { likes } = post;
@@ -72,7 +79,9 @@ export const ProfileHead = ({ profileUser, isSessionUser }) => {
           {!isSessionUser ? (
             <div className="flex items-center justify-start my-3">
               <button
-                onClick={() => handleFollow()}
+                onClick={ () => {
+                  user? handleFollow() : setVisible(true)
+                } }
                 className=" p-2 bg-slate-100 text-slate-600 font-medium rounded-md mr-5"
               >
                 {isFollowing ? (
@@ -122,3 +131,5 @@ export const ProfileHead = ({ profileUser, isSessionUser }) => {
     </div>
   );
 };
+
+export default WithAuth(ProfileHead)

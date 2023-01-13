@@ -35,3 +35,4 @@ yarn-error.log*
 .vercel
 serviceAccountKey.json
 frbsconfig.json
+rnlinked-sandbox-service-account.json
