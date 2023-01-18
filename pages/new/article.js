@@ -169,7 +169,7 @@ const Article = () => {
       const img = await resizeImage(e.target.files[0]);
       console.log("Image Based64==>", img);
       const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_NODE_API}/api/n/articles/upload-image`,
+        `${process.env.NEXT_PUBLIC_NODE_API}/articles/upload-image`,
         { img }
       );
       console.log("Uploaded image response===>", data);
