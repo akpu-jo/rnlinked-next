@@ -238,15 +238,13 @@ const Article = () => {
           >
             <ChevronLeftIcon className=" w-5 h-5" />
           </button>
-          <Link href="/">
-            <a className="w-36 md:w-44  hidden sm:block ">
+          <Link href="/" className="w-36 md:w-44  hidden sm:block ">
               <Image
                 src="/rn.svg"
                 alt="rnlinked logo"
                 width={125}
                 height={28}
               />
-            </a>
           </Link>
           <div className=" flex items-center justify-between">
             <button className=" flex items-center text-center px-2 mr-3">

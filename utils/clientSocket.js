@@ -7,4 +7,4 @@ const socket = io(process.env.NEXT_PUBLIC_NODE_API)
     
 // }
 
-export default socket
+export default socket 

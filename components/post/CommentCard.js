@@ -8,14 +8,11 @@ import HeartInactiveIcon from "../icons/HeartInactiveIcon";
 import parse from "html-react-parser";
 import { useAuth } from "@/contexts/AuthContext";
 
-
 export const CommentCard = ({ comment }) => {
   const router = useRouter();
-  const {user} = useAuth()
-  
-  const [liked, setLiked] = useState(
-    comment.likes.includes(user && user._id)
-  );
+  const { user } = useAuth();
+
+  const [liked, setLiked] = useState(comment.likes.includes(user && user._id));
   const [animateLike, setAnimateLike] = useState(false);
   const [commentLikes, setCommentLikes] = useState(comment.likes);
 
@@ -53,25 +50,26 @@ export const CommentCard = ({ comment }) => {
             />
           </div>
         )}
-          <p className=" pt-2 py-1 text-slate-800 text-ellipsis overflow-hidden ">
-        {parse(comment.body)}
-      </p>
+        <p className=" pt-2 py-1 text-slate-800 text-ellipsis overflow-hidden ">
+          {parse(comment.body)}
+        </p>
       </article>
       <div className=" flex justify-between items-center">
-        <Link href={`/${comment.userId.username}`}>
-          <a className=" flex justify-start items-center py-2 z-10">
-            <Avatar src={comment.userId.image} size="sm" squared />
-            <div className=" ml-3 flex justify-center items-center">
-              <p className=" tracking-normal text-slate-500 capitalize">
-                {comment.userId.name}
-              </p>
-              <p className=" p-1 text-2xl text-gray-400">&middot;</p>
-              <p className="text-slate-400 text-sm font-light">{timestamp}</p>
-              {/* <p className=" font-semibold text-gray-400">
+        <Link
+          href={`/${comment.userId.username}`}
+          className=" flex justify-start items-center py-2 z-10"
+        >
+          <Avatar src={comment.userId.image} size="sm" squared />
+          <div className=" ml-3 flex justify-center items-center">
+            <p className=" tracking-normal text-slate-500 capitalize">
+              {comment.userId.name}
+            </p>
+            <p className=" p-1 text-2xl text-gray-400">&middot;</p>
+            <p className="text-slate-400 text-sm font-light">{timestamp}</p>
+            {/* <p className=" font-semibold text-gray-400">
                 @{comment.userId.username}
               </p> */}
-            </div>
-          </a>
+          </div>
         </Link>
         <div
           className={` flex items-center  ${

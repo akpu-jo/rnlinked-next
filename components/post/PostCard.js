@@ -10,12 +10,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { timeDifference } from "@/utils/timeStamp";
-import {
-  Avatar,
-
-  Image,
-  useModal,
-} from "@nextui-org/react";
+import { Avatar, Image, useModal } from "@nextui-org/react";
 import HeartInactiveIcon from "../icons/HeartInactiveIcon";
 import { useAuth } from "@/contexts/AuthContext";
 import NewPostModal from "./NewPostModal";
@@ -60,8 +55,8 @@ export const PostCard = ({
   };
 
   const deletePost = async () => {
-    console.log('postreplyto ===>', post.replyTo)
-    const replyTo = isReply? `replyTo=${post.replyTo}` : ''
+    console.log("postreplyto ===>", post.replyTo);
+    const replyTo = isReply ? `replyTo=${post.replyTo}` : "";
     axios
       .delete(`/api/posts/${post._id}?${replyTo}`)
       .then((res) => {
@@ -70,8 +65,8 @@ export const PostCard = ({
         });
       })
       .catch((error) => console.log(error));
-      mainPost? router.back() : router.reload()
-      setDeleteModalOpen(false)
+    mainPost ? router.back() : router.reload();
+    setDeleteModalOpen(false);
   };
 
   const header = () => {
@@ -81,8 +76,8 @@ export const PostCard = ({
   const mbody = () => {
     return (
       <p className=" text-slate-700 text-lg p-5 tracking-wide">
-        This will permanently delete your post! You won&apos;t be able to recover
-        this post once deleted.
+        This will permanently delete your post! You won&apos;t be able to
+        recover this post once deleted.
       </p>
     );
   };
@@ -108,7 +103,7 @@ export const PostCard = ({
 
   useEffect(() => {
     setLiked(post.likes.includes(user && user._id));
-    console.log(post)
+    console.log(post);
   }, [user]);
 
   const queryBuilder = () => {
@@ -125,24 +120,20 @@ export const PostCard = ({
         <section className="flex justify-between items-center ">
           <div className=" flex mb-1 items-center  bg-opacity-90 rounded-lg">
             <Link href={`/${post.userId.username}`}>
-              <a>
-                <Avatar zoomed squared size="md"  src={post.userId.image} />
-              </a>
+              <Avatar zoomed squared size="md" src={post.userId.image} />
             </Link>
 
-            <Link href={`/${post.userId.username}`}>
-              <a className=" px-3 ">
-                <p className=" font-medium tracking-wide leading-5 text-md">
-                  {post.userId.name}
+            <Link href={`/${post.userId.username}`} className=" px-3 ">
+              <p className=" font-medium tracking-wide leading-5 text-md">
+                {post.userId.name}
+              </p>
+              <div className=" flex items-center font-semibold text-sm text-gray-400">
+                @{post.userId.username}
+                <p className=" px-1 text-2xl text-gray-400">&middot;</p>
+                <p className="text-slate-400 text-sm font-light">
+                  {timestamp} ago
                 </p>
-                <div className=" flex items-center font-semibold text-sm text-gray-400">
-                  @{post.userId.username}
-                  <p className=" px-1 text-2xl text-gray-400">&middot;</p>
-                  <p className="text-slate-400 text-sm font-light">
-                    {timestamp} ago
-                  </p>
-                </div>
-              </a>
+              </div>
             </Link>
           </div>
           <div className=" relative flex items-center text-center px-2 mr-3 h-full ">
@@ -171,7 +162,12 @@ export const PostCard = ({
           {isReply && (
             <p className=" flex items-center text-sm text-slate-500 pb-1 tracking-normal">
               <ReplyIcon className=" w-5 h-5 mr-1" />
-              <span>In reply to {post.replyTo.userId.name}</span>
+              <span>
+                In reply to{" "}
+                {post.replyTo !== null
+                  ? post.replyTo.userId.name
+                  : " a deleted post"}
+              </span>
             </p>
           )}
           {post.image.length > 0 && (
@@ -189,14 +185,14 @@ export const PostCard = ({
             </div>
           )}
 
-          <Link href={`/${post.userId.username}/p/${post._id}`} scroll={false}>
-            <a
-              className={`${clipText && "clip-txt"} ${
-                fullW ? "" : "w-80"
-              } ${mainPost && 'text-2xl'} text-lg font- whitespace-pre-line leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-800 `}
-            >
-              <p className="  w-full">{post.body}</p>
-            </a>
+          <Link
+            href={`/${post.userId.username}/p/${post._id}`}
+            scroll={false}
+            className={`${clipText && "clip-txt"} ${fullW ? "" : "w-80"} ${
+              mainPost && "text-2xl"
+            } text-lg font- whitespace-pre-line leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-800 `}
+          >
+            <p className="  w-full">{post.body}</p>
           </Link>
         </article>
         {user && showAtions && (
@@ -228,7 +224,8 @@ export const PostCard = ({
             >
               <ChatIcon className=" w-5 h-5 mr-1" />
               <p className=" tracking-wide">
-                {post.replies !== undefined && post.replies.length || ""} Replies{" "}
+                {(post.replies !== undefined && post.replies.length) || ""}{" "}
+                Replies{" "}
               </p>
             </li>
 

@@ -28,13 +28,13 @@ const Explore = () => {
   const [peopleToFollow, setPeopleToFollow] = useState([]);
 
   const getIdToken = async () => {
-    return await auth.currentUser.getIdToken(true)
-  }
+    return await auth.currentUser.getIdToken(true);
+  };
   const getTrendingPosts = async () => {
-    const token = await auth.currentUser.getIdToken(true)
+    const token = await auth.currentUser.getIdToken(true);
     const { data } = await axios.get("/api/explore/trending", {
       headers: {
-        token
+        token,
       },
     });
     console.log("Trending===>", data);
@@ -42,11 +42,11 @@ const Explore = () => {
   };
 
   const getPostsForYou = async () => {
-    const token = await auth.currentUser.getIdToken(true)
+    const token = await auth.currentUser.getIdToken(true);
 
     const { data } = await axios.get("/api/explore/foryou", {
       headers: {
-        token
+        token,
       },
     });
     console.log("for you===>", data);
@@ -54,11 +54,11 @@ const Explore = () => {
   };
 
   const getPeopleToFollow = async () => {
-    const token = await auth.currentUser.getIdToken(true)
+    const token = await auth.currentUser.getIdToken(true);
 
     const { data } = await axios.get(`/api/explore/whotofollow`, {
       headers: {
-        token
+        token,
       },
     });
     setPeopleToFollow(data.users);
@@ -71,18 +71,19 @@ const Explore = () => {
       <div className=" flex justify-between items-center my-3 border-b border-slate-100 py-2">
         <div>
           <div className={` flex items-center `}>
-            <Link href={`/${post.userId.username}`}>
-              <a className=" flex justify-start items-center z-10">
-                <Avatar src={post.userId.image} squared size="sm" zoomed />
-                <div className=" ml-2">
-                  <p className=" tracking-normal text-slate-500 capitalize">
-                    {post.userId.name}
-                  </p>
-                  {/* <p className=" font-semibold text-gray-400 text-sm">
+            <Link
+              href={`/${post.userId.username}`}
+              className="flex justify-start items-center z-10"
+            >
+              <Avatar src={post.userId.image} squared size="sm" zoomed />
+              <div className=" ml-2">
+                <p className=" tracking-normal text-slate-500 capitalize">
+                  {post.userId.name}
+                </p>
+                {/* <p className=" font-semibold text-gray-400 text-sm">
                       @{post.userId.username}
                     </p> */}
-                </div>
-              </a>
+              </div>
             </Link>
             <p className=" p-1 text-2xl text-gray-400">&middot;</p>
             <p className="text-slate-400 text-sm font-light">{timestamp}</p>

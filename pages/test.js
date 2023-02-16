@@ -4,6 +4,13 @@ const Test = () => {
   const prevScrollPosition = useRef(0);
   const [show, setShow] = useState(false);
 
+  const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
+  const isBigScreen = useMediaQuery({ minWidth: 1820 });
+  const isTablet = useMediaQuery({ minWidth: 768 });
+  const isMobile = useMediaQuery({ maxWidth: 640 });
+  const isPortrait = useMediaQuery({ orientation: "portrait" });
+  const isRetina = useMediaQuery({ minResolution: "2dppx" });
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPosition = window.scrollY;

@@ -3,6 +3,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 .bgimg {
   background-image: url("/nurses-vector.jpg");
   background-repeat: repeat-x;
@@ -10,8 +17,8 @@
 
 body {
   height: 100%;
-  --tw-bg-opacity: 1;
-  background-color: rgb(248 250 252 / var(--tw-bg-opacity));
+  /* --tw-bg-opacity: 1;
+  background-color: rgb(248 250 252 / var(--tw-bg-opacity)); */
 }
 
 blockquote {
@@ -143,8 +150,8 @@ blockquote {
 .koyqBc h1 {
   font-size: x-large;
 }
-.max-w-55 {
-  max-width: 75%;
+.max-w-85 {
+  max-width: 85%;
 }
 
 .mine {
@@ -152,8 +159,8 @@ blockquote {
 }
 
 .mine .body {
-  background-color: #253863;
-  color: #fff;
+  background-color: #358486;
+  color: #fff; 
 }
 .mine.first .body {
   border-bottom-right-radius: 2px;

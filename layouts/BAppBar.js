@@ -8,16 +8,16 @@ import UserOptionsDropdown from "@/components/users/UserOptionsDropdown";
 
 export const APP_BAR_HEIGHT = "2rem";
 
-const AppBar = ({ children, extraclass, alt = false, showUser = true }) => {
+const BAppBar = ({ children, extraclass, alt = false, showUser = true }) => {
   const { user } = useAuth();
 
   const router = useRouter();
   return (
     <header
-      className={`${extraclass} top-0 right-0 left-0 z-50 py-3 bg-slate-50 border-b`}
+      className={`${extraclass} inset-0 z-50 border-b`}
     >
       <nav
-        className=" flex justify-between items-center max-w-6xl mx-auto space-x-  "
+        className=" flex justify-between items-center max-w-6xl mx-auto bg-slate-50 "
         style={{ height: APP_BAR_HEIGHT }}
       >
         <ul className="flex items-center ml-3">
@@ -49,4 +49,4 @@ const AppBar = ({ children, extraclass, alt = false, showUser = true }) => {
   );
 };
 
-export default AppBar;
+export default BAppBar;

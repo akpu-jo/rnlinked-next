@@ -50,12 +50,12 @@ const UserOptionsDropdown = () => {
         </li>
         <li className=" border-b border-slate-200 py-3 mt-3 text-xl tracking-wide hover:font-medium hover:text-slate-800 ">
           <Link href={`/${user.username}`}>
-            <a>Profile</a>
+            Profile
           </Link>
         </li>
         <li className=" border-b border-slate-200 py-3 mt-3 text-xl tracking-wide hover:font-medium hover:text-slate-800 ">
           <Link href={`/account/profile`}>
-            <a>Edit profile</a>
+            Edit profile
           </Link>
         </li>
         <li className=" border-b border-slate-200 py-3 mt-5 text-xl tracking-wide hover:font-medium hover:text-slate-800">

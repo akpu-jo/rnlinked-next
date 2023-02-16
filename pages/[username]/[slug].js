@@ -126,7 +126,7 @@ const ArticlePage = ({ article }) => {
             <h2 className=" -mb-2 mx-3 text-slate-600 font-medium text-lg tracking-wide">
               Author
             </h2>
-            <UserCard user={article.author} showBio={true} />
+            <UserCard user={article.author} showBio={true} /> 
           </div>
 
         </section>

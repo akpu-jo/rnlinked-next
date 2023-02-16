@@ -12,22 +12,16 @@ const ChatList = () => {
   const router = useRouter();
   const [chatList, setChatList] = useState([]);
 
-  const isDesktopOrLaptop = useMediaQuery({ minWidth: 1024 });
-  const isBigScreen = useMediaQuery({ minWidth: 1820 });
-  const isTablet = useMediaQuery({ minWidth: 768 });
   const isMobile = useMediaQuery({ maxWidth: 640 });
-  const isPortrait = useMediaQuery({ orientation: "portrait" });
-  const isRetina = useMediaQuery({ minResolution: "2dppx" });
-
+  const active = (href) => router.asPath === href;
 
   const listChat = async () => {
-    const token = await auth.currentUser.getIdToken(true)
-    const { data } = await axios.get(
-      `/api/messages/get-chats`, {
-        headers:{
-          token
-      }}
-      );
+    const token = await auth.currentUser.getIdToken(true);
+    const { data } = await axios.get(`/api/messages/get-chats`, {
+      headers: {
+        token,
+      },
+    });
     console.log(data.chats);
     setChatList(data.chats);
   };
@@ -47,18 +41,24 @@ const ChatList = () => {
   };
 
   useEffect(() => {
-    listChat()
+    listChat();
   }, []);
 
   return (
-    <div className="pb-16">
+    <div className="pb-24 ">
       {chatList.length > 0 ? (
         chatList.map((c) => (
-          <div key={c._id} className=" flex items-center my-1 py-1 ml-3  ">
+          <div
+            key={c._id}
+            className={`${
+              active(`/messages/${c._id}`) &&
+              "bg-elm-50 -mr-3 border-r-2 border-primary-confetti text-"
+            } flex items-center my-1 py-1 ml-3`}
+          >
             <div
               onClick={() => {
                 console.log(c.isGroupChat);
-                !c.isGroupChat && router.push(`/${c.users[1].username}`);
+                !c.isGroupChat && router.push(`/${c.users[0].username}`);
               }}
               className=" pr-3"
             >
@@ -75,23 +75,19 @@ const ChatList = () => {
             </div>
             <Link
               key={c._id}
-              href={
-                isMobile ? `/messages/${c._id}` : `/messages?msgId=${c._id}`
-              }
-              as={`/messages/${c._id}`}
+              href={`/messages/${c._id}`}
+              className={` py-2 text-clip w-3/4 `}
             >
-              <a className=" py-2 text-clip w-3/4">
-                <p className=" clip-txt-1 text-slate-800 ">{c.chatName}</p>
-                {/* {getChatName(c.chatName)} */}
-                {c.latestMessage && (
-                  <p className=" text-slate-500 text-sm clip-txt-1">
-                    <span className=" font-semibold">
-                      {getMessageLatestSender(c)}
-                    </span>
-                    {c.latestMessage.content}
-                  </p>
-                )}
-              </a>
+              <p className=" clip-txt-1 text-slate-800 ">{c.chatName}</p>
+              {/* {getChatName(c.chatName)} */}
+              {c.latestMessage && (
+                <p className=" text-slate-500 text-sm clip-txt-1">
+                  <span className=" font-semibold">
+                    {getMessageLatestSender(c)}
+                  </span>
+                  {c.latestMessage.content}
+                </p>
+              )}
             </Link>
           </div>
         ))

@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 
       //extract email username
       const emailUsername = email.split("@")[0].replace(".", "-");
-      console.log("username===>", emailUsername);
+      // console.log("username===>", emailUsername);
       //check if username exists
       const userNameExists = await checkIfUsernameExists(emailUsername);
       //generate username

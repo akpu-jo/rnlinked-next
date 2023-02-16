@@ -43,7 +43,7 @@ const Profile = ({ u }) => {
       <UserOptionsModal setVisible={setVisible} bindings={bindings} />
       <div className="max-w-6xl mx-auto sm:grid grid-cols-8 gap-5 pt-28">
         <SideNav />
-        <div className=" col-span-4 xl:col-span-4 bg-slate-00">
+        <div className=" col-span-4 xl:col-span-4 bg-slate-00 pb-20">
           <ProfileHead
             profileUser={profileUser}
             isSessionUser={isSessionUser}

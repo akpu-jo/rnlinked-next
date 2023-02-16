@@ -6,7 +6,7 @@ import {
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styles from "../../styles/Message.module.css";
 
 import { Loading, Textarea } from "@nextui-org/react";
@@ -60,20 +60,24 @@ const Chat = () => {
   };
 
   const joinChatRoom = (chatId) => {
-    socket.emit("join room", chatId);
+    socket.emit("join chat", chatId);
   };
 
   const getChatMessages = async () => {
     const token = await auth.currentUser.getIdToken(true);
-    console.log(chat._id);
     const { data } = await axios.get(`/api/messages?chatId=${msgId}`, {
       headers: {
         token,
       },
     });
-    console.log(data);
     setMessages(data.messages);
+    console.log('bottomRef======>', bottomRef)
     bottomRef.current.scrollIntoView();
+  };
+
+  const addMessageToChat = (newMessage) => {
+    setMessages((messages) => [...messages, ...[newMessage]]);
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleSubmit = async (e) => {
@@ -98,10 +102,9 @@ const Chat = () => {
       socket.emit("new message", data.message);
     }
 
-    setMessages((messages) => [...messages, ...[data.message]]);
+    addMessageToChat(data.message);
     setContent("");
     socket.emit("stop typing", chat._id);
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const getLiClassNames = (msg, prevMsg, nxtMsg) => {
@@ -150,14 +153,13 @@ const Chat = () => {
     return () => {
       socket.off("typing");
     };
-  }, [router]);
+  }, []);
 
   useEffect(() => {
     socket.on("message received", (newMessage) => {
-      console.log("New Message==>", newMessage);
-      setMessages((messages) => [...messages, ...[newMessage]]);
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      addMessageToChat(newMessage);
     });
+
   }, []);
 
   useEffect(() => {
@@ -170,8 +172,8 @@ const Chat = () => {
   }, [success, router.query]);
 
   return (
-    <div className=" sm:flex flex-col sm:h-full my-16 sm:my-0 ">
-      <header className=" fixed top-0 left-0 right-0 bg-white sm:static flex justify-between items-center border-b h-14 px-3">
+    <div className=" sm:flex flex-col sm:h-full mt-20 sm:my-0 ">
+      <header className=" fixed top-0 left-0 right-0 bg-white sm:static flex justify-between items-center border-b h-16 px-3">
         <button
           className=" text-slate-500 rounded-md p-1 bg-slate-100 mr-3 sm:hidden "
           onClick={(e) => {
@@ -218,7 +220,7 @@ const Chat = () => {
               ))}
           </div>
           {success && chat && (
-            <div className=" ml-1">
+            <div className={` ${remainingChatImages !== 0 || !chat.isGroupChat ? 'ml-2':'ml-5'} `}>
               <p className=" leading-4 capitalize clip-txt-1 text-slate-800 text-base font-normal">
                 {chat.chatName}
               </p>
@@ -243,7 +245,7 @@ const Chat = () => {
           <DotsVerticalIcon className=" w-5 h-5" />{" "}
         </button>
       </header>
-      <ul className="  mx-3 sm:pb-2 sm:pt-2 sm:h-0 overflow-y-auto sm:grow ">
+      <ul className="  mx-3 sm:pb-10 pb-20 sm:pt-2 sm:h-0 overflow-y-auto sm:grow ">
         {messages.map((message, i) => (
           <Message
             message={message}

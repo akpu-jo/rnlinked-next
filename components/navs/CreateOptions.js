@@ -31,7 +31,7 @@ const CreateOptions = ({ open, close }) => {
                 icon={<PencilAltIcon className=" w-7 h-7" />}
                 className=" mr-2"
               />{" "}
-                Short post
+              Short post
             </button>
           </li>
           {/* <Link href={`/new/post`}>
@@ -48,16 +48,17 @@ const CreateOptions = ({ open, close }) => {
 
           <NewPostModal setVisible={setVisible} bindings={bindings} />
           <li className=" bg-primary-springWood bg-opacity-80 shadow-sm rounded-lg p-2 my-3 text-xl tracking-wide focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50">
-            <Link href={`/new/article`}>
-              <a className=" flex items-center bg-slate-40">
-                <Avatar
-                  squared
-                  size="lg"
-                  icon={<NewspaperIcon className=" w-7 h-7" />}
-                  className=" mr-2"
-                />
-                Write article
-              </a>
+            <Link
+              href={`/new/article`}
+              className=" flex items-center bg-slate-40"
+            >
+              <Avatar
+                squared
+                size="lg"
+                icon={<NewspaperIcon className=" w-7 h-7" />}
+                className=" mr-2"
+              />
+              Write article
             </Link>
           </li>
         </ul>
