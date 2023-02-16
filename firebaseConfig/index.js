@@ -3,7 +3,7 @@ import { getAuth, GoogleAuthProvider, TwitterAuthProvider } from 'firebase/auth'
 
 
 const firebaseConfig = JSON.parse(
-  process.env.NEXT_PUBLIC_FIREBASE_SANDBOX_CONFIG
+  process.env.NEXT_PUBLIC_FIREBASE_CONFIG
 );
 
 const app = initializeApp(firebaseConfig);
