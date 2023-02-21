@@ -1,32 +1,66 @@
 import Chat from "@/components/messages/Chat";
-import { ChevronLeftIcon } from "@heroicons/react/outline";
 import React, { useEffect, useState } from "react";
-import Recommendations from "@/components/explore/Recommendations";
-import PencilSquareIcon from "@/components/icons/PencilSquareIcon";
-import ChatList from "@/components/messages/ChatList";
-import SearchChat from "@/components/messages/SearchChat";
-import MobileNav from "@/components/navs/MobileNav";
-import SideNav from "@/components/navs/SideNav";
-import EmptyStates from "@/components/uiTemplates/EmptyStates";
-import { Avatar } from "@nextui-org/react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import NewChatModal from "@/components/messages/NewChatModal";
 import { useAuth } from "@/contexts/AuthContext";
-import AppBar from "@/layouts/AppBar";
-import { useMediaQuery } from "react-responsive";
-import WithAuth from "@/components/auth/WithAuth";
 import ChatLayout from "@/layouts/ChatLayout";
+import axios from "axios";
+import { getCookie } from "cookies-next";
 
-const ChatPage = ({ setVisible, setCloseMethod }) => {
+const ChatPage = ({ chat, conversations, remainingChatImages, otherChatUsers }) => {
   const { user } = useAuth();
+  const [messages, setMessages] = useState(conversations)
 
-  return <div className=" h-full">{user && <Chat />}</div>;
+  return (
+    <div className=" h-full">
+      {user && (
+        <Chat
+          chat={chat}
+          messages={messages}
+          setMessages={setMessages}
+          remainingChatImages={remainingChatImages}
+          otherChatUsers={otherChatUsers[0].username}
+        />
+      )}
+    </div>
+  );
 };
 
+ChatPage.getLayout = function getLayout(page) {
+  return <ChatLayout>{page}</ChatLayout>;
+};
 export default ChatPage;
 
-ChatPage.getLayout = function getLayout(page) {
-  return <ChatLayout >{page}</ChatLayout>;
+export const getServerSideProps = async ({ req, res, query }) => {
+  const { msgId } = query;
+
+  const token = getCookie("token", { req, res });
+
+  const getChat = () => {
+    return axios.get(`${process.env.NEXT_PUBLIC_URL}/api/messages/${msgId}`, {
+      headers: {
+        token,
+      },
+    });
+  };
+
+  const getMessages = () => {
+    return axios.get(
+      `${process.env.NEXT_PUBLIC_URL}/api/messages?chatId=${msgId}`,
+      {
+        headers: {
+          token,
+        },
+      }
+    );
+  };
+
+  const [chatResult, msgResult] = await Promise.all([getChat(), getMessages()]);
+
+  return {
+    props: {
+      chat: chatResult.data.chat,
+      remainingChatImages: chatResult.data.remainingChatImages,
+      otherChatUsers: chatResult.data.otherChatUsers,
+      conversations: msgResult.data.messages,
+    },
+  };
 };

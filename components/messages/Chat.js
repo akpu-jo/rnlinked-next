@@ -15,69 +15,76 @@ import socket from "@/utils/clientSocket";
 import { useAuth } from "@/contexts/AuthContext";
 import { auth } from "firebaseConfig";
 
-const Chat = () => {
+const Chat = ({
+  chat,
+  messages,
+  setMessages,
+  remainingChatImages,
+  otherChatUsers,
+}) => {
   const router = useRouter();
   const { msgId } = router.query;
   const { user } = useAuth();
 
-  const [chat, setChat] = useState({});
+  // const [chat, setChat] = useState(conversation);
   // const [isGroupChat, setIsGroupChat] = useState(false)
   const [success, setSuccess] = useState(false);
-  const [remainingChatImages, setRemainingChatImages] = useState({});
-  const [messages, setMessages] = useState([]);
+  // const [remainingChatImages, setRemainingChatImages] = useState({});
+  // const [messages, setMessages] = useState([]);
 
   const [content, setContent] = useState("");
-  const [chatMeta, setChatMeta] = useState({
-    chatName: "ChatName",
-    lastSenderId: "",
-    otherChatUsers: {},
-  });
+  // const [chatMeta, setChatMeta] = useState({
+  //   chatName: "ChatName",
+  //   lastSenderId: "",
+  //   otherChatUsers: {},
+  // });
 
-  const { otherChatUsers } = chatMeta;
+  // const { otherChatUsers } = chatMeta;
   const [typing, setTyping] = useState(false);
   let [timer, setTimer] = useState(null);
   const bottomRef = useRef(null);
 
-  const getChat = async () => {
-    const token = await auth.currentUser.getIdToken(true);
-    const { data } = await axios.get(`/api/messages/${msgId}`, {
-      headers: {
-        token,
-      },
-    });
-    console.log(data);
-    setChat(data.chat);
-    // setIsGroupChat(data.chat.isGroup)
-    setRemainingChatImages(data.remainingChatImages);
-    data.success &&
-      setChatMeta({
-        ...chatMeta,
-        otherChatUsers: data.otherChatUsers[0].username,
-      });
-    if (data.success) {
-      setSuccess(data.success);
-    }
-  };
+  // const getChat = async () => {
+  // const token = await auth.currentUser.getIdToken(true);
+  // const { data } = await axios.get(`/api/messages/${msgId}`, {
+  //   headers: {
+  //     token,
+  //   },
+  // });
+  // console.log(data);
+  // setChat(data.chat);
+  // setIsGroupChat(data.chat.isGroup)
+  // setRemainingChatImages(data.remainingChatImages);
+  // data.success &&
+  //   setChatMeta({
+  //     ...chatMeta,
+  //     otherChatUsers: data.otherChatUsers[0].username,
+  //   });
+  // if (data.success) {
+  //   setSuccess(data.success);
+  // }
+  // };
 
   const joinChatRoom = (chatId) => {
     socket.emit("join chat", chatId);
   };
 
-  const getChatMessages = async () => {
-    const token = await auth.currentUser.getIdToken(true);
-    const { data } = await axios.get(`/api/messages?chatId=${msgId}`, {
-      headers: {
-        token,
-      },
-    });
-    setMessages(data.messages);
-    console.log('bottomRef======>', bottomRef)
-    bottomRef.current.scrollIntoView();
-  };
+  // const getChatMessages = async () => {
+  // const token = await auth.currentUser.getIdToken(true);
+  // const { data } = await axios.get(`/api/messages?chatId=${msgId}`, {
+  //   headers: {
+  //     token,
+  //   },
+  // });
+  // setMessages(data.messages);
+  // console.log("bottomRef======>", bottomRef);
+  // bottomRef.current.scrollIntoView();
+  // };
 
   const addMessageToChat = (newMessage) => {
-    setMessages((messages) => [...messages, ...[newMessage]]);
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    messages.push(newMessage);
+    // setMessages((messages) => [...messages, ...[newMessage]]);
+    // bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleSubmit = async (e) => {
@@ -146,7 +153,6 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    getChat();
     socket.on("typing", () => setTyping(true));
     socket.on("stop typing", () => setTyping(false));
 
@@ -157,19 +163,27 @@ const Chat = () => {
 
   useEffect(() => {
     socket.on("message received", (newMessage) => {
-      addMessageToChat(newMessage);
+      // messages.push(newMessage)
+      setMessages((messages) => [...messages, ...[newMessage]]);
+      // addMessageToChat(newMessage);
+      // setSuccess(true);
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      console.log("msg updated", bottomRef.current);
     });
-
   }, []);
 
-  useEffect(() => {
-    getChat();
-  }, [router.query]);
+  // useEffect(() => {
+  //   setMessages(conversations)
+  // }, [router.query.msgId]);
 
   useEffect(() => {
-    success && joinChatRoom(msgId);
-    success && getChatMessages();
-  }, [success, router.query]);
+    bottomRef.current?.scrollIntoView();
+  }, [router.query.msgId]);
+
+  useEffect(() => {
+    joinChatRoom(msgId);
+    // success && getChatMessages();
+  }, [router.query.msgId]);
 
   return (
     <div className=" sm:flex flex-col sm:h-full mt-20 sm:my-0 ">
@@ -192,12 +206,11 @@ const Chat = () => {
           className=" flex items-center  "
         >
           <div className=" flex flex-row-reverse  ">
-            {success && remainingChatImages !== 0 && (
+            {remainingChatImages !== 0 && (
               <p className=" ml-2 text-sm text-slate-600 font-light flex items-center px-2  rounded-md ">{`+${remainingChatImages}`}</p>
             )}
 
-            {success &&
-              chat &&
+            {chat &&
               chat.chatImages.map((image, i) => (
                 <li
                   key={i}
@@ -219,8 +232,12 @@ const Chat = () => {
                 </li>
               ))}
           </div>
-          {success && chat && (
-            <div className={` ${remainingChatImages !== 0 || !chat.isGroupChat ? 'ml-2':'ml-5'} `}>
+          {chat && (
+            <div
+              className={` ${
+                remainingChatImages !== 0 || !chat.isGroupChat ? "ml-2" : "ml-5"
+              } `}
+            >
               <p className=" leading-4 capitalize clip-txt-1 text-slate-800 text-base font-normal">
                 {chat.chatName}
               </p>
@@ -245,7 +262,7 @@ const Chat = () => {
           <DotsVerticalIcon className=" w-5 h-5" />{" "}
         </button>
       </header>
-      <ul className="  mx-3 sm:pb-10 pb-20 sm:pt-2 sm:h-0 overflow-y-auto sm:grow ">
+      <ul className="  mx-3 sm:pt-2 sm:h-0 overflow-y-auto sm:grow ">
         {messages.map((message, i) => (
           <Message
             message={message}
@@ -258,7 +275,7 @@ const Chat = () => {
             key={i}
           />
         ))}
-        <div ref={bottomRef} />
+        <div className="pt-20 sm:pt-10" ref={bottomRef} />
       </ul>
 
       <form

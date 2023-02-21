@@ -1,4 +1,6 @@
 import axios from "axios";
+import { setCookie, deleteCookie } from "cookies-next";
+
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -19,15 +21,13 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const errorCodes = [
-    'auth/wrong-password',
-    'auth/user-not-found',
-  ]
+  const errorCodes = ["auth/wrong-password", "auth/user-not-found"];
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (session) => {
       if (session) {
         const { data } = await axios.get(`/api/users?email=${session.email}`);
+        setCookie("token", await session.getIdToken(true));
 
         setUser(data.user);
       } else {
@@ -37,6 +37,22 @@ export const AuthProvider = ({ children }) => {
     });
 
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const handleTokenRefresh = setInterval(async () => {
+      console.log("refreshing token...");
+      if (user) {
+        const token = await auth.currentUser.getIdToken(true);
+        console.log("refreshing token...", token);
+        deleteCookie("token");
+        setCookie("token", token);
+      }
+    }, 30 * 60 * 1000);
+
+    return () => {
+      clearInterval(handleTokenRefresh);
+    };
   }, []);
 
   const signup = async (email, password, name) => {
@@ -67,7 +83,8 @@ export const AuthProvider = ({ children }) => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        errorCodes.includes(errorCode) && setError('Please provide a valid email address and password.')
+        errorCodes.includes(errorCode) &&
+          setError("Please provide a valid email address and password.");
         console.log(`${errorCode}: ${errorMessage} testing first`);
       });
   };
@@ -97,7 +114,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, error, setError, signup, signin, withProvider, signout }}>
+    <AuthContext.Provider
+      value={{ user, error, setError, signup, signin, withProvider, signout }}
+    >
       {loading ? null : children}
     </AuthContext.Provider>
   );

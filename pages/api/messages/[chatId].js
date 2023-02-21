@@ -32,7 +32,7 @@ export default async function handler(req, res) {
               "Chat does not exist or you do not have permission to view it",
           });
         }
-        console.log("chat api===>", sessionUser);
+        // console.log("chat api===>", sessionUser);
 
         chat = await Chat.findOne({
           _id: chatId,
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
           });
         }
         const otherChatUsers = getOtherChatUsers(chat.users, sessionUser);
-        console.log("otherChatUsers====>", otherChatUsers);
+        // console.log("otherChatUsers====>", otherChatUsers);
         //Get Chatname
         if (chat.chatName === undefined) {
           const namesArray = otherChatUsers.map((user) => user.name);

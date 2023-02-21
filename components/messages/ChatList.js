@@ -13,7 +13,7 @@ const ChatList = () => {
   const [chatList, setChatList] = useState([]);
 
   const isMobile = useMediaQuery({ maxWidth: 640 });
-  const active = (href) => router.asPath === href;
+  const active = (href, otherUserId, group) => router.asPath === href || (router.query.msgId === otherUserId && !group );
 
   const listChat = async () => {
     const token = await auth.currentUser.getIdToken(true);
@@ -51,7 +51,7 @@ const ChatList = () => {
           <div
             key={c._id}
             className={`${
-              active(`/messages/${c._id}`) &&
+              active(`/messages/${c._id}`, c.users[0]._id, c.isGroupChat) &&
               "bg-elm-50 -mr-3 border-r-2 border-primary-confetti text-"
             } flex items-center my-1 py-1 ml-3`}
           >
