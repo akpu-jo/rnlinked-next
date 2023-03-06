@@ -14,21 +14,26 @@ import Message from "@/components/messages/Message";
 import socket from "@/utils/clientSocket";
 import { useAuth } from "@/contexts/AuthContext";
 import { auth } from "firebaseConfig";
+import { useMediaQuery } from "react-responsive";
 
 const Chat = ({
   chat,
+  currentChatId,
   messages,
   setMessages,
   remainingChatImages,
   otherChatUsers,
+  bottomRef,
 }) => {
   const router = useRouter();
   const { msgId } = router.query;
+
   const { user } = useAuth();
 
+  const isMobile = useMediaQuery({ maxWidth: 640 });
+
   // const [chat, setChat] = useState(conversation);
-  // const [isGroupChat, setIsGroupChat] = useState(false)
-  const [success, setSuccess] = useState(false);
+  const [sending, setSending] = useState(false);
   // const [remainingChatImages, setRemainingChatImages] = useState({});
   // const [messages, setMessages] = useState([]);
 
@@ -42,7 +47,9 @@ const Chat = ({
   // const { otherChatUsers } = chatMeta;
   const [typing, setTyping] = useState(false);
   let [timer, setTimer] = useState(null);
-  const bottomRef = useRef(null);
+  const scroll = useRef();
+
+  // const bottomRef = useRef(null);
 
   // const getChat = async () => {
   // const token = await auth.currentUser.getIdToken(true);
@@ -65,10 +72,6 @@ const Chat = ({
   // }
   // };
 
-  const joinChatRoom = (chatId) => {
-    socket.emit("join chat", chatId);
-  };
-
   // const getChatMessages = async () => {
   // const token = await auth.currentUser.getIdToken(true);
   // const { data } = await axios.get(`/api/messages?chatId=${msgId}`, {
@@ -87,9 +90,15 @@ const Chat = ({
     // bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const invalid = sending || !content.replace(/\s/g, "").length;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setSending(true);
+    if (!content.replace(/\s/g, "").length) {
+      return setSending(false);
+    }
     const token = await auth.currentUser.getIdToken(true);
     const { data } = await axios.post(
       `/api/messages`,
@@ -103,15 +112,21 @@ const Chat = ({
         },
       }
     );
-    console.log("newMessage", data);
 
     if (socket.connected) {
-      socket.emit("new message", data.message);
+      const socketData = {
+        message: data.message,
+        chatId: chat._id,
+      };
+      socket.emit("new message", socketData);
     }
 
-    addMessageToChat(data.message);
+    // addMessageToChat(data.message);
+    setMessages((messages) => [...messages, ...[data.message]]);
+    // bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     setContent("");
     socket.emit("stop typing", chat._id);
+    setSending(false);
   };
 
   const getLiClassNames = (msg, prevMsg, nxtMsg) => {
@@ -153,34 +168,44 @@ const Chat = ({
   };
 
   useEffect(() => {
-    socket.on("typing", () => setTyping(true));
+    const showTypingIndicator = (room) => {
+      if (room !== currentChatId) return;
+      setTyping(true);
+    };
+    socket.on("typing", showTypingIndicator);
     socket.on("stop typing", () => setTyping(false));
 
     return () => {
-      socket.off("typing");
+      socket.off("typing", showTypingIndicator);
     };
-  }, []);
+  }, [currentChatId]);
 
   useEffect(() => {
-    socket.on("message received", (newMessage) => {
-      // messages.push(newMessage)
-      setMessages((messages) => [...messages, ...[newMessage]]);
-      // addMessageToChat(newMessage);
-      // setSuccess(true);
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-      console.log("msg updated", bottomRef.current);
-    });
-  }, []);
+    // console.log("useEffect called with chatId", currentChatId);
 
-  // useEffect(() => {
-  //   setMessages(conversations)
-  // }, [router.query.msgId]);
+    const handleMessageReceived = (socketData) => {
+      const { message, chatId } = socketData;
+      // console.log("message received for chatId", chatId);
+      if (chatId !== currentChatId) return;
+      setMessages((messages) => [...messages, message]);
+    };
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView();
-  }, [router.query.msgId]);
+    socket.on("message received", handleMessageReceived);
+
+    return () => {
+      socket.off("message received", handleMessageReceived);
+    };
+  }, [currentChatId]);
 
   useEffect(() => {
+    scroll.current?.scrollIntoView();
+  }, [messages]);
+
+  useEffect(() => {
+    const joinChatRoom = (chatId) => {
+      socket.emit("join chat", chatId);
+    };
+
     joinChatRoom(msgId);
     // success && getChatMessages();
   }, [router.query.msgId]);
@@ -264,16 +289,17 @@ const Chat = ({
       </header>
       <ul className="  mx-3 sm:pt-2 sm:h-0 overflow-y-auto sm:grow ">
         {messages.map((message, i) => (
-          <Message
-            message={message}
-            isGroup={chat && chat.isGroupChat}
-            getLiClassNames={getLiClassNames(
-              message,
-              messages[i - 1],
-              messages[i + 1]
-            )}
-            key={i}
-          />
+          <li key={i} ref={scroll}>
+            <Message
+              message={message}
+              isGroup={chat && chat.isGroupChat}
+              getLiClassNames={getLiClassNames(
+                message,
+                messages[i - 1],
+                messages[i + 1]
+              )}
+            />
+          </li>
         ))}
         <div className="pt-20 sm:pt-10" ref={bottomRef} />
       </ul>
@@ -286,7 +312,13 @@ const Chat = ({
           className=" flex-1 text-gray-800 bg-gry-100 p-2 py-1 rounded-sm focus:outline-none "
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          onKeyDown={(e) => handleTyping(e)}
+          // onKeyDown={(e) => handleTyping(e)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey && !isMobile) {
+              handleSubmit(e);
+            }
+            handleTyping(e);
+          }}
           aria-label="Type you message"
           minRows={1}
           maxRows={3}
@@ -296,8 +328,12 @@ const Chat = ({
           size="lg"
         />
 
-        <button className=" mr-2 " type="submit">
-          <PaperAirplaneIcon className=" text-cloud-900 rounded-md w-8 h-8 rotate-90 items-center " />
+        <button className=" mr-2 " type="submit" disabled={invalid}>
+          <PaperAirplaneIcon
+            className={`${
+              invalid && "cursor-not-allowed opacity-50"
+            } text-cloud-900 rounded-md w-8 h-8 rotate-90 items-center "`}
+          />
         </button>
       </form>
     </div>

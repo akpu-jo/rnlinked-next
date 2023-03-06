@@ -7,9 +7,9 @@ import { getChatIdByUserId } from "@/utils/messages";
 import mongoose from "mongoose";
 
 export default async function handler(req, res) {
-  const { token } = req.headers;
+  // const { token } = req.headers;
 
-  const sessionUser = await authenticate(token);
+  const sessionUser = await authenticate(req, res);
 
   const { method } = req;
 
@@ -22,35 +22,33 @@ export default async function handler(req, res) {
         let messages;
 
         const { chatId } = req.query;
-        
+
         const isValidId = mongoose.isValidObjectId(chatId);
-        
+
         if (!isValidId) {
           return res.json({
             success: false,
             message:
-            "Chat does not exist or you do not have permission to view it",
+              "Chat does not exist or you do not have permission to view it",
           });
         }
-        
+
         messages = await Message.find({ chat: chatId }).populate(
           "sender",
           "name username image _id"
-          );
-          
-          console.log("Chat Id ===>", messages);
-          if (messages.length === 0) {
-            //chek if chat id is really userId
-            const userFound = await User.findById(chatId);
-            
-            console.log("Chat Id ===>", userFound);
-            if (userFound !== null) {
-              const chatid = await getChatIdByUserId(sessionUser._id, chatId)
-            console.log('chatalt====>', chatid)
+        );
+        if (messages.length === 0) {
+          //chek if chat id is really userId
+          const userFound = await User.findById(chatId);
+
+          console.log("Chat Id /api/messages/index:44====>", userFound);
+          if (userFound !== null) {
+            const chatid = await getChatIdByUserId(sessionUser._id, chatId);
+            console.log("chatalt /api/messages/index:47====>", chatid);
             messages = await Message.find({ chat: chatid }).populate(
               "sender",
               "name username image _id"
-              );
+            );
           }
         }
         res.status(200).json({

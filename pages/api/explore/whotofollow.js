@@ -3,10 +3,10 @@ import connectDb from "@/utils/db";
 import { authenticate } from "@/utils/auth";
 
 export default async function handler(req, res) {
-  const { token } = req.headers;
-  console.log(token)
+  // const { token } = req.headers;
+  // console.log(token)
 
-  const sessionUser = await authenticate(token)
+  const sessionUser = await authenticate(req, res)
   
     const { method } = req;
   

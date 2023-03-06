@@ -6,19 +6,18 @@ import { getChatByUserId, getOtherChatUsers } from "@/utils/messages";
 import mongoose from "mongoose";
 
 export default async function handler(req, res) {
-
-  const { token } = req.headers;
-
-  const sessionUser = await authenticate(token)
-
-
   const { method } = req;
+  const sessionUser = await authenticate(req, res);
 
   await connectDb();
 
+  // console.log("reaches here, shouldnot really", req);
   switch (method) {
     case "GET":
       try {
+        if (sessionUser.tokenExpired) {
+          return res.json(sessionUser);
+        }
         let chat;
         // const users = JSON.parse(req.body.users);
         // const userId = req
@@ -71,9 +70,18 @@ export default async function handler(req, res) {
             ? imageArray
             : [imageArray.at(0), imageArray.at(1)];
 
-        const remainingChatImages = imageArray.length > 2 ? imageArray.length - 2 : 0
+        const remainingChatImages =
+          imageArray.length > 2 ? imageArray.length - 2 : 0;
 
-        res.status(200).json({ success: true, chat,  remainingChatImages, otherChatUsers});
+        res
+          .status(200)
+          .json({
+            success: true,
+            chat,
+            remainingChatImages,
+            otherChatUsers,
+            // tokenExpired: true,
+          });
       } catch (error) {
         console.log("get chat Err0r====>", error);
         res.status(400).json({ error });

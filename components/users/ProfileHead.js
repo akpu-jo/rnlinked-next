@@ -59,6 +59,12 @@ const ProfileHead = ({
       </Link>
     );
   };
+
+  const setChat = () => {
+    //find the post
+    //if it don't exist, create one
+    //get the chatId and push to the chat page 
+  }
   useEffect(() => {
     setIsFollowing(profileUser.followers.includes(user && user._id));
   }, [user, router.query.src]);

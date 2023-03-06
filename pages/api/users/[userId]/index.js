@@ -1,5 +1,4 @@
 import User from "@/models/userModel";
-import { authenticate } from "@/utils/auth";
 import connectDb from "@/utils/db";
 import Post from "models/postModel";
 

@@ -1,23 +1,32 @@
 import Chat from "@/components/messages/Chat";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import ChatLayout from "@/layouts/ChatLayout";
 import axios from "axios";
 import { getCookie } from "cookies-next";
+import { useRouter } from "next/router";
 
-const ChatPage = ({ chat, conversations, remainingChatImages, otherChatUsers }) => {
+const ChatPage = ({ chat, conversations, remainingChatImages, otherChatUsers, currentChatId }) => {
   const { user } = useAuth();
+  const router = useRouter()
   const [messages, setMessages] = useState(conversations)
+  const bottomRef = useRef(null);
+
+   useEffect(() => {
+    setMessages(conversations)
+  }, [router.query]);
 
   return (
     <div className=" h-full">
       {user && (
         <Chat
           chat={chat}
+          currentChatId={currentChatId}
           messages={messages}
           setMessages={setMessages}
           remainingChatImages={remainingChatImages}
           otherChatUsers={otherChatUsers[0].username}
+          bottomRef={bottomRef}
         />
       )}
     </div>
@@ -29,7 +38,9 @@ ChatPage.getLayout = function getLayout(page) {
 };
 export default ChatPage;
 
-export const getServerSideProps = async ({ req, res, query }) => {
+export const getServerSideProps = async ( context) => {
+  const { req, res, query, resolvedUrl } = context
+  // console.log('ctx /messages/[msgId]:42 ====>', context)
   const { msgId } = query;
 
   const token = getCookie("token", { req, res });
@@ -53,7 +64,20 @@ export const getServerSideProps = async ({ req, res, query }) => {
     );
   };
 
+  
   const [chatResult, msgResult] = await Promise.all([getChat(), getMessages()]);
+
+  // console.log('chatResult=====>', req)
+  const encodedPath = encodeURIComponent(resolvedUrl)
+
+  if(chatResult.data.tokenExpired){
+    return{
+      redirect: {
+        destination: `/refresh?redirect=${encodedPath}`,
+        permanent: false
+      }
+    }
+  }
 
   return {
     props: {
@@ -61,6 +85,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
       remainingChatImages: chatResult.data.remainingChatImages,
       otherChatUsers: chatResult.data.otherChatUsers,
       conversations: msgResult.data.messages,
+      currentChatId: msgId
     },
   };
 };

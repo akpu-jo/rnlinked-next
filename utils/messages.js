@@ -3,6 +3,7 @@ import Message from "@/models/messageModel";
 import mongoose from "mongoose";
 
 export const getChatByUserId = async (sessionUser, otherUser) => {
+  console.log('here /utils/messages:6')
   return Chat.findOneAndUpdate(
     {
       isGroupChat: false,

@@ -4,9 +4,9 @@ import { authenticate } from "@/utils/auth";
 import Message from "@/models/messageModel";
 
 export default async function handler(req, res) {
-  const { token } = req.headers;
+  // const { token } = req.headers;
 
-  const sessionUser = await authenticate(token)
+  const sessionUser = await authenticate(req, res)
 
   const { method } = req; 
 

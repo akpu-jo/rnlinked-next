@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
       console.log("refreshing token...");
       if (user) {
         const token = await auth.currentUser.getIdToken(true);
-        console.log("refreshing token...", token);
+        console.log("refreshing token...");
         deleteCookie("token");
         setCookie("token", token);
       }

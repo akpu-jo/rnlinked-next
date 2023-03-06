@@ -29,7 +29,7 @@ const NewPostModal = ({ setVisible, bindings, isReply = false, post }) => {
   const isInvalid = value === "";
   const placeholder = isReply ? "Type your reply" : "Share you thoughts";
 
-  const handleImage = async (e) => {
+  const handleFile = async (e) => {
     let file = e.target.files[0];
     console.log(e.target);
     console.log(imgFile);
@@ -171,7 +171,7 @@ const NewPostModal = ({ setVisible, bindings, isReply = false, post }) => {
               name="image"
               accept="image/*"
               value={image}
-              onChange={handleImage}
+              onChange={handleFile}
             />
             <Avatar size={'md'} squared icon={<PhotographIcon className=" w-9 h-9 text-elm-600" />} />
             

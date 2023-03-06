@@ -1,16 +1,17 @@
 
-import React, { useState }  from "react";
+import React, { useState, useRef }  from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Message = ({ message, getLiClassNames, isGroup }) => {
   const { user } = useAuth()
+  const scroll = useRef(null);
 
   const [isMine] = useState(message.sender._id === user._id);
 
   const liClassName = isMine ? "mine" : "theirs";
 
   return (
-    <li className={` flex flex-col items-start  ${getLiClassNames}`}>
+    <li ref={scroll} className={` flex flex-col items-start  ${getLiClassNames}`}>
       {isGroup && getLiClassNames.includes("theirs first") && (
         <span className=" text-xs font-medium text-slate-500">
           {message.sender.name}
