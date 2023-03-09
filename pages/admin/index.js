@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { typeOf } from "react-is";
 import CsvDownloadButton from "react-json-to-csv";
 
-const index = ({u}) => {
+const Admin = ({u}) => {
     const users = JSON.parse(u)
     console.log(typeof u, u)
   const [usersJson, setUsersJson] = useState("");
@@ -19,7 +19,7 @@ const index = ({u}) => {
   );
 };
 
-export default index;
+export default Admin;
 
 export const getServerSideProps = async () => {
   await connectDb();
