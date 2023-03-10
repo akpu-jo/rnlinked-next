@@ -1,9 +1,8 @@
 import Post from "@/models/postModel";
-import connectDb from "../../../utils/db";
+import connectDb from "@/utils/db";
 
 export default async function handler(req, res) {
   const { method } = req;
-  const { email, password } = req.body;
 
   await connectDb();
 
@@ -11,30 +10,17 @@ export default async function handler(req, res) {
     case "GET":
       try {
         const { postid } = req.query;
-        let replies = [];
         const post = await Post.findById(postid)
-          .populate("userId", "name username image")
-          .populate({
-            path: "replyTo",
-            populate: { path: "userId", select: "name username image" },
-          });
+        .select(" _id likes")
+          .populate("likes", "_id name username image")
 
         console.log("post api ====>", post);
 
         if (post === null) {
           res.status(200).json({ success: false });
         }
-        if (post !== null) {
-          replies = await Post.find({ replyTo: postid })
-            .populate("userId", "name username image")
-            .populate({
-              path: "replyTo",
-              select: "_id",
-              populate: { path: "userId", select: "name username" },
-            });
-        }
 
-        res.status(200).json({ success: true, post, replies });
+        res.status(200).json({ success: true, likes: post.likes });
       } catch (error) {
         console.log("post error ===> ", error);
         res.status(400).json({ success: false });

@@ -13,7 +13,7 @@ const PostPage = ({ post, replies }) => {
 
   return (
     <div className=" bg-slate-50">
-      <AppBar alt={isMobile} />
+      <AppBar alt={isMobile} extraclass={''} />
       <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5">
         <SideNav />
         <PostPageTemplate post={post} replies={replies} />

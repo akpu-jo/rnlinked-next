@@ -1,7 +1,9 @@
 import {
+  BookmarkIcon,
   ChatIcon,
   DotsVerticalIcon,
   ReplyIcon,
+  SaveIcon,
   UserCircleIcon,
 } from "@heroicons/react/outline";
 // import Image from "next/image";
@@ -10,13 +12,14 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { timeDifference } from "@/utils/timeStamp";
-import { Avatar, Image, useModal } from "@nextui-org/react";
+import { Avatar, Image, Tooltip, useModal } from "@nextui-org/react";
 import HeartInactiveIcon from "../icons/HeartInactiveIcon";
 import { useAuth } from "@/contexts/AuthContext";
 import NewPostModal from "./NewPostModal";
 import SubMenu from "../uiTemplates/submenu/SubMenu";
 import SubMenuItem from "../uiTemplates/submenu/SubMenuItem";
 import ModalTemplate from "../uiTemplates/Modal";
+import PostEngagementModal from "./PostEngagementModal";
 
 export const PostCard = ({
   post,
@@ -35,11 +38,23 @@ export const PostCard = ({
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [showEngagement, setShowEngagement] = useState(false);
+  const [EngagingUsers, setEngagingUsers] = useState({})
+  const [engagementType, setEngagementType] = useState("");
 
   const timestamp = timeDifference(Date.now(), new Date(post.createdAt));
 
   const isAuthor = user && post.userId._id === user._id;
   const isReply = post.replyTo !== undefined;
+
+  const showLikes = async (engagementType) => {
+    const { data } = await axios.get(
+      `/api/posts/${router.query.postId}/${engagementType}`
+    );
+    setEngagingUsers(data.likes)
+
+    setShowEngagement(true)
+  };
 
   const handleLike = async (id) => {
     const { likes } = post;
@@ -188,17 +203,42 @@ export const PostCard = ({
           <Link
             href={`/${post.userId.username}/p/${post._id}`}
             scroll={false}
-            className={`${clipText && "clip-txt"} ${fullW ? "" : "w-80"} ${
-              mainPost && "text-2xl"
-            } text-lg font- whitespace-pre-line leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-800 `}
+            className={`${clipText && "clip-txt"} ${
+              fullW ? "" : "w-80"
+            } whitespace-pre-line leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-700 `}
           >
-            <p className="  w-full">{post.body}</p>
+            <p className={` ${mainPost ? "text-xl" : "text-lg"}  font- w-full`}>
+              {post.body}
+            </p>
           </Link>
         </article>
+        {mainPost && (
+          <div className=" border-y border-slate-100 py-2 mt-3 text-sm ">
+            <span
+              onClick={() => showLikes("likes")}
+              className={` ml-1 text-slate-600 tracking-wide hover:underline`}
+            >
+              {postLikes.length} Like{postLikes.length > 1 ? "s" : ""}
+            </span>
+
+            <span
+              className={` ml-5 text-slate-600 tracking-wide hover:underline`}
+            >
+              {(post.replies !== undefined && post.replies.length) || ""} Repl
+              {post.replies.length > 1 ? "ies" : "y"}
+            </span>
+          </div>
+        )}
+        <PostEngagementModal
+          engagementType={"likes"}
+          visible={showEngagement}
+          setVisible={setShowEngagement}
+          users={EngagingUsers}
+        />
         {user && showAtions && (
           <ul
             className={` flex items-center justify-between ${
-              liked ? "text-red-500" : " text-gray-500"
+              liked ? "text-red-500" : " text-slate-500"
             }`}
           >
             <li
@@ -209,26 +249,30 @@ export const PostCard = ({
               className={` flex items-center p-2 text-lg mr-2 cursor-pointer`}
               onAnimationEnd={() => setAnimateLike(false)}
             >
-              <HeartInactiveIcon animateLike={animateLike} liked={liked} />
+              <div className=" hover:bg-slate-200 p-1 rounded-lg ">
+                <HeartInactiveIcon animateLike={animateLike} liked={liked} />
+              </div>
               <span
                 className={` ml-1 ${
-                  animateLike && ""
-                } text-slate-500 tracking-wide`}
+                  mainPost && ""
+                } text-slate-500 tracking-wide hover:underline`}
               >
-                {postLikes.length} Liked
+                {!mainPost && postLikes.length} Like
+                {postLikes.length > 1 && !mainPost && "s"}
               </span>
             </li>
-            <li
-              // onClick={() => router.push(`/new/comment/${post._id}`)}
-              className=" flex items-center p-2  text-lg text-gray-500  "
-            >
-              <ChatIcon className=" w-5 h-5 mr-1" />
-              <p className=" tracking-wide">
-                {(post.replies !== undefined && post.replies.length) || ""}{" "}
-                Replies{" "}
-              </p>
-            </li>
-
+            {!mainPost && (
+              <li
+                // onClick={() => router.push(`/new/comment/${post._id}`)}
+                className=" flex items-center p-2  text-lg text-gray-500  "
+              >
+                <ChatIcon className=" w-5 h-5 mr-1" />
+                <p className=" tracking-wide">
+                  {(post.replies !== undefined && post.replies.length) || ""}{" "}
+                  Replies{" "}
+                </p>
+              </li>
+            )}
             <li
               onClick={() => setVisible(true)}
               className=" flex items-center p-2  text-lg text-gray-500 cursor-pointer  "
@@ -242,6 +286,18 @@ export const PostCard = ({
                 post={post}
               />
             </li>
+            {mainPost && (
+              <li className=" p-2  text-lg text-gray-500  ">
+                <Tooltip
+                  content={"Coming soon"}
+                  trigger="click"
+                  className=" flex items-center"
+                >
+                  <BookmarkIcon className=" w-5 h-5 mr-1" />
+                  <p className=" tracking-wide">Save</p>
+                </Tooltip>
+              </li>
+            )}
           </ul>
         )}
       </div>

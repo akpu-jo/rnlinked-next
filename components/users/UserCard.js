@@ -26,7 +26,7 @@ const UserCard = ({ user, showBio = false, clipBio = false }) => {
   }, [sessionUser]);
 
   return (
-    <div className=" py-2 my-3 mx-2">
+    <div className=" py-1 my-1 mx-2">
       <div className={` flex items-center justify-between `}>
         <Link
           href={`/${user.username}`}

@@ -36,3 +36,5 @@ yarn-error.log*
 serviceAccountKey.json
 frbsconfig.json
 rnlinked-sandbox-service-account.json
+
+archive
