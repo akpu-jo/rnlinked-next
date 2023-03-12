@@ -64,7 +64,7 @@ const AuthOptions = ({
           />
           <RecButton
             action={showSignupWithEmail}
-            text={`Sing ${isSignup ? "up" : "in"} with Email`}
+            text={`Sign ${isSignup ? "up" : "in"} with Email`}
             icon={icon(<Mail fill="currentColor" dec={"mr-4"} />)}
           />
         </div>

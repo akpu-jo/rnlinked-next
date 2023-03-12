@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar } from "@nextui-org/react";
 import WithAuth from "../auth/WithAuth";
+import MediaModal from "../post/MediaModal";
 
 const ProfileHead = ({
   profileUser,
@@ -27,6 +28,7 @@ const ProfileHead = ({
   );
   // const [animateLike, setAnimateLike] = useState(false);
   const [followers, setFollowers] = useState(profileUser.followers);
+  const [showMediaModal, setShowMediaModal] = useState(false);
 
   // const timestamp = timeDifference(Date.now(), new Date(post.createdAt));
 
@@ -63,8 +65,8 @@ const ProfileHead = ({
   const setChat = () => {
     //find the post
     //if it don't exist, create one
-    //get the chatId and push to the chat page 
-  }
+    //get the chatId and push to the chat page
+  };
   useEffect(() => {
     setIsFollowing(profileUser.followers.includes(user && user._id));
   }, [user, router.query.src]);
@@ -86,7 +88,20 @@ const ProfileHead = ({
             }
           />
         ) : (
-          <Avatar src={profileUser.image} css={{ size: "$20" }} squared/>
+          <>
+            <MediaModal
+              visible={showMediaModal}
+              setVisible={setShowMediaModal}
+              src={profileUser.image}
+            />
+            <Avatar
+            // onClick={() => setShowMediaModal(true)}
+              src={profileUser.image}
+              css={{ size: "$20" }}
+              squared
+              zoomed
+            />
+          </>
           // <Image
           //   className=" rounded-3xl "
           //   src={profileUser.image}

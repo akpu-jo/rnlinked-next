@@ -23,7 +23,7 @@ const Following = () => {
       ? "You are not following anyone yet"
       : `${
           profileUser.name && profileUser.name.split(" ")[0]
-        } is not following by anyone yet`;
+        } is not following anyone yet`;
 
   useEffect(() => {
     getUser();

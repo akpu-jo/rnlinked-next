@@ -20,6 +20,7 @@ import SubMenu from "../uiTemplates/submenu/SubMenu";
 import SubMenuItem from "../uiTemplates/submenu/SubMenuItem";
 import ModalTemplate from "../uiTemplates/Modal";
 import PostEngagementModal from "./PostEngagementModal";
+import MediaModal from "./MediaModal";
 
 export const PostCard = ({
   post,
@@ -38,9 +39,12 @@ export const PostCard = ({
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
   const [showEngagement, setShowEngagement] = useState(false);
-  const [EngagingUsers, setEngagingUsers] = useState({})
+  const [EngagingUsers, setEngagingUsers] = useState({});
   const [engagementType, setEngagementType] = useState("");
+
+  const [showMediaModal, setShowMediaModal] = useState(false);
 
   const timestamp = timeDifference(Date.now(), new Date(post.createdAt));
 
@@ -51,9 +55,9 @@ export const PostCard = ({
     const { data } = await axios.get(
       `/api/posts/${router.query.postId}/${engagementType}`
     );
-    setEngagingUsers(data.likes)
+    setEngagingUsers(data.likes);
 
-    setShowEngagement(true)
+    setShowEngagement(true);
   };
 
   const handleLike = async (id) => {
@@ -185,9 +189,18 @@ export const PostCard = ({
               </span>
             </p>
           )}
+
+          {post.image.length > 0 && (
+            <MediaModal
+              visible={showMediaModal}
+              setVisible={setShowMediaModal}
+              src={post.image[0].url}
+            />
+          )}
           {post.image.length > 0 && (
             <div className=" w-full ">
               <Image
+                onClick={() => setShowMediaModal(true)}
                 className=" object-cover rounded-sm w-full bg-gray-300 "
                 src={post.image[0].url}
                 alt=""

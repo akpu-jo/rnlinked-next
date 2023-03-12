@@ -27,7 +27,7 @@ const NewPostModal = ({ setVisible, bindings, isReply = false, post }) => {
   const [errorMsg, setErrorMsg] = useState(false);
 
   const isInvalid = value === "";
-  const placeholder = isReply ? "Type your reply" : "Share you thoughts";
+  const placeholder = isReply ? "Type your reply" : "Share your thoughts";
 
   const handleFile = async (e) => {
     let file = e.target.files[0];
@@ -109,42 +109,43 @@ const NewPostModal = ({ setVisible, bindings, isReply = false, post }) => {
       <Modal fullScreen={isMobile} {...bindings} width="500px" closeButton>
         <Modal.Header className="">
           {!isReply && (
-            <h2 className="w-full text-start pb-2 ml-3 font-medium text-gray-800 dark:text-white text-lg">
+            <h2 className="w-full text-start pb-2 ml-3 font-div text-slate-700 tracking-wide dark:text-white text-lg">
               New post
             </h2>
           )}
         </Modal.Header>
         <Modal.Body className="mx-3">
           <form className="" onSubmit={handleSubmit}>
-          {/* {isReply && <ReplyPostCard post={post} />} */}
-          {errorMsg && <p>{errorMsg}</p>}
-          {isReply && (
+            {/* {isReply && <ReplyPostCard post={post} />} */}
+            {errorMsg && <p>{errorMsg}</p>}
+            {isReply && (
               <p className=" flex items-center text-base text-slate-500 pb-2 tracking-normal">
                 <ReplyIcon className=" w-5 h-5 mr-1" />
                 <span>In reply to {post.userId.name}</span>
               </p>
             )}
-          {previewImg !== "" && (
-              <div className="py-4 group ">
-                <>
-                  <Image
-                    className=" object-cover rounded-md  "
-                    src={previewImg}
-                    alt=""
-                    width={500}
-                    height={200}
-                  />
+            {previewImg !== "" && (
+              <div className="py-4 group relative inline-block  ">
+                <Image
+                  className="rounded-md h-56 object-cover"
+                  src={previewImg}
+                  alt=""
+                  width={200}
+                  height={200}
+                  quality={80}
+                  objectFit="cover"
+                />
 
-                  <button
-                    onClick={handleImageRemove}
-                    className="hidden group-hover:block absolute top-4 right-0 text-center rounded-sm p-2 bg-blue-50  text-red-600"
-                  >
-                    <TrashIcon className=" w-5 h-5 " />
-                  </button>
-                </>
+                <button
+                  onClick={handleImageRemove}
+                  className="hidden group-hover:block absolute top-4 right-0 text-center rounded-lg p-0.5 m-1 bg-slate-900  text-slate-100"
+                >
+                  
+                  <XIcon className=" sm:w-5 sm:h-5 w-6 h-6 " />
+                </button>
               </div>
             )}
-          <div className=" flex mb-3">
+            <div className=" flex mb-3">
               {user && (
                 <div>
                   <Avatar squared src={user.image} />
@@ -163,30 +164,33 @@ const NewPostModal = ({ setVisible, bindings, isReply = false, post }) => {
               />
             </div>
 
-          <div className=" flex justify-between items-center my-5">
-          <label className=" inline-flex w-12">
-            <input
-              className=" w-0 h-0 opacity-0"
-              type="file"
-              name="image"
-              accept="image/*"
-              value={image}
-              onChange={handleFile}
-            />
-            <Avatar size={'md'} squared icon={<PhotographIcon className=" w-9 h-9 text-elm-600" />} />
-            
-          </label>
-          <button
-            type="button"
-            disabled={isInvalid}
-            onClick={() => handleSubmit()}
-            className={`px-5 py-2 bg-elm-900 text-slate-50 font-semibold rounded-sm text-base ${
-              isInvalid && "cursor-not-allowed opacity-50"
-            }`}
-          >
-            Post
-          </button>
-          </div>
+            <div className=" flex justify-between items-center my-5">
+              <label className=" inline-flex w-12">
+                <input
+                  className=" w-0 h-0 opacity-0"
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  value={image}
+                  onChange={handleFile}
+                />
+                <Avatar
+                  size={"md"}
+                  squared
+                  icon={<PhotographIcon className=" w-9 h-9 text-elm-600" />}
+                />
+              </label>
+              <button
+                type="button"
+                disabled={isInvalid}
+                onClick={() => handleSubmit()}
+                className={`px-5 py-2 bg-elm-900 text-slate-50 font-semibold rounded-sm text-base ${
+                  isInvalid && "cursor-not-allowed opacity-50"
+                }`}
+              >
+                Post
+              </button>
+            </div>
           </form>
         </Modal.Body>
       </Modal>

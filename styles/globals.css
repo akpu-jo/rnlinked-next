@@ -141,6 +141,7 @@ blockquote {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .img {
   border: hsl(0, 0%, 83%);
   border-width: 2;
