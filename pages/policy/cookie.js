@@ -32,7 +32,7 @@ const CookiePolicy = () => {
                   when you visit a website. They are used to store information
                   such as your preferences, login information, and browsing
                   history. This allows websites to remember your actions and
-                  preferences over time, so you don't have to re-enter them each
+                  preferences over time, so you don&apos;t have to re-enter them each
                   time you visit the site.{" "}
                 </>
               )}

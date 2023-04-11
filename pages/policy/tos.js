@@ -19,8 +19,8 @@ const TOS = () => {
               empower nurses worldwide.
             </p>
             <p className=" text-xl pb-5">
-              These terms of service ("Terms") apply to your use of our website
-              and services ("Service"). By using the Service, you agree to be
+              These terms of service (&quot;Terms&quot;) apply to your use of our website
+              and services (&quot;Service&quot;). By using the Service, you agree to be
               bound by these Terms.
             </p>
             <p className=" text-xl pb-5">
@@ -160,7 +160,7 @@ const TOS = () => {
                   You agree to indemnify and hold Rnlinked and its affiliates,
                   officers, agents, and employees harmless from any claim,
                   damages, liabilities, costs, and expenses (including
-                  reasonable attorneys' fees) arising out of or in connection
+                  reasonable attorneys&apos; fees) arising out of or in connection
                   with your use of our website and services, your content, your
                   violation of these Terms, or your violation of any rights of
                   another.
@@ -184,7 +184,7 @@ const TOS = () => {
               text={txt(
                 <>
                   We may revise these Terms from time to time. If we make
-                  changes, we’ll notify you in advance before making these
+                  changes, we&apos;ll notify you in advance before making these
                   changes to provide you the opportunity to review the changes
                   before they become effective. These changes will not be
                   retroactive, Your continued use of our Service following any
