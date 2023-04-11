@@ -56,22 +56,7 @@ export default async function handler(req, res) {
       }
       break;
     case "PATCH":
-      // const defaultClient = SibApiV3Sdk.ApiClient.instance;
 
-      // //configure API key auth: api-key
-      // const apiKey = defaultClient.authentications["api-key"];
-
-      // apiKey.apiKey =
-      //   "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";
-
-      // const partnerKey = defaultClient.authentications["partner-key"];
-      // partnerKey.apiKey =
-      //   "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";
-
-      // let api = new SibApiV3Sdk.ContactsApi();
-      // const newContact = new SibApiV3Sdk.CreateContact()
-
-      // let addedToSib;
 
       try {
         const { filter, reqBody } = req.body;
