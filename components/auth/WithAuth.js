@@ -1,18 +1,20 @@
-import { useModal } from "@nextui-org/react";
-import { useRouter } from "next/router";
+import { useAuth } from "@/contexts/AuthContext";
 import React, { useState } from "react";
 import AuthOptions from "./AuthOptions";
 
 const WithAuth = (Component) => {
   const NewComponent = (props) => {
-    const { setVisible, bindings } = useModal();
-    const [isSignup, setIsSignup] = useState(false);
+    const { setVisible, bindings, isSignup, setIsSignup } = useAuth();
 
     const [closeMethod, setCloseMethod] = useState(null);
 
     return (
       <>
-        <Component setVisible={setVisible} setCloseMethod={setCloseMethod} {...props} />
+        <Component
+          setVisible={setVisible}
+          setCloseMethod={setCloseMethod}
+          {...props}
+        />
         <AuthOptions
           onclose={closeMethod}
           setVisible={setVisible}

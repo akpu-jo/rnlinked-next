@@ -13,6 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export default function Home({ posts }) {
   const { user } = useAuth();
+  console.log(user, 'user')
   const router = useRouter();
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -96,14 +97,24 @@ export default function Home({ posts }) {
 }
 
 export const getServerSideProps = async (context) => {
-  console.log(process.env.NEXT_PUBLIC_URL);
-  const { data } = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/posts`);
+  try {
+    
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/posts`);
+    return {
+      props: {
+        posts: data.posts,
+      },
+    };
+  } catch (error) {
+    console.log('next url+++++++============================================================================>');
+    return {
+      props: {
+        // posts: data.posts,
+      },
+    };
+    
+  }
 
-  return {
-    props: {
-      posts: data.posts,
-    },
-  };
 };
 
 // Home.getLayout = function getLayout(page){

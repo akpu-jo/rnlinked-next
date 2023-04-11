@@ -1,14 +1,12 @@
-import { s3 } from "@/utils/aws";
-import { nanoid } from "nanoid";
 import Post from "../../../models/postModel";
-import User from "../../../models/userModel";
 import connectDb from "../../../utils/db";
-
+  
 export default async function handler(req, res) {
   const { method } = req;
   const { userId } = req.query;
 
   await connectDb();
+  console.log('reached /api/posts:16==================================================> 🤡')
 
   switch (method) {
     case "GET":

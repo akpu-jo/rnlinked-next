@@ -79,7 +79,6 @@ const NewChatModal = () => {
                 handleSelectedUsers={handleSelectedUsers}
                 selectedUsers={selectedUsers}
                 key={user._id}
-                scrollIntoViewref={scrollIntoViewref}
               />
               <CheckedIcon
                 user={user}
@@ -140,6 +139,7 @@ const NewChatModal = () => {
               focus={true}
               selectedUsers={selectedUsers}
               handleSelectedUsers={handleSelectedUsers}
+              scrollIntoViewref={scrollIntoViewref}
             />
           </div>
           <div className="p-4 overflow-y-auto">

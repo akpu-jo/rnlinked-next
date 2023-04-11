@@ -1,4 +1,3 @@
-import { useAuth } from "@/contexts/AuthContext";
 import { Loading } from "@nextui-org/react";
 import { auth } from "firebaseConfig";
 import React, { useEffect } from "react";

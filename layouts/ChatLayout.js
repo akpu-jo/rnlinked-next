@@ -28,12 +28,25 @@ const ChatLayout = ({
 
   const chatPage = router.query.msgId !== undefined ? true : false;
 
-  if (!user) {
-    setVisible(true);
-    console.log("no user===");
-  } else {
-    setVisible(false);
-  }
+  
+
+  useEffect(() => {
+    const authSubcribe = () => {
+      if (!user) {
+        setVisible(true);
+        console.log("no user===");
+      } else {
+        setVisible(false);
+      }
+    }
+
+    authSubcribe()
+  
+    return () => {
+      authSubcribe()
+    }
+  }, [])
+  
 
   useEffect(() => {
     setCloseMethod(() => () => {

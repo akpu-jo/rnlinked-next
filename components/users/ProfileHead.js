@@ -30,17 +30,9 @@ const ProfileHead = ({
   const [followers, setFollowers] = useState(profileUser.followers);
   const [showMediaModal, setShowMediaModal] = useState(false);
 
-  // const timestamp = timeDifference(Date.now(), new Date(post.createdAt));
-
-  // if (!user) {
-  //   setVisible(true);
-  // } else {
-  //   setVisible(false);
-  // }
 
   const handleFollow = async () => {
-    // const { likes } = post;
-    const { data } = await axios.post(`/api/users/${profileUser._id}/follow`, {
+     const { data } = await axios.post(`/api/users/${profileUser._id}/follow`, {
       sessionUserId: user._id,
     });
 

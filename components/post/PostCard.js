@@ -122,7 +122,6 @@ export const PostCard = ({
 
   useEffect(() => {
     setLiked(post.likes.includes(user && user._id));
-    console.log(post);
   }, [user]);
 
   const queryBuilder = () => {

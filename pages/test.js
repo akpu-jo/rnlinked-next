@@ -1,3 +1,4 @@
+import EmailOptIn from "@/components/auth/EmailOptIn";
 import React, { useState, useEffect, useRef } from "react";
 
 const Test = () => {
@@ -49,9 +50,10 @@ const Test = () => {
   };
 
   return (
-    <div className="w-full h-screen bg-gray-100 flex flex-col justify-end">
+    <div className="w-full h-screen bg-gray-100">
+
+      <EmailOptIn />
       <div className="p-4">
-        <h1 className="text-2xl font-bold text-gray-800">Chat with ChatGPT</h1>
         <ul className="mt-4 space-y-2">
           {messages.map((message, index) => (
             <li key={index} className="p-2 bg-gray-200 rounded">
@@ -60,13 +62,13 @@ const Test = () => {
           ))}
         </ul>
       </div>
-      <form onSubmit={handleSubmit} className="p-4 bg-white">
+      <form onSubmit={handleSubmit} className="p-4 bg-white" style={{ position: "fixed", bottom: 10, left: 5, right: 5, }} >
         <input
           type="text"
           name="message"
           placeholder="Type your message here"
           className="w-full px-4 py-2 rounded bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          style={{ position: "absolute", bottom: 0 }}
+          
         />
         <button
           type="submit"

@@ -1,4 +1,5 @@
 import AuthOptions from "@/components/auth/AuthOptions";
+import { useAuth } from "@/contexts/AuthContext";
 import { useModal } from "@nextui-org/react";
 import React, { useState } from "react";
 import { PasswordReset } from "../components/auth/password/PasswordReset";
@@ -8,8 +9,7 @@ const Welcome = () => {
   const [signInOpen, setSignInOpen] = useState(false);
   const [signUpOpen, setSignUpOpen] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
-  const { setVisible, bindings } = useModal();
-  const [isSignup, setIsSignup] = useState(false);
+  const { setVisible, bindings, isSignup, setIsSignup } = useAuth();
 
   // useEffect(() => {
   //     document.title = 'Welcome - RNlinked';
@@ -81,6 +81,7 @@ const Welcome = () => {
           bindings={bindings}
           isSignup={isSignup}
           setIsSignup={setIsSignup}
+          onclose={() => setVisible(false)}
         />
 
         <div className=" flex flex-col items-center h-screen">

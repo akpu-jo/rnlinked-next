@@ -8,7 +8,7 @@ import Input from "../uiTemplates/inputs/Input";
 
 const SignupWithEmail = ({ showSigninOptions }) => {
   const { signup } = useAuth();
-  const [fullName, setFullName] = useState("");
+  const [fullName, setFullName] = useState("Jak Me");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -16,6 +16,7 @@ const SignupWithEmail = ({ showSigninOptions }) => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    
     try {
       await signup(email, password, fullName);
     } catch (err) {
@@ -50,7 +51,7 @@ const SignupWithEmail = ({ showSigninOptions }) => {
         onChange={({ target }) => setPassword(target.value)}
       />
       <RecButton
-        text={"Sign up"}
+        text={"Next"}
         bg={"bg-elm-900 font-semibold"}
         color={"text-slate-50 "}
         disabled={isInvalid}

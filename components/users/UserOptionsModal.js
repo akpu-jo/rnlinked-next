@@ -3,11 +3,18 @@ import { Avatar, Button, Modal, useModal } from "@nextui-org/react";
 import { ChevronLeftIcon, UserCircleIcon } from "@heroicons/react/outline";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
-export const UserOptionsModal = ({setVisible, bindings}) => {
-    const { user, signout } = useAuth();
+export const UserOptionsModal = ({ setVisible, bindings }) => {
+  const { user, signout } = useAuth();
+  const router = useRouter()
 
-    if (!user) return null;
+  const onclick = (link) =>{
+    router.push(link)
+    setVisible(false)
+  }
+
+  if (!user) return null;
 
   return (
     <>
@@ -42,18 +49,16 @@ export const UserOptionsModal = ({setVisible, bindings}) => {
                 <p className=" font-semibold text-gray-400">@{user.username}</p>
               </div>
             </li>
-            <li className=" border-b border-slate-200 py-3 mt-3 text-xl tracking-wide hover:font-medium hover:text-slate-800 ">
-              <Link href={`/account/profile`}>
-               Edit profile
-              </Link>
+            <li onClick={() => onclick(`/account/profile`)} className=" border-b border-slate-200 py-3 mt-3 text-xl tracking-wide hover:font-medium hover:text-slate-800 ">
+              <Link href={`/account/profile`}>Edit profile</Link>
             </li>
             <li className=" border-b border-slate-200 py-3 mt-5 text-xl tracking-wide hover:font-medium hover:text-slate-800">
               Help and Feedback
             </li>
-            <li className=" border-b border-slate-200 py-3 text-xl tracking-wide hover:font-medium hover:text-slate-800">
-              Privacy policy
+            <li onClick={() => onclick('/policy/privacy')} className=" border-b border-slate-200 py-3 text-xl tracking-wide hover:font-medium hover:text-slate-800">
+              <Link href={'/policy/privacy'}>Privacy policy</Link>
             </li>
-            <li className=" border-b border-slate-200 py-3 text-xl tracking-wide hover:font-medium hover:text-slate-800">
+            <li onClick={() =>onclick('/policy/tos')} className=" border-b border-slate-200 py-3 text-xl tracking-wide hover:font-medium hover:text-slate-800">
               Terms of service
             </li>
             <li className=" mt-10 py-3 text-secondary-burntSienna  text-xl tracking-wide font-semibold ">

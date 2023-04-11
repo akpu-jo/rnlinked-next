@@ -52,6 +52,10 @@ const userSchema = new mongoose.Schema(
     ],
     followers: [{ type: ObjectId, ref: "User" }],
     following: [{ type: ObjectId, ref: "User" }],
+    signinMethod: String,
+    emailVerified: Boolean,
+    inEmailList: Boolean,
+    receivedEmailPrompt: Boolean
   },
   { timestamps: true }
 );

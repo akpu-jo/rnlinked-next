@@ -13,14 +13,12 @@ const SideNav = ({ showText = true }) => {
   let slugPath = process.window && window.location.pathname;
 
   const isActive = (path) => {
-    console.log("now");
     return active.includes(path);
   };
 
   const { setVisible, bindings } = useModal();
 
   useEffect(() => {
-    console.log(window.location);
     typeof window !== undefined && setActive(window.location.pathname);
   }, [slugPath]);
 
