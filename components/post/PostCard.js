@@ -133,7 +133,7 @@ export const PostCard = ({
   };
 
   return (
-    <div className="py-2 border-b border-slate-100 bg-white rounded-lg mb-1 ">
+    <div className="py-2 border-b border-slate-100 bg-white rounded-lg ring-slate-200 my-4 mx-3 ">
       <div className=" mx-2  bg-opacity-50 rounded-lg px-2 py-3">
         <section className="flex justify-between items-center ">
           <div className=" flex mb-1 items-center  bg-opacity-90 rounded-lg">
@@ -189,6 +189,19 @@ export const PostCard = ({
             </p>
           )}
 
+       
+          <Link
+            href={`/${post.userId.username}/p/${post._id}`}
+            scroll={false}
+            className={`${clipText && "clip-txt"} ${
+              fullW ? "" : "w-80"
+            } whitespace-pre-line leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-700 font-body `}
+          >
+            <p className={` ${mainPost ? "text-xl" : "text-lg"}  font- w-full`}>
+              {post.body}
+            </p>
+          </Link>
+
           {post.image.length > 0 && (
             <MediaModal
               visible={showMediaModal}
@@ -200,7 +213,7 @@ export const PostCard = ({
             <div className=" w-full ">
               <Image
                 onClick={() => setShowMediaModal(true)}
-                className=" object-cover rounded-sm w-full bg-gray-300 "
+                className=" object-cover rounded-lg w-full bg-gray-300 "
                 src={post.image[0].url}
                 alt=""
                 width={300}
@@ -212,17 +225,6 @@ export const PostCard = ({
             </div>
           )}
 
-          <Link
-            href={`/${post.userId.username}/p/${post._id}`}
-            scroll={false}
-            className={`${clipText && "clip-txt"} ${
-              fullW ? "" : "w-80"
-            } whitespace-pre-line leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-700 `}
-          >
-            <p className={` ${mainPost ? "text-xl" : "text-lg"}  font- w-full`}>
-              {post.body}
-            </p>
-          </Link>
         </article>
         {mainPost && (
           <div className=" border-y border-slate-100 py-2 mt-3 text-sm ">

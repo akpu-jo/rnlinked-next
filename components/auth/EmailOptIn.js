@@ -8,8 +8,8 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import RecButton from "../uiTemplates/buttons/RecButton";
 
-const EmailOptIn = ({ loadVerifyEmail }) => {
-  const { setUser, verifyEmail, addUserToSib } = useAuth();
+const EmailOptIn = () => {
+  const { setUser, verifyEmail, addUserToSib, setOpenCatchUp, loadVerifyEmail} = useAuth();
   const router = useRouter();
   const [optedIn, setOptedIn] = useState(false);
 
@@ -30,6 +30,7 @@ const EmailOptIn = ({ loadVerifyEmail }) => {
       await addUserToSib(meta.filter);
       setUser(data.user);
       router.push("/");
+      setOpenCatchUp(false)
     } else {
       console.log(auth.currentUser.emailVerified);
 
@@ -38,7 +39,7 @@ const EmailOptIn = ({ loadVerifyEmail }) => {
 
       verifyEmail();
 
-      loadVerifyEmail();
+      loadVerifyEmail(true);
       //wait for user response
       //update emailVerified on Mongodb
       // add/rm from SIB depending on inEmailList
@@ -47,7 +48,7 @@ const EmailOptIn = ({ loadVerifyEmail }) => {
 
   return (
     <form method="POST" className=" mx-10" onSubmit={handleSubmit}>
-      {optedIn && <div>yayyyyy, you are in</div>}
+      {/* {optedIn && <div>yayyyyy, you are in</div>} */}
       <div className="flex justify-between">
         <div className="flex-1">
           <p className=" text-slate-700 font-medium tracking-normal pb-2">

@@ -7,7 +7,7 @@ const MenuOptions = ({ icon, text, link = "#", active = false }) => {
       href={link}
       className={` ${
         active && " bg-elm-200 hover:bg-elm-300 text-slate-800"
-      } flex items-center space-x-4 hover:bg-elm-100 rounded-lg p-1 w-fit px-2`}
+      } flex items-center space-x-4 hover:bg-elm-100 rounded-lg p-1 w-fit xl:w-full px-2`}
     >
       <span className="">{icon} </span>
       <p

@@ -117,7 +117,7 @@ const Explore = () => {
   }, []);
 
   return (
-    <div className=" flex flex-col h-screen bg-slate-50">
+    <div className=" bg-gray-50">
       {showSearch ? (
         <SearchHeader
           showSearch={showSearch}
@@ -135,7 +135,7 @@ const Explore = () => {
 
       <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5">
         <SideNav />
-        <main className=" mb-24 col-span-6 ">
+        <main className=" pb-24 col-span-6 ">
           {recommendedUsers.length ? (
             <Recommendations recommendedUsers={recommendedUsers} />
           ) : (
@@ -160,14 +160,14 @@ const Explore = () => {
                   ))}
                 </div>
               </section>
-              <section className=" mx-4 my-3 ">
+              {/* <section className=" mx-4 my-3 ">
                 <h2 className=" text-slate-500 font-medium tracking-normal py-2">
                   FOR YOU
                 </h2>
                 {postsForYou.map((post) => (
                   <div key={post._id}>{forYou(post)}</div>
                 ))}
-              </section>
+              </section> */}
             </>
           )}
         </main>
@@ -175,7 +175,7 @@ const Explore = () => {
           {/* <TrendingPosts /> */}
         </section>
       </div>
-      <p className=" flex-1 text-center text-xl font-medium p-2 m-10 "></p>
+      <p className=" flex-1 text-center text-xl font-medium p-2 m "></p>
       <MobileNav />
     </div>
   );

@@ -48,7 +48,7 @@ const SideNav = ({ showText = true }) => {
         onClick={() => setVisible(true)}
         className={` ${
           isActive("new/post") && " bg-elm-200 hover:bg-elm-300 text-slate-800"
-        } flex items-center space-x-4 hover:bg-elm-100 rounded-lg p-1 w-fit px-2`}
+        } flex items-center space-x-4 hover:bg-elm-100 rounded-lg p-1 w-fit xl:w-full px-2`}
       >
         <PencilAltIcon className=" w-7 h-7" />{" "}
         <p

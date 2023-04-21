@@ -16,8 +16,8 @@ function MyApp({ Component, pageProps }) {
     <AuthProvider>
       <NextUIProvider>
         <SocketLayout>
-            {getLayout(<Component {...pageProps} />)}
-            <OnboardingCatchUp />
+          {getLayout(<Component {...pageProps} />)}
+          <OnboardingCatchUp />
         </SocketLayout>
       </NextUIProvider>
     </AuthProvider>

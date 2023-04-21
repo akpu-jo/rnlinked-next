@@ -71,7 +71,7 @@ const Profile = () => {
 
         <form className=" mx-4">
           <div className="pb-5">
-            <label className="block text-base text-gray-600 font-semibold tracking-wide py-1">
+            <label className="block text-sm text-gray-600 font-semibold tracking-wide py-1">
               Name
             </label>
             <input
@@ -79,13 +79,13 @@ const Profile = () => {
               aria-label="Enter the course name"
               type="text"
               name="name"
-              className="px-3 py-3 w-full rounded-sm text-base bg-gray-100 focus:bg-gray-50 focus:outline-none focus:ring-4 hover:bg-gray-50 hover:ring-4 ring-blue-100"
+              className="px-3 py-3 w-full rounded-md shadow-sm text-base bg-white focus:bg-gray-50 focus:outline-none focus:ring-4 hover:bg-gray-50 hover:ring-4 ring-blue-100"
               value={name}
               onChange={(e) => setValues({ ...values, name: e.target.value })}
             />
           </div>
           <div className="pb-5">
-            <label className="block text-base text-gray-600 font-semibold tracking-wide py-1">
+            <label className="block text-sm text-gray-600 font-semibold tracking-wide py-1">
               Username
             </label>
             <input
@@ -93,7 +93,7 @@ const Profile = () => {
               aria-label="Enter the course name"
               type="text"
               name="username"
-              className="px-3 py-3 w-full rounded-sm text-base bg-gray-100 focus:bg-gray-50 focus:outline-none focus:ring-4 hover:bg-gray-50 hover:ring-4 ring-blue-100"
+              className="px-3 py-3 w-full rounded-md shadow-sm text-base bg-white focus:bg-gray-50 focus:outline-none focus:ring-4 hover:bg-gray-50 hover:ring-4 ring-blue-100"
               value={username}
               onChange={(e) =>
                 setValues({ ...values, username: e.target.value })
@@ -101,14 +101,15 @@ const Profile = () => {
             />
           </div>
           <div className="pb-5">
-            <label className="block text-base text-gray-600 font-semibold tracking-wide py-1">
+            <label className="block text-sm text-gray-600 font-semibold tracking-wide py-1">
               Description
             </label>
             <textarea
               aria-label="Enter the video embed link from Youtube"
               name="description"
+              rows={5}
               // placeholder='Enter the video embed link from Youtube'
-              className="px-3 py-3 w-full placeholder:text-sm rounded-sm text-base bg-gray-100 focus:bg-gray-50 focus:outline-none focus:ring-4 hover:bg-gray-50 hover:ring-4 ring-blue-100"
+              className="px-3 py-3 w-full placeholder:text-sm rounded-sm text-base bg-white focus:bg-gray-50 focus:outline-none focus:ring-4 hover:bg-gray-50 hover:ring-4 ring-blue-100"
               value={bio}
               onChange={(e) => setValues({ ...values, bio: e.target.value })}
             />

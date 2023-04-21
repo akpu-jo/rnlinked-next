@@ -1,3 +1,4 @@
+import LoadingState from "@/components/uiTemplates/LoadingState";
 import { useModal } from "@nextui-org/react";
 import axios from "axios";
 import { setCookie, deleteCookie } from "cookies-next";
@@ -51,21 +52,24 @@ export const AuthProvider = ({ children }) => {
       console.log("from unsubscribe", session);
       if (session) {
         const { data } = await axios.get(`/api/users?email=${session.email}`);
-        
+
         const { user } = data;
-        console.log("from unsubscribe", user);
-        if (!user.inEmailList && !user.receivedEmailPrompt) {
+        console.log("inSession", user);
+        if (
+          user.inEmailList === undefined &&
+          user.receivedEmailPrompt === undefined
+        ) {
+          console.log("herereee");
           showPersonalExperience(true);
           return;
-        }
-
-        if (!session.emailVerified && user.receivedEmailPrompt) {
+        } else if (!session.emailVerified && user.receivedEmailPrompt) {
           loadVerifyEmail(true);
-        }
-        setCookie("token", await session.getIdToken(true));
+        } else {
+          setCookie("token", await session.getIdToken(true));
 
-        setUser(user);
-        setVisible(false)
+          setUser(user);
+        }
+        setVisible(false);
       } else {
         setUser(null);
       }
@@ -245,7 +249,7 @@ export const AuthProvider = ({ children }) => {
         setEmailVerificationCatchUp,
       }}
     >
-      {loading ? null : children}
+      {loading ? <LoadingState /> : children}
     </AuthContext.Provider>
   );
 };
