@@ -43,7 +43,7 @@ export default function Home({ posts }) {
 
         <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5  ">
           <SideNav />
-          <main className=" mb-24 col-span-8 sm:mt-2 max-w-lg mx-auto  ">
+          <main className=" mb-24 col-span-8 mt-2 max-w-lg mx-auto  ">
             <Tab.Group
               selectedIndex={selectedIndex}
               onChange={(index) => {
@@ -55,12 +55,12 @@ export default function Home({ posts }) {
                 console.log(categories[index]);
               }}
             >
-              <Tab.List className=" sticky top-0 z-4 bg-white space-x-3  border-b whitespace-nowrap overflow-x-scroll hide-scrollbar mx-3">
+              <Tab.List className=" sticky top-0 z-4 bg-white space-x-3 rounded-lg  border-b whitespace-nowrap overflow-x-scroll hide-scrollbar mx-3">
                 {categories.map((category) => (
                   <Tab key={category}>
                     {({ selected }) => (
                       <h2
-                        className={` p-2 ${
+                        className={` p-2 font-head text-xl ${
                           selected && " border-b-2 border-primary-confetti"
                         } `}
                       >
@@ -80,9 +80,7 @@ export default function Home({ posts }) {
               </Tab.Panels>
             </Tab.Group>
           </main>
-          <aside className=" hidden lg:block col-span-1">
-
-          </aside>
+          <aside className=" hidden lg:block col-span-1" />
           <MobileNav user={user} />
         </div>
       </div>

@@ -104,17 +104,29 @@ const NewPostModal = ({ setVisible, bindings, isReply = false, post }) => {
     }
   };
 
+  const closeHandler = () => {
+    setVisible(false);
+  };
+
   return (
     <>
-      <Modal fullScreen={isMobile} {...bindings} width="500px" closeButton>
-        <Modal.Header className="">
+      <Modal
+        fullScreen={isMobile}
+        {...bindings}
+        width="500px"
+        // closeButton
+        onClose={closeHandler}
+        className=''
+      >
+        <Modal.Header className="flex items-center justify-end my-3 mt-5">
           {!isReply && (
             <h2 className="w-full text-start pb-2 ml-3 font-div text-slate-700 tracking-wide dark:text-white text-lg">
               New post
             </h2>
           )}
+          <XIcon className=" w-7 h-7 m-3 text-slate-700 bg-slate-200 hover:bg-slate-300 rounded-md" onClick={closeHandler} />
         </Modal.Header>
-        <Modal.Body className="mx-3">
+        <Modal.Body className="mx-6 mb-4">
           <form className="" onSubmit={handleSubmit}>
             {/* {isReply && <ReplyPostCard post={post} />} */}
             {errorMsg && <p>{errorMsg}</p>}
@@ -140,7 +152,6 @@ const NewPostModal = ({ setVisible, bindings, isReply = false, post }) => {
                   onClick={handleImageRemove}
                   className="hidden group-hover:block absolute top-4 right-0 text-center rounded-lg p-0.5 m-1 bg-slate-900  text-slate-100"
                 >
-                  
                   <XIcon className=" sm:w-5 sm:h-5 w-6 h-6 " />
                 </button>
               </div>

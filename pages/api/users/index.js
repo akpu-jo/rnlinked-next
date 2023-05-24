@@ -13,8 +13,8 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       try {
-        const { email } = req.query;
-        const user = await User.findOne({ email });
+        const { uid } = req.query;
+        const user = await User.findOne({ uid });
         res.status(200).json({ success: true, user });
       } catch (error) {
         res.status(400).json({ success: false });

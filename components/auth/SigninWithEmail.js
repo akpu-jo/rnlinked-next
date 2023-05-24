@@ -28,9 +28,6 @@ const SigninWithEmail = ({ showSigninOptions }) => {
   };
   return (
     <form method="POST" className=" mx-10" onSubmit={handleLogin}>
-      {error && (
-        <p className="mb-4 text-center text-xs text-red-500">{error}</p>
-      )}
       <Input
         icon={icon(<Mail fill="currentColor" />)}
         placeholder={"Email"}

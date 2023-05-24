@@ -5,7 +5,7 @@ export const Timeline = ({posts}) => {
 
   return (
       <>
-      {posts.map((post, i) => (
+      {posts?.map((post, i) => (
           <PostCard key={post._id} post={post} />
       ))}
           </>

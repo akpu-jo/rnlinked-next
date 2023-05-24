@@ -117,7 +117,7 @@ const Explore = () => {
   }, []);
 
   return (
-    <div className=" bg-gray-50">
+    <div className="">
       {showSearch ? (
         <SearchHeader
           showSearch={showSearch}
@@ -135,7 +135,7 @@ const Explore = () => {
 
       <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5">
         <SideNav />
-        <main className=" pb-24 col-span-6 ">
+        <main className=" pb-24 col-span-8 max-w-xl mx-auto ">
           {recommendedUsers.length ? (
             <Recommendations recommendedUsers={recommendedUsers} />
           ) : (
@@ -171,9 +171,9 @@ const Explore = () => {
             </>
           )}
         </main>
-        <section className=" hidden lg:block sticky top-16  col-span-3 bg-slate-40 mt-2 bg-white rounded-xl p-5 max-h-96">
-          {/* <TrendingPosts /> */}
-        </section>
+       {/* <section className=" hidden lg:block sticky top-16  col-span-3 bg-slate-40 mt-2 bg-white rounded-xl p-5 max-h-96">
+          <TrendingPosts />
+        </section> */}
       </div>
       <p className=" flex-1 text-center text-xl font-medium p-2 m "></p>
       <MobileNav />

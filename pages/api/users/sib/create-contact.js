@@ -24,6 +24,7 @@ export default async function handler(req, res) {
       const apiKey = defaultClient.authentications["api-key"];
 
       apiKey.apiKey = process.env.SIB_API_KEY;
+      console.log("API KEY /api/users/sib/create-contact:41", process.env.SIB_API_KEY);
 
       const partnerKey = defaultClient.authentications["partner-key"];
       partnerKey.apiKey = process.env.SIB_API_KEY;
@@ -58,9 +59,9 @@ export default async function handler(req, res) {
               console.log("datalog /api/users/sib/createContact:56", data);
             },
             (error) => {
-              if (error.body.code === "duplicate_parameter") {
-                addedToSib = "Contact already exist.";
-              }
+              // if (error.body.code === "duplicate_parameter") {
+              //   addedToSib = "Contact already exist.";
+              // }
               console.log("errorlog /api/users/sib/createContact:58", error);
             }
           );

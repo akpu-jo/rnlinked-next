@@ -12,14 +12,14 @@ const PostPage = ({ post, replies }) => {
   const isMobile = useMediaQuery({ maxWidth: 640 });
 
   return (
-    <div className=" bg-slate-50">
-      <AppBar alt={isMobile} extraclass={''} />
+    <>
+      <AppBar alt={isMobile} extraclass={""} />
       <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5">
         <SideNav />
         <PostPageTemplate post={post} replies={replies} />
       </div>
       <MobileNav user={user} />
-    </div>
+    </>
   );
 };
 
@@ -37,19 +37,17 @@ export const getServerSideProps = async (context) => {
       return {
         notFound: true,
       };
-    } 
-      return {
-        props: {
-          post: data.post,
-          replies: data.replies,
-        },
-      };
+    }
+    return {
+      props: {
+        post: data.post,
+        replies: data.replies,
+      },
+    };
   } catch (error) {
     console.log("post client  ===> ", error);
     return {
       notFound: true,
     };
   }
-
-  
 };

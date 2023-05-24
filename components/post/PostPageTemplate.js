@@ -4,12 +4,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { PostCard } from "./PostCard";
 import EmptyStates from "../uiTemplates/EmptyStates";
+import Back from "../navs/Back";
 
 const PostPageTemplate = ({ post, replies }) => {
   const { user } = useAuth();
   const router = useRouter();
 
-  //TO IMPLEMENT THIS FEATURE LATER, 
+  //TO IMPLEMENT THIS FEATURE LATER,
   //=HIDE PARENT POST WHEN THE CURRENT POST IS A REPLY
   const currentPostRef = useRef(null);
   const [showParentPost, setShowParentPost] = useState(false);
@@ -36,11 +37,12 @@ const PostPageTemplate = ({ post, replies }) => {
   };
 
   return (
-    <main className="col-span-6 sm:mt-5 mb-24 ">
+    <main className="col-span-8 sm:mt-5 mb-24 max-w-xl mx-auto w-full ">
+      <Back />
       {post.replyTo !== undefined && (
         <>
           {
-            <div className="mx-3 border-l-4">
+            <div className="ml-8 mx-3 border-l-4">
               {post.replyTo !== null ? (
                 <PostCard post={post.replyTo} />
               ) : (
@@ -50,14 +52,14 @@ const PostPageTemplate = ({ post, replies }) => {
               )}
             </div>
           }
-          {/* <div className=" h-20" ref={bottonRef} /> */}
+          {/* <div className=" h-20" ref={bottonRef}πap /> */}
         </>
       )}
       <div ref={currentPostRef}>
         <PostCard post={post} clipText={false} mainPost={true} />
       </div>
       {replies.length > 0 && (
-        <div className=" mx-3 border-l-4">
+        <div className="ml-8 mx-3 border-l-4">
           {replies.map((reply, i) => (
             <PostCard key={i} post={reply} />
           ))}

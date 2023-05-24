@@ -8,7 +8,7 @@ import Input from "../uiTemplates/inputs/Input";
 
 const SignupWithEmail = ({ showSigninOptions }) => {
   const { signup } = useAuth();
-  const [fullName, setFullName] = useState("Jak Me");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

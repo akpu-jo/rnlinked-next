@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   const [showOptions, setShowOptions] = useState(true);
   const [showEmailOptIn, setShowEmailOptIn] = useState(false);
   const [showVerifyEmail, setShowVerifyEmail] = useState(false);
-  const [inSignUpFlow, setInSignUpFlow] = useState(false);
+  const [inAuthFlow, setInAuthFlow] = useState(false);
 
   //via catch up
   const [openCatchUp, setOpenCatchUp] = useState(false);
@@ -46,30 +46,33 @@ export const AuthProvider = ({ children }) => {
     "auth/email-already-in-use",
   ];
 
+  const findAndSetUser = async (session) => {
+    const { data } = await axios.get(`/api/users?uid=${session.uid}`);
+    const { user } = data;
+
+    if (
+      user.inEmailList === undefined &&
+      user.receivedEmailPrompt === undefined
+    ) {
+      showPersonalExperience(true);
+      return;
+    } else if (!session.emailVerified && user.receivedEmailPrompt) {
+      loadVerifyEmail(true);
+    } else {
+      setCookie("token", await session.getIdToken(true));
+
+      setUser(user);
+    }
+    setVisible(false);
+  };
+
   useEffect(() => {
+    console.log(inAuthFlow);
+    if (inAuthFlow) return;
     const unsubscribe = onAuthStateChanged(auth, async (session) => {
-      if (inSignUpFlow) return;
-      console.log("from unsubscribe", session);
+      console.log(inAuthFlow);
       if (session) {
-        const { data } = await axios.get(`/api/users?email=${session.email}`);
-
-        const { user } = data;
-        console.log("inSession", user);
-        if (
-          user.inEmailList === undefined &&
-          user.receivedEmailPrompt === undefined
-        ) {
-          console.log("herereee");
-          showPersonalExperience(true);
-          return;
-        } else if (!session.emailVerified && user.receivedEmailPrompt) {
-          loadVerifyEmail(true);
-        } else {
-          setCookie("token", await session.getIdToken(true));
-
-          setUser(user);
-        }
-        setVisible(false);
+        await findAndSetUser(session);
       } else {
         setUser(null);
       }
@@ -77,11 +80,10 @@ export const AuthProvider = ({ children }) => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [inAuthFlow]);
 
   useEffect(() => {
     const handleTokenRefresh = setInterval(async () => {
-      console.log("refreshing token...");
       if (user) {
         const token = await auth.currentUser.getIdToken(true);
         console.log("refreshing token...");
@@ -96,10 +98,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const signup = async (email, password, name) => {
-    setInSignUpFlow(true);
+    setInAuthFlow(true);
     return createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
-        console.log(userCredential);
         const image =
           "https://res.cloudinary.com/rnlinked/image/upload/v1679134371/avatar-default_wvnv69.webp";
 
@@ -126,9 +127,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signin = (email, password) => {
+    setInAuthFlow(true);
     return signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log(userCredential);
+      .then(async (session) => {
+        await findAndSetUser(session.user);
+        router.push("/");
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -137,6 +140,47 @@ export const AuthProvider = ({ children }) => {
           setError("Please provide a valid email address and password.");
         console.log(`${errorCode}: ${errorMessage} testing first`);
       });
+  };
+
+  const withProvider = (provider) => {
+    setInAuthFlow(true);
+    setLoading(true);
+    setVisible(false)
+
+    return signInWithPopup(auth, provider)
+      .then(async (session) => {
+        const isNewUser = session._tokenResponse.isNewUser;
+        if (!isNewUser) {
+          await findAndSetUser(session.user);
+          router.push("/");
+        } else {
+          setLoading(false)
+          showPersonalExperience(true);
+
+          const user = {
+            name: session.user.displayName,
+            email: session.user.email,
+            uid: session.user.uid,
+            image: session.user.photoURL,
+            signinMethod: session.providerId,
+            emailVerified: session.user.emailVerified,
+          };
+          const { data } = await axios.post(`/api/users`, user);
+        }
+
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+  };
+
+  const signout = async () => {
+    await signOut(auth);
+    setUser(null);
+    deleteCookie("token");
+    router.push("/");
   };
 
   const showPersonalExperience = (viaCatchUp = false) => {
@@ -163,42 +207,6 @@ export const AuthProvider = ({ children }) => {
       setShowEmailOptIn(false);
       setShowVerifyEmail(true);
     }
-  };
-
-  const withProvider = (provider) => {
-    return signInWithPopup(auth, provider)
-      .then(async (result) => {
-        console.log(result);
-        const isNewUser = result._tokenResponse.isNewUser;
-        const user = {
-          name: result.user.displayName,
-          email: result.user.email,
-          uid: result.user.uid,
-          image: result.user.photoURL,
-          signinMethod: result.providerId,
-          emailVerified: result.user.emailVerified,
-        };
-        console.log(user);
-        if (isNewUser) {
-          setInSignUpFlow(true);
-          const { data } = await axios.post(`/api/users`, user);
-          showPersonalExperience();
-          console.log(data);
-          //add personal experience togle to context-done
-          //update user record in MongoDB-done
-          //create a function to handle personal experience onSubmit
-          //if user agrees - add to sendinBlue
-          //setUser to new user record from mongo
-          // setUser(data.user);
-        }
-      })
-      .catch((error) => console.log(error));
-  };
-
-  const signout = async () => {
-    await signOut(auth);
-    setUser(null);
-    router.push("/");
   };
 
   const verifyEmail = () => {
@@ -253,19 +261,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-// function useAuthProvider() {
-//   const sendPasswordResetEmail = async (email) => {
-//     await sendPasswordResetEmail(auth, email);
-//   };
-
-//   const confirmPasswordReset = (password, code) => {};
-
-//   return {
-//     login,
-//     signup,
-//     signout,
-//     sendPasswordResetEmail,
-//     confirmPasswordReset,
-//   };
-// }

@@ -33,7 +33,7 @@ const AppBar = ({ children, extraclass, alt = false, showUser = true }) => {
             </button>
           ) : (
             <Link href="/" className={`${alt && "hidden sm:block"}`}>
-              <Image src="/rn.svg" alt="rnlinked logo" width={60} height={30} />
+              <Image src="/logo/rnl.svg" alt="rnlinked logo" width={120} height={70} />
             </Link>
           )}
         </ul>

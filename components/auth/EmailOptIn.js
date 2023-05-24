@@ -9,7 +9,13 @@ import React, { useEffect, useState } from "react";
 import RecButton from "../uiTemplates/buttons/RecButton";
 
 const EmailOptIn = () => {
-  const { setUser, verifyEmail, addUserToSib, setOpenCatchUp, loadVerifyEmail} = useAuth();
+  const {
+    setUser,
+    verifyEmail,
+    addUserToSib,
+    setOpenCatchUp,
+    loadVerifyEmail,
+  } = useAuth();
   const router = useRouter();
   const [optedIn, setOptedIn] = useState(false);
 
@@ -22,24 +28,21 @@ const EmailOptIn = () => {
       reqBody: { inEmailList: optedIn, receivedEmailPrompt: true },
     };
 
-    const {data} = await axios.patch('/api/users', meta)
+    const { data } = await axios.patch("/api/users", meta);
 
     console.log(data.user);
     if (auth.currentUser.emailVerified) {
-
       await addUserToSib(meta.filter);
       setUser(data.user);
       router.push("/");
-      setOpenCatchUp(false)
+      setOpenCatchUp(false);
     } else {
       console.log(auth.currentUser.emailVerified);
 
       //update inEmailList & receivedEmailPrompt on mongodb
       //send verification email
 
-      verifyEmail();
-
-      loadVerifyEmail(true);
+      loadVerifyEmail();
       //wait for user response
       //update emailVerified on Mongodb
       // add/rm from SIB depending on inEmailList

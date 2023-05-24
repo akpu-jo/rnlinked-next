@@ -38,6 +38,7 @@ export const PostCard = ({
   const { setVisible, bindings } = useModal();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [preventPostClick, setPreventPostClick] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const [showEngagement, setShowEngagement] = useState(false);
@@ -89,7 +90,11 @@ export const PostCard = ({
   };
 
   const header = () => {
-    return <h2 className="text-xl tracking-wide font-medium ">Delete post?</h2>;
+    return (
+      <h2 className="text-xl text-center tracking-wide font-medium ">
+        You cannot undo this action!
+      </h2>
+    );
   };
 
   const mbody = () => {
@@ -132,16 +137,30 @@ export const PostCard = ({
     return postQ;
   };
 
+  const handlePostClick = (e) => {
+    // console.log('handlePostClick===>', e.target.classList)
+    if (!e.target.classList.contains("nextui-backdrop") && !preventPostClick && !mainPost) {
+      router.push(`/${post.userId.username}/p/${post._id}`);
+    }
+  };
   return (
     <div className="py-2 border-b border-slate-100 bg-white rounded-lg ring-slate-200 my-4 mx-3 ">
-      <div className=" mx-2  bg-opacity-50 rounded-lg px-2 py-3">
+      <Overlay isOpen={preventPostClick} setIsOpen={setPreventPostClick} />
+      <div
+        onClick={handlePostClick}
+        className=" rounded-lg px-4 py-3 hover:bg-confetti-50 hover:bg-opacity-5 "
+      >
         <section className="flex justify-between items-center ">
-          <div className=" flex mb-1 items-center  bg-opacity-90 rounded-lg">
-            <Link href={`/${post.userId.username}`}>
-              <Avatar zoomed squared size="md" src={post.userId.image} />
-            </Link>
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/${post.userId.username}`);
+            }}
+            className=" flex mb-1 items-center  bg-opacity-90 rounded-lg"
+          >
+            <Avatar zoomed squared size="md" src={post.userId.image} />
 
-            <Link href={`/${post.userId.username}`} className=" px-3 ">
+            <div className=" px-3 ">
               <p className=" font-medium tracking-wide leading-5 text-md">
                 {post.userId.name}
               </p>
@@ -152,14 +171,26 @@ export const PostCard = ({
                   {timestamp} ago
                 </p>
               </div>
-            </Link>
+            </div>
           </div>
           <div className=" relative flex items-center text-center px-2 mr-3 h-full ">
-            <button className="" onClick={() => setMenuOpen(!menuOpen)}>
+            <button
+              className=""
+              onClick={(e) => {
+                e.stopPropagation();
+                setMenuOpen(!menuOpen);
+                setPreventPostClick(true);
+              }}
+            >
               <DotsVerticalIcon className=" w-5 h-5" />{" "}
             </button>
 
-            <SubMenu show={menuOpen} onClickOutside={() => setMenuOpen(false)}>
+            <SubMenu
+              show={menuOpen}
+              onClickOutside={() => {
+                setMenuOpen(false);
+              }}
+            >
               {isAuthor && (
                 <SubMenuItem
                   item={"Delete post"}
@@ -172,6 +203,10 @@ export const PostCard = ({
         <ModalTemplate
           visible={deleteModalOpen}
           setVisible={setDeleteModalOpen}
+          closeHandler={() => {
+            setDeleteModalOpen(false)
+            setPreventPostClick(false)
+          }}
           header={header}
           body={mbody}
           footer={footer}
@@ -183,24 +218,25 @@ export const PostCard = ({
               <span>
                 In reply to{" "}
                 {post.replyTo !== null
-                  ? post.replyTo.userId.name
+                  ? post.replyTo.userId?.name
                   : " a deleted post"}
               </span>
             </p>
           )}
 
-       
-          <Link
-            href={`/${post.userId.username}/p/${post._id}`}
-            scroll={false}
-            className={`${clipText && "clip-txt"} ${
+          <div
+            className={`${clipText && "clip-tx"} ${
               fullW ? "" : "w-80"
-            } whitespace-pre-line leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-700 font-body `}
+            } whitespace-pre-line leading-normal tracking-wide overflow-hidden text-ellipsis pt-2 py-2 text-slate-700 font-head `}
           >
-            <p className={` ${mainPost ? "text-xl" : "text-lg"}  font- w-full`}>
+            <p
+              className={` ${
+                mainPost ? "text-xl leading-loose " : "text-lg"
+              }  font-body w-full`}
+            >
               {post.body}
             </p>
-          </Link>
+          </div>
 
           {post.image.length > 0 && (
             <MediaModal
@@ -210,9 +246,14 @@ export const PostCard = ({
             />
           )}
           {post.image.length > 0 && (
-            <div className=" w-full ">
+            <div
+              className=" w-full photo "
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowMediaModal(true);
+              }}
+            >
               <Image
-                onClick={() => setShowMediaModal(true)}
                 className=" object-cover rounded-lg w-full bg-gray-300 "
                 src={post.image[0].url}
                 alt=""
@@ -224,7 +265,6 @@ export const PostCard = ({
               />
             </div>
           )}
-
         </article>
         {mainPost && (
           <div className=" border-y border-slate-100 py-2 mt-3 text-sm ">
@@ -256,7 +296,8 @@ export const PostCard = ({
             }`}
           >
             <li
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation()
                 setAnimateLike(true);
                 handleLike(post._id);
               }}
@@ -277,7 +318,7 @@ export const PostCard = ({
             </li>
             {!mainPost && (
               <li
-                // onClick={() => router.push(`/new/comment/${post._id}`)}
+                onClick={(e) => e.stopPropagation()}
                 className=" flex items-center p-2  text-lg text-gray-500  "
               >
                 <ChatIcon className=" w-5 h-5 mr-1" />
@@ -288,7 +329,11 @@ export const PostCard = ({
               </li>
             )}
             <li
-              onClick={() => setVisible(true)}
+              onClick={(e) => {
+                e.stopPropagation()
+                setVisible(!bindings.open)
+                console.log(bindings)
+              }}
               className=" flex items-center p-2  text-lg text-gray-500 cursor-pointer  "
             >
               <ReplyIcon className=" w-5 h-5 mr-1 -rotate-180 " />
@@ -318,3 +363,20 @@ export const PostCard = ({
     </div>
   );
 };
+
+const Overlay = ({ isOpen, setIsOpen, children }) => {
+  if (!isOpen) {
+    return null;
+  }
+
+  return (
+    <div
+      className="absolute top-0 left-0 w-full h-full bg-gray-700 opacity-0 z-100"
+      onClick={() => setIsOpen(false)}
+    >
+      {children}
+    </div>
+  );
+};
+
+export default Overlay;

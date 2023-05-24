@@ -11,15 +11,15 @@ const Header = ({ children }) => {
   const router = useRouter();
 
   return (
-    <header className=" sticky top-0 right-0 left-0 z-50 py-2 bg-slate-50 border-b">
+    <header className=" sticky top-0 right-0 left-0 z-50 bg-slate-50 border-b">
       <nav className=" flex justify-between items-center max-w-6xl md:mx-auto mx-3 ">
         <ul className="flex items-center">
           <Link href="/" className="w-36 md:w-44  ">
             <Image
-              src="/rn-logo.png"
+              src="/logo/rnl.svg"
               alt="Picture of the logo"
               width={125}
-              height={28}
+              height={80}
             />
           </Link>
         </ul>

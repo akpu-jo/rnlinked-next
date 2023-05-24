@@ -1,4 +1,5 @@
 import AltHeader from "@/components/navs/AltHeader";
+import Back from "@/components/navs/Back";
 import { useAuth } from "@/contexts/AuthContext";
 import AppBar from "@/layouts/AppBar";
 import { Avatar } from "@nextui-org/react";
@@ -60,6 +61,7 @@ const Profile = () => {
       </AppBar>
 
       <main className=" max-w-lg mx-auto">
+        <Back />
         <span className=" mx-4">
           <Avatar
             className=" mx-4"

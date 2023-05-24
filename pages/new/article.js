@@ -227,7 +227,7 @@ const Article = () => {
   return (
     <div className=" flex flex-col h-screen  bg-blac">
       {/* {h}  */}
-      <header className=" fixed top-0 right-0 left-0 z-5 py-2 bg-slate-100 ">
+      <header className=" fixed top-0 right-0 left-0 z-5 py-3 sm:py-0 bg-slate-50 ">
         <div className=" flex items-center justify-between max-w-5xl mx-auto px-3 ">
           <button
             className=" text-slate-500 rounded-md p-1 bg-slate-100 mr-3 sm:hidden "
@@ -240,10 +240,10 @@ const Article = () => {
           </button>
           <Link href="/" className="w-36 md:w-44  hidden sm:block ">
               <Image
-                src="/rn.svg"
+                src="/logo/rnl.svg"
                 alt="rnlinked logo"
                 width={125}
-                height={28}
+                height={70}
               />
           </Link>
           <div className=" flex items-center justify-between">
@@ -263,10 +263,10 @@ const Article = () => {
         </div>
       </header>
 
-      <form className=" flex-1 max-w-3xl w-full mx-auto mt-16">
-        <div className=" mx-2 my-3">
+      <form className=" flex-1 max-w-3xl w-full mx-auto mt-16 sm:mt-20">
+        <div className=" mx-2 md:-mx-3 my-3">
           <TextareaAutosize
-            className=" w-full text-3xl font-semibold text-slate-700 px-1 bg-slate-70   "
+            className=" w-full text-3xl font-semibold text-slate-700 px-2 py-2 bg-slate-70   "
             maxRows={2}
             maxLength={150}
             placeholder="Headline"
@@ -296,7 +296,7 @@ const Article = () => {
             </button>
           </div>
         ) : (
-          <div className="flex items-center justify-center border border-dashed py-2 sm:py-4 bg-cloud-50 mb-3 mx-3 ">
+          <div className="flex items-center justify-center border-2 border-dashed border-slate-400 py-4 my-4 bg-cloud-50 mb-3 mx-2  md:-mx-3 ">
             {imageUploading ? (
               <div>
                 <Loading type="points-opacity" />
