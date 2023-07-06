@@ -22,6 +22,7 @@ import ArticleCommentSlideOver from "@/components/articles/ArticleCommentSlideOv
 import { useAuth } from "@/contexts/AuthContext";
 import AppBar from "@/layouts/AppBar";
 import { useMediaQuery } from "react-responsive";
+import Back from "@/components/navs/Back";
 
 const ArticlePage = ({ article }) => {
   const router = useRouter();
@@ -52,8 +53,8 @@ const ArticlePage = ({ article }) => {
   }, [user]);
 
   return (
-    <div className=" bg-slate-50 ">
-      <AppBar extraclass={'fixed'} alt={isMobile} />
+    <div className=" ">
+      {/* <AppBar extraclass={'fixed'} alt={isMobile} /> */}
       {/* <AltHeader>
         <div className=" flex items-center ">
           <button className=" px-2 mx-1">
@@ -63,7 +64,8 @@ const ArticlePage = ({ article }) => {
       </AltHeader> */}
       <main className=" max-w-6xl mx-auto mb-10 sm:grid grid-cols-11 gap-5 ">
         <SideNav />
-        <article className=" col-span-6 mt-16 ">
+        <article className=" col-span-6 mt- ">
+          <Back topic={`Article by ${article.author.name}`} />
           <h2 className="pt-2 pb-2 text-3xl text-slate-600 leading-normal tracking-wider font-medium font-serif">
             {article.title}
           </h2>
@@ -80,7 +82,7 @@ const ArticlePage = ({ article }) => {
               />
             </figure>
           )}
-          <div className="max-w-2xl py-6 mx-auto px-3 sm:px-0 text-justify text-gray-600 text-xl font-base leading-relaxed tracking-wide">
+          <div className="max-w-2xl py-6 mx-auto px-3 sm:px-0 text-justify text-gray-600 text-lg font-light font-body leading-relaxed tracking-wide">
             {parse(article.body)}
           </div>
           <footer className="focus-within:hidden  sm:max-w-sm mx-auto lg:ring-1 ring-slate-400 lg:rounded-xl  sticky md:bottom-5 bottom-0 right-0 left-0  py-2 shadow-lg text-cloud-900 bg-slate-100 z-50">

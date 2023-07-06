@@ -134,7 +134,7 @@ const Explore = () => {
       )}
 
       <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5">
-        <SideNav />
+        <SideNav showUser={false} />
         <main className=" pb-24 col-span-8 max-w-xl mx-auto ">
           {recommendedUsers.length ? (
             <Recommendations recommendedUsers={recommendedUsers} />

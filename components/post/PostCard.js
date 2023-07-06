@@ -21,6 +21,7 @@ import SubMenuItem from "../uiTemplates/submenu/SubMenuItem";
 import ModalTemplate from "../uiTemplates/Modal";
 import PostEngagementModal from "./PostEngagementModal";
 import MediaModal from "./MediaModal";
+import Overlay from "../uiTemplates/modals/Overlay";
 
 export const PostCard = ({
   post,
@@ -364,19 +365,4 @@ export const PostCard = ({
   );
 };
 
-const Overlay = ({ isOpen, setIsOpen, children }) => {
-  if (!isOpen) {
-    return null;
-  }
 
-  return (
-    <div
-      className="absolute top-0 left-0 w-full h-full bg-gray-700 opacity-0 z-100"
-      onClick={() => setIsOpen(false)}
-    >
-      {children}
-    </div>
-  );
-};
-
-export default Overlay;

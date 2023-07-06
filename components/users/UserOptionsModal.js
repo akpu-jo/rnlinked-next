@@ -4,10 +4,14 @@ import { ChevronLeftIcon, UserCircleIcon } from "@heroicons/react/outline";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useMediaQuery } from "react-responsive";
+import { ArrowNarrowLeftIcon } from "@heroicons/react/solid";
 
 export const UserOptionsModal = ({ setVisible, bindings }) => {
   const { user, signout } = useAuth();
   const router = useRouter()
+  const isMobile = useMediaQuery({ maxWidth: 640 });
+
 
   const onclick = (link) =>{
     router.push(link)
@@ -18,13 +22,13 @@ export const UserOptionsModal = ({ setVisible, bindings }) => {
 
   return (
     <>
-      <Modal fullScreen {...bindings}>
+      <Modal fullScreen={isMobile} {...bindings}>
         <Modal.Header className=" flex justify-start m-3 ">
           <button
-            className=" text-slate-500 rounded-md p-2 bg-slate-100 mr-3 "
-            onClick={() => setVisible(false)}
+            className=" text-slate-700 rounded-md p-2 mr-3 "
+           
           >
-            <ChevronLeftIcon className=" w-5 h-5" />
+            <ArrowNarrowLeftIcon className=" w-7 h-7"  onClick={() => setVisible(false)}/>
           </button>
         </Modal.Header>
         <Modal.Body className=" m-3">

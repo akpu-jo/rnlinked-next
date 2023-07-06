@@ -13,6 +13,11 @@ module.exports = {
         body: ["Poppins"],
       },
       colors: {
+        tradewind: {
+          200:"#d0ece7",
+          600:"#91d2c6",
+          900: "#62beae"
+        },
         cloud: {
           50: "#e9ebef",
           100: "#d3d7e0",

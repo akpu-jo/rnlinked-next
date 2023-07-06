@@ -29,7 +29,7 @@ const Followers = () => {
   }, []);
 
   return (
-    <>
+    <div className=" ">
       {profileUser.name && profileUser.followers.length < 1 ? (
         <p className=" text-slate-500 text-center my-10 ">{emptyListMsg}</p>
       ) : (
@@ -40,7 +40,7 @@ const Followers = () => {
             ))}
         </>
       )}
-    </>
+    </div>
   );
 };
 

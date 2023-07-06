@@ -32,8 +32,16 @@ const AppBar = ({ children, extraclass, alt = false, showUser = true }) => {
               <ChevronLeftIcon className=" w-5 h-5" />
             </button>
           ) : (
-            <Link href="/" className={`${alt && "hidden sm:block"}`}>
-              <Image src="/logo/rnl.svg" alt="rnlinked logo" width={120} height={70} />
+            <Link href="/" className={`${alt && "hidden sm:block"} flex items-center gap-4`}>
+              <Image
+                src="/icon-192x192.png"
+                alt="rnlinked logo"
+                width={50}
+                height={50}
+              />
+              <h1 className=" hidden xl:block font-head font-semibold text-3xl lowercase tracking-tight">
+                RNLinked.
+              </h1>
             </Link>
           )}
         </ul>

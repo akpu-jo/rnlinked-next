@@ -18,7 +18,11 @@ export default function MobileNav() {
 
   return (
     <>
-      <div className=" h-16 md:hidden fixed bottom-0 right-0 left-0  py-2 shadow-lg text-cloud-900 bg-primary-springWood flex justify-around items-center z-50">
+      <div 
+      className=" h-16 sm:hidden fixed bottom-0 right-0 left-0  
+      py-2 shadow-lg text-cloud-900 bg-primary-springWood 
+      flex justify-around items-center z-50"
+      >
         <Link href={`/`}>
           <span className=" p-2 rounded-full bg-slate-100 inline-block text-cloud-900">
             {active === "/" ? <HomeIconUI filled /> : <HomeIconUI />}
@@ -37,40 +41,7 @@ export default function MobileNav() {
         >
           {active === "/messages" ? <MessageIcon filled /> : <MessageIcon />}
         </Link>
-
-        <div
-          onClick={() => {
-            setOpen(true);
-          }}
-          className="add-post  text-cloud-900 "
-        >
-          <Avatar
-            bordered
-            icon={
-              <svg
-                className=" w-10 h-8"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1}
-                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                />
-              </svg>
-            }
-          />
-        </div>
       </div>
-      <CreateOptions
-        close={() => {
-          setOpen(false);
-        }}
-        open={open}
-      />
     </>
   );
 }

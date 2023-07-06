@@ -1,4 +1,5 @@
 import Post from "../../../models/postModel";
+import User from "@/models/userModel";
 import connectDb from "../../../utils/db";
   
 export default async function handler(req, res) {
@@ -21,6 +22,7 @@ export default async function handler(req, res) {
           .sort({ createdAt: -1 }); /* find all the data in our database */
         res.status(200).json({ success: true, posts });
       } catch (error) {
+        console.log('get posts error:/api/posts/24 ===>', error)
         res.status(400).json({ success: false });
       }
       break;

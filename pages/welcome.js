@@ -57,7 +57,7 @@ const Welcome = () => {
                 setIsSignup(true)
                 setVisible(true);
               }}
-              className=" hidden md:block w-32 hover:text-elm-900 dark:text-slate-200  text-sm font-semibold"
+              className=" hidden md:block w-32 hover:text-elm-900 dark:text-slate-200 text-xl font-"
             >
               Sign Up
             </button>
@@ -69,7 +69,7 @@ const Welcome = () => {
                 setIsSignup(false)
                 setVisible(true);
               }}
-              className=" hover:text-elm-900  dark:text-slate-100 font-semibold"
+              className=" text-xl tracking-tight hover:text-elm-900  dark:text-slate-100 font-"
             >
               Sign in
             </button>

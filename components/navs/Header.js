@@ -14,13 +14,16 @@ const Header = ({ children }) => {
     <header className=" sticky top-0 right-0 left-0 z-50 bg-slate-50 border-b">
       <nav className=" flex justify-between items-center max-w-6xl md:mx-auto mx-3 ">
         <ul className="flex items-center">
-          <Link href="/" className="w-36 md:w-44  ">
+          <Link href="/" className="w-36 md:w-44 flex items-center gap-1  ">
             <Image
-              src="/logo/rnl.svg"
-              alt="Picture of the logo"
-              width={125}
-              height={80}
+              src="/icon-192x192.png"
+              alt="rnlinked logo"
+              width={50}
+              height={50}
             />
+            <h1 className=" font-head font-semibold text-3xl lowercase tracking-tight">
+              RNLinked.
+            </h1>
           </Link>
         </ul>
         {/* {JSON.stringify(user.email)} */}

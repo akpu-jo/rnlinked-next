@@ -10,10 +10,12 @@ import { useRouter } from "next/router";
 import SideNav from "@/components/navs/SideNav";
 import AppBar from "@/layouts/AppBar";
 import { useAuth } from "@/contexts/AuthContext";
+import FloatingComposeBtn from "@/components/navs/FloatingComposeBtn";
+import MobileHeader from "@/components/navs/mobileNavs/MobileHeader";
 
 export default function Home({ posts }) {
   const { user } = useAuth();
-  console.log(user, 'user')
+  console.log(user, "user");
   const router = useRouter();
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -38,12 +40,13 @@ export default function Home({ posts }) {
     return (
       <div className=" ">
         {head()}
-        
-        <AppBar />
 
-        <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5  ">
+        {/* <AppBar /> */}
+        <MobileHeader />
+
+        <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5 relative ">
           <SideNav />
-          <main className=" mb-24 col-span-8 mt-2 max-w-lg mx-auto  ">
+          <main className=" mb-24 col-span-8 sm:mt-12 max-w-lg mx-auto  ">
             <Tab.Group
               selectedIndex={selectedIndex}
               onChange={(index) => {
@@ -60,7 +63,7 @@ export default function Home({ posts }) {
                   <Tab key={category}>
                     {({ selected }) => (
                       <h2
-                        className={` p-2 font-head text-xl ${
+                        className={` p-3 font-head text-xl ${
                           selected && " border-b-2 border-primary-confetti"
                         } `}
                       >
@@ -83,6 +86,7 @@ export default function Home({ posts }) {
           <aside className=" hidden lg:block col-span-1" />
           <MobileNav user={user} />
         </div>
+            <FloatingComposeBtn />
       </div>
     );
   }
@@ -96,23 +100,22 @@ export default function Home({ posts }) {
 
 export const getServerSideProps = async (context) => {
   try {
-    
-    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/posts`);
+    const { data } = await axios.get(
+      `${process.env.NEXT_PUBLIC_URL}/api/posts`
+    );
     return {
       props: {
         posts: data.posts,
       },
     };
   } catch (error) {
-    console.log('next url+++++++============================================================================>');
+    // console.log('next url error =================>', error);
     return {
       props: {
         // posts: data.posts,
       },
     };
-    
   }
-
 };
 
 // Home.getLayout = function getLayout(page){

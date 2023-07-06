@@ -14,7 +14,7 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <AuthProvider>
-      <NextUIProvider>
+      <NextUIProvider disableBaseline={true}>
         <SocketLayout>
           {getLayout(<Component {...pageProps} />)}
           <OnboardingCatchUp />

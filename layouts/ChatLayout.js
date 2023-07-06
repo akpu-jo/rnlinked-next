@@ -64,7 +64,7 @@ const ChatLayout = ({
           className={`sm:grid grid-cols-11 gap-4 ${!isMobile && "fixed"}`}
           style={{ height: `calc(100% - ${APP_BAR_HEIGHT})` }}
         >
-          <SideNav />
+          <SideNav showUser={false} />
           <aside
             className={` ${
               chatPage ? "hidden sm:block " : ""

@@ -30,9 +30,8 @@ const ProfileHead = ({
   const [followers, setFollowers] = useState(profileUser.followers);
   const [showMediaModal, setShowMediaModal] = useState(false);
 
-
   const handleFollow = async () => {
-     const { data } = await axios.post(`/api/users/${profileUser._id}/follow`, {
+    const { data } = await axios.post(`/api/users/${profileUser._id}/follow`, {
       sessionUserId: user._id,
     });
 
@@ -87,7 +86,7 @@ const ProfileHead = ({
               src={profileUser.image}
             />
             <Avatar
-            // onClick={() => setShowMediaModal(true)}
+              // onClick={() => setShowMediaModal(true)}
               src={profileUser.image}
               css={{ size: "$20" }}
               squared
@@ -103,10 +102,12 @@ const ProfileHead = ({
           // />
         )}
         <figcaption className=" ml-6">
-          <p className=" font-semibold text-lg">{profileUser.name}</p>
-          <p className=" font-semibold text-gray-400">
-            @{profileUser.username}
-          </p>
+          <div className=" leading-3">
+            <p className=" font-medium text-lg">{profileUser.name}</p>
+            <p className=" text-gray-400">
+              @{profileUser.username}
+            </p>
+          </div>
           {!isSessionUser ? (
             <div className="flex items-center justify-start my-3">
               <button
@@ -136,7 +137,7 @@ const ProfileHead = ({
           ) : (
             <Link
               href={`/account/profile`}
-              className=" flex items-center py-2 px-4 bg-slate-100 text-slate-600 font-medium rounded-md mr-5"
+              className=" flex items-center py-0.5 mt-3 px-4 bg-tradewind-200 bg-opacity-20 border border-tradewind-200 shadow-sm text-slate-600 font-medium rounded-md mr-5"
             >
               Edit profile
             </Link>

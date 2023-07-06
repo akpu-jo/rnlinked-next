@@ -9,7 +9,7 @@ function classNames(...classes) {
 export default function Tabs({cats, children}) {
 
   return (
-    <div className="w-full max-w-lg px-2 sm:px-0">
+    <div className="w-full max-w-lg px-2 sm:px-0 mx-auto">
       <Tab.Group>
         <Tab.List className="flex p-1 space-x-1 bg-blue-900/10 rounded-xl ">
           {cats.map((category) => (

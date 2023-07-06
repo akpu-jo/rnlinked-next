@@ -38,7 +38,7 @@ const PostPageTemplate = ({ post, replies }) => {
 
   return (
     <main className="col-span-8 sm:mt-5 mb-24 max-w-xl mx-auto w-full ">
-      <Back />
+      <Back topic={`Note by ${post.userId.name}`} />
       {post.replyTo !== undefined && (
         <>
           {
