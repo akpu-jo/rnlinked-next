@@ -16,8 +16,8 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head>
           <link rel="manifest" href="/manifest.json" />
-          <link rel="apple-touch-icon" href="/icon.png"></link>
-          <meta name="theme-color" content="#fff" />
+          <link rel="apple-touch-icon" href="/appstore.png"></link>
+          <meta name="theme-color" content="#62beae" />
           {CssBaseline.flush()}
         </Head>
         <body>

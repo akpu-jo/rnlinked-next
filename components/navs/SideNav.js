@@ -35,20 +35,26 @@ const SideNav = ({ showUser = true, colSpan }) => {
 
   const userIcon = () => {
     return (
-      <Avatar
-        zoomed
-        className=""
-        squared
-        size="md"
-        icon={
-          !user.image && <UserCircleIcon className=" w-10 h-10 opacity-50 " />
-        }
-        src={user.image}
-      />
+      <>
+        {user && <Avatar
+          zoomed
+          className=""
+          squared
+          size="md"
+          icon={
+            !user.image && <UserCircleIcon className=" w-10 h-10 opacity-50 " />
+          }
+          src={user.image}
+        />}
+      </>
     );
   };
   return (
-    <section className={` hidden sm:block sticky top-0 border-r h-screen  ${colSpan ? colSpan : 'col-span-1 xl:col-span-3'} bg-slate-60 space-y-5 g-white rounded-lg p-4  bg-slate-60 `}>
+    <section
+      className={` hidden sm:block sticky top-0 border-r h-screen  ${
+        colSpan ? colSpan : "col-span-1 xl:col-span-3"
+      } bg-slate-60 space-y-5 g-white rounded-lg p-4  bg-slate-60 `}
+    >
       {showUser && (
         <Link href="/" className={`flex items-center gap-4 -ml-3`}>
           <Image
