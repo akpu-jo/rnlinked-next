@@ -46,7 +46,7 @@ export default function Home({ posts }) {
 
         <div className=" max-w-6xl mx-auto sm:grid grid-cols-11 gap-5 relative ">
           <SideNav />
-          <main className=" mb-24 col-span-8 sm:mt-12 max-w-lg mx-auto  ">
+          <main className=" col-span-8 sm:mt-12 max-w-lg mx-auto  ">
             <Tab.Group
               selectedIndex={selectedIndex}
               onChange={(index) => {

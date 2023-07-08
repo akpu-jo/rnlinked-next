@@ -219,6 +219,10 @@ li {
 .nextui-c-fFabR .nextui-avatar-img {
   z-index: 20;
 }
+
+.noscroll{
+  overflow: hidden;
+}
 .theirs.first .body {
   border-bottom-left-radius: 2px;
   margin: 0 0 2px;
