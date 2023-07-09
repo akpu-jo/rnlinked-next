@@ -140,7 +140,7 @@ const Explore = () => {
             <Recommendations recommendedUsers={recommendedUsers} />
           ) : (
             <>
-              <section>
+              {/* <section>
                 <h2 className=" mx-3 text-slate-500 font-medium tracking-normal py-2 my-1">
                   TRENDING
                 </h2>
@@ -149,7 +149,7 @@ const Explore = () => {
                     <PostCard post={post} key={post._id} fullW={false} />
                   ))}
                 </div>
-              </section>
+              </section> */}
               <section className=" mx-4 my-5">
                 <h2 className=" text-slate-500 font-medium tracking-normal py-2 my-1">
                   PEOPLE TO FOLLOW

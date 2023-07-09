@@ -351,7 +351,7 @@
           {
             "src": "android/android-launchericon-48-48.png",
             "sizes": "48x48"
-          },
+          }, 
           {
             "src": "ios/16.png",
             "sizes": "16x16"
@@ -469,5 +469,28 @@
       "medical",
       "productivity",
       "social"
-    ]
+    ],
+    "dir": "auto",
+    "lang": "en",
+    "prefer_related_applications": false,
+    "shortcuts": [
+      {
+        "name": "Articles",
+        "url": "https://rnlinked.com/?feed=Articles",
+        "description": "Read new articles"
+      },
+      {
+        "name": "Notes",
+        "url": "https://rnlinked.com",
+        "description": "See new notes"
+      },
+      {
+        "name": "Explore",
+        "url": "https://rnlinked.com/explore",
+        "description": "Explore your community"
+      }
+    ],
+    "edge_side_panel": {
+      "preferred_width": 0
+    }
 }
