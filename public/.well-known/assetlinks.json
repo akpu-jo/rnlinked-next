@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.rnlinked.twa",
+        "sha256_cert_fingerprints": ["63:2D:6A:BB:55:38:80:2D:86:98:55:31:68:F7:15:85:47:1B:89:45:34:68:12:0D:FA:15:31:FA:69:FC:1C:4D"]
+      }
+    }]
