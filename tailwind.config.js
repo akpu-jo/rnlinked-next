@@ -8,6 +8,9 @@ module.exports = {
   darkMode: "class", // 'media'
   theme: {
     extend: {
+      animation: {
+        "pulse-slow": "pulse 4s "
+      },
       fontFamily: {
         head: ['"Exo 2"'],
         body: ["Poppins"],
@@ -18,7 +21,7 @@ module.exports = {
           600:"#91d2c6",
           900: "#62beae"
         },
-        cloud: {
+        cloud: {   
           50: "#e9ebef",
           100: "#d3d7e0",
           200: "#bec3d0",

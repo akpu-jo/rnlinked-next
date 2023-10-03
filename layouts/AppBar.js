@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -14,7 +13,7 @@ const AppBar = ({ children, extraclass, alt = false, showUser = true }) => {
   const router = useRouter();
   return (
     <header
-      className={`${extraclass} top-0 right-0 left-0 z-50 py-3 bg-slate-50 border-b`}
+      className={`${extraclass} px-10 top-0 right-0 left-0 z-50 py-3 bg-slate-50 border-b`}
     >
       <nav
         className=" flex justify-between items-center max-w-6xl mx-auto space-x-  "
