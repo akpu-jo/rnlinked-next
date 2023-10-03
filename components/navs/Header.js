@@ -12,7 +12,7 @@ const Header = ({ children }) => {
 
   return (
     <header className=" sticky top-0 right-0 left-0 z-50 bg-slate-50 border-b">
-      <nav className=" flex justify-between items-center max-w-6xl md:mx-auto mx-3 ">
+      <nav className=" flex justify-between items-center max-w-6xl md:mx-auto mx-3 px-10 ">
         <ul className="flex items-center">
           <Link href="/" className="w-36 md:w-44 flex items-center gap-1  ">
             <Image

@@ -1,9 +1,11 @@
 import AltHeader from "@/components/navs/AltHeader";
 import Back from "@/components/navs/Back";
 import SideNav from "@/components/navs/SideNav";
+import ModalTemplate from "@/components/uiTemplates/Modal";
+import RecButton from "@/components/uiTemplates/buttons/RecButton";
 import { useAuth } from "@/contexts/AuthContext";
 import AppBar from "@/layouts/AppBar";
-import { Avatar } from "@nextui-org/react";
+import { Avatar, Popover } from "@nextui-org/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -13,6 +15,7 @@ const Profile = () => {
   const { user } = useAuth();
   const router = useRouter();
   const isMobile = useMediaQuery({ maxWidth: 640 });
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const [values, setValues] = useState({
     name: "",
@@ -20,6 +23,7 @@ const Profile = () => {
     bio: "",
   });
   const { username, name, bio } = values;
+
 
   const fillValues = () => {
     if (user) {
@@ -41,6 +45,42 @@ const Profile = () => {
     router.replace(`/${data.user.username}`);
   };
 
+  const header = () => {
+    return (
+      <h2 className="text-xl text-center tracking-wide font-medium ">
+        We're sorry to see you go!!!
+      </h2>
+    );
+  };
+  
+  const mbody = () => {
+    return (
+      <p className=" text-slate-700 text-lg p-5 tracking-wide">
+        Are you sure you want to delete your account? By doing this, you will not
+        be able to recover your data. 
+      </p>
+    );
+  };
+  
+  const footer = () => {
+    return (
+      <>
+        <button
+          onClick={() => setShowDeleteConfirm(false)}
+          className="px-5 py-1 bg-red-500 text-slate-50 font-semibold rounded-md text-base tracking-wide "
+        >
+          Cancel
+        </button>
+        <button
+          // onClick={() => deletePost()}
+          className=" px-5 py-1 bg-slate-50 text-slate-500 ring-1 ring-slate-200 font-semibold rounded-md text-base tracking-wide "
+        >
+          Delete
+        </button>
+      </>
+    );
+  };
+  
   useEffect(() => {
     user && fillValues();
     console.log(user);
@@ -127,10 +167,38 @@ const Profile = () => {
               </button>
             </div>
           </form>
+          <Popover>
+            <Popover.Content>
+              <div>
+                <h3>We're sorry to see you go!!</h3>
+                <p>
+                  Are you sure you want to delete your account? By doing this,
+                  you will not be able to recover your data.
+                </p>
+              </div>
+            </Popover.Content>
+          </Popover>
+          <div className=" my-10 mx-3">
+            <RecButton
+              action={() => setShowDeleteConfirm(true)}
+              text={"Delete account"}
+              color={"text-red-500"}
+              type={"button"}
+            />
+            <ModalTemplate
+              header={header}
+              body={mbody}
+              footer={footer}
+              setVisible={setShowDeleteConfirm}
+              closeHandler={() => setShowDeleteConfirm(false)}
+              visible={showDeleteConfirm}
+            />
+          </div>
         </main>
       </div>
     </div>
   );
 };
+
 
 export default Profile;
