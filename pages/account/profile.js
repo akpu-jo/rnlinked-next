@@ -48,7 +48,7 @@ const Profile = () => {
   const header = () => {
     return (
       <h2 className="text-xl text-center tracking-wide font-medium ">
-        We're sorry to see you go!!!
+        We&apos;re sorry to see you go!!!
       </h2>
     );
   };
@@ -170,7 +170,7 @@ const Profile = () => {
           <Popover>
             <Popover.Content>
               <div>
-                <h3>We're sorry to see you go!!</h3>
+                <h3>We&apos;re sorry to see you go!!</h3>
                 <p>
                   Are you sure you want to delete your account? By doing this,
                   you will not be able to recover your data.
